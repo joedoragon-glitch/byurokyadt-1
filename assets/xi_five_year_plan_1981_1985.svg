@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1600" viewBox="0 0 1200 1600">
+<rect width="1200" height="1600" fill="#ead9ae"/><rect width="1200" height="270" fill="#99241c"/>
+<path d="M0 270H1200V850L0 1110z" fill="#b5392b"/><path d="M0 1110L1200 790V1600H0z" fill="#e2cc9b"/>
+<rect x="34" y="34" width="1132" height="1532" fill="none" stroke="#791d18" stroke-width="6"/>
+<text x="72" y="195" fill="#f2dfae" font-family="Arial" font-size="172" font-weight="900">XI</text><text x="1110" y="128" text-anchor="end" fill="#f2dfae" font-family="Arial" font-size="94" font-weight="900">ПЯТИЛЕТКА</text><text x="1110" y="218" text-anchor="end" fill="#dfc48e" font-family="Arial" font-size="58" font-weight="800">1981–1985</text>
+<!-- industrial plan -->
+<g fill="#3d3e3a"><rect x="90" y="735" width="170" height="290"/><rect x="265" y="675" width="180" height="350"/><rect x="450" y="790" width="155" height="235"/><rect x="610" y="720" width="170" height="305"/>
+<rect x="150" y="560" width="44" height="465"/><rect x="325" y="525" width="44" height="500"/><rect x="650" y="615" width="44" height="410"/></g>
+<g stroke="#4d4b43" stroke-width="7" fill="none"><path d="M830 570L735 1025M830 570L925 1025M725 675H935M690 780H970M655 900H1005"/><path d="M725 675L830 780 935 675M690 780L830 900 970 780"/></g>
+<g fill="none" stroke="#831e18" stroke-width="34"><circle cx="995" cy="930" r="122"/></g><circle cx="995" cy="930" r="42" fill="#e2cc9b"/>
+<g stroke="#831e18" stroke-width="28"><path d="M995 765V720M995 1140V1095M830 930H785M1205 930H1160M878 813L845 780M1112 1047L1145 1080M1112 813L1145 780M878 1047L845 1080"/></g>
+<!-- wheat -->
+<g stroke="#b99139" stroke-width="10" fill="#caa244"><path d="M1090 1050L1072 730M1135 1050L1117 730"/><ellipse cx="1048" cy="775" rx="23" ry="11"/><ellipse cx="1094" cy="775" rx="23" ry="11"/><ellipse cx="1050" cy="820" rx="23" ry="11"/><ellipse cx="1096" cy="820" rx="23" ry="11"/><ellipse cx="1095" cy="865" rx="23" ry="11"/><ellipse cx="1140" cy="865" rx="23" ry="11"/></g>
+<!-- heroic workers -->
+<path d="M75 1490L145 1190 275 1050 385 1070 485 1190 548 1490z" fill="#6c1a16"/><ellipse cx="327" cy="990" rx="82" ry="92" fill="#c4956f"/><path d="M245 970L275 910 345 888 398 920 414 970 370 940 312 947 275 985z" fill="#3e372f"/>
+<path d="M405 1490L492 1195 602 1082 712 1110 810 1230 868 1490z" fill="#393c3e"/><ellipse cx="642" cy="990" rx="82" ry="92" fill="#d0a17a"/><path d="M560 970L592 915 662 895 712 925 725 970 682 940 620 946 586 985z" fill="#50473a"/>
+<path d="M740 1305L860 1160 935 1210 1110 995 1152 1030 950 1360 865 1295 785 1370z" fill="#ad3024"/>
+<rect x="60" y="1305" width="1080" height="227" fill="#2f2e29"/><text x="600" y="1370" text-anchor="middle" fill="#f0dcac" font-family="Arial" font-size="45" font-weight="900">НАУЧНО-ТЕХНИЧЕСКИЙ ПРОГРЕСС</text><text x="600" y="1430" text-anchor="middle" fill="#dfc799" font-family="Arial" font-size="32" font-weight="700">КАЧЕСТВО ТРУДА • ЭКОНОМИЯ РЕСУРСОВ</text><text x="600" y="1492" text-anchor="middle" fill="#d0ad55" font-family="Arial" font-size="34" font-weight="900">ПЛАН • ДИСЦИПЛИНА • РЕЗУЛЬТАТ</text>
+</svg>
