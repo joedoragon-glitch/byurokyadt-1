@@ -1,22 +1,62 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1600" viewBox="0 0 1200 1600">
-<rect width="1200" height="1600" fill="#e8d8b0"/><rect width="1200" height="210" fill="#99241c"/>
-<path d="M0 1170L1200 850V1600H0z" fill="#801d18"/><path d="M1200 210V960L650 780z" fill="#b33a2b"/>
-<rect x="34" y="34" width="1132" height="1532" fill="none" stroke="#7b1d18" stroke-width="6"/>
-<text x="600" y="124" text-anchor="middle" fill="#f2dfae" font-family="Arial" font-size="61" font-weight="800">ЛЕОНИД ИЛЬИЧ БРЕЖНЕВ</text>
-<!-- solemn stylized late-Soviet portrait -->
-<path d="M205 1328L302 922 452 815 748 815 898 922 995 1328z" fill="#262b31"/>
-<path d="M465 836L600 1038 735 836 675 795 525 795z" fill="#eee5cf"/><path d="M560 820L600 1038 640 820 622 790 578 790z" fill="#671f20"/>
-<path d="M525 690H675L680 840H520z" fill="#c99770"/>
-<path d="M468 355L535 292 645 278 735 335 780 460 760 620 700 735 605 785 505 742 445 630 424 480z" fill="#d0a27b"/>
-<path d="M603 286L735 338 777 460 742 618 688 704 605 774z" fill="#dfb087"/><path d="M468 355L535 292 602 286 585 455 550 610 505 742 445 630 424 480z" fill="#a8775d"/>
-<ellipse cx="430" cy="515" rx="39" ry="72" fill="#b98262"/><ellipse cx="781" cy="515" rx="39" ry="72" fill="#c99972"/>
-<path d="M438 410L452 330 512 270 590 244 674 252 742 300 774 382 726 338 659 313 594 322 527 308 475 356z" fill="#302d28"/>
-<path d="M463 340L512 286 560 267 540 326zM566 269L620 252 665 266 625 321zM674 270L724 306 744 337 692 315z" fill="#6c675d"/>
-<path d="M477 445L556 430M640 429L724 447" stroke="#302a26" stroke-width="25"/><path d="M492 469L548 467M654 468L708 470" stroke="#302a26" stroke-width="9"/>
-<path d="M590 465L616 465 626 575 596 604 575 588z" fill="#a77458"/><path d="M536 650L598 661 669 646M555 684L651 683" fill="none" stroke="#6b463b" stroke-width="8"/>
-<g fill="#d0ad55"><path d="M772 1018l13 30h33l-26 20 10 31-30-18-29 18 10-31-26-20h32z"/><path d="M830 1018l13 30h33l-26 20 10 31-30-18-29 18 10-31-26-20h32z"/></g>
-<rect x="68" y="1220" width="1064" height="288" fill="#6f1a16"/><rect x="91" y="1243" width="1018" height="242" fill="none" stroke="#e6cd95" stroke-width="5"/>
-<text x="600" y="1340" text-anchor="middle" fill="#f2dfae" font-family="Arial" font-size="49" font-weight="800">ГЕНЕРАЛЬНЫЙ СЕКРЕТАРЬ ЦК КПСС</text>
-<text x="600" y="1410" text-anchor="middle" fill="#dfc38d" font-family="Arial" font-size="36" font-weight="700">ЛЕОНИД ИЛЬИЧ БРЕЖНЕВ</text>
-<text x="600" y="1470" text-anchor="middle" fill="#d0ad55" font-family="Arial" font-size="31" font-weight="800">СССР • 1982</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 1024">
+<defs>
+ <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#efe0b8"/><stop offset="1" stop-color="#d9c89d"/></linearGradient>
+ <linearGradient id="skin" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#d9a77d"/><stop offset=".55" stop-color="#bd8667"/><stop offset="1" stop-color="#9d6a53"/></linearGradient>
+ <linearGradient id="suit" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#252a30"/><stop offset=".5" stop-color="#171b20"/><stop offset="1" stop-color="#343a40"/></linearGradient>
+ <pattern id="grain" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="2" cy="3" r=".7" fill="#49351e" opacity=".16"/><circle cx="14" cy="8" r=".5" fill="#fff3d4" opacity=".16"/><path d="M0 15L18 12" stroke="#694527" stroke-width=".35" opacity=".12"/></pattern>
+ <filter id="rough"><feTurbulence baseFrequency=".9" numOctaves="2" seed="8" type="fractalNoise" result="n"/><feColorMatrix in="n" type="saturate" values="0" result="g"/><feBlend in="SourceGraphic" in2="g" mode="multiply"/></filter>
+</defs>
+<rect width="768" height="1024" fill="url(#paper)"/>
+<rect x="18" y="18" width="732" height="988" fill="none" stroke="#8f211a" stroke-width="5"/>
+<rect x="28" y="28" width="712" height="120" rx="2" fill="#a82b22"/>
+<text x="384" y="82" text-anchor="middle" font-family="Arial, sans-serif" font-size="31" font-weight="900" fill="#f4dfad">ЛЕОНИД ИЛЬИЧ БРЕЖНЕВ</text>
+<text x="384" y="118" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#e4c98f">СССР • 1982</text>
+<!-- Kremlin tower -->
+<g transform="translate(42 164)" fill="#9b271f">
+ <path d="M0 450h110V196l-16-58-18 58v254z"/><path d="M28 196h54v-68H28z"/><path d="M17 128h76L55 68z"/>
+ <path d="M55 4l9 24h25L69 42l8 25-22-15-22 15 8-25-20-14h25z" fill="#b2251d"/>
+ <circle cx="55" cy="262" r="23" fill="#e7d29c"/><circle cx="55" cy="262" r="18" fill="#a2261e"/><path d="M55 249v15l11 6" stroke="#e7d29c" stroke-width="4" fill="none"/>
+ <path d="M-4 450h124v32H-4z"/>
+</g>
+<!-- red constructivist rays -->
+<path d="M220 159L752 159L752 480z" fill="#b22b22"/>
+<path d="M278 159L752 252L752 332z" fill="#cc4b35" opacity=".7"/>
+<path d="M340 159L752 364L752 423z" fill="#8f211a" opacity=".7"/>
+<!-- bust -->
+<g transform="translate(145 170)">
+ <path d="M100 724L132 485L250 408L395 416L505 510L544 724z" fill="url(#suit)"/>
+ <path d="M255 444L318 560L375 443L347 413L283 413z" fill="#f0e8d1"/>
+ <path d="M292 436L318 565L343 436L329 415L305 415z" fill="#6e1e1d"/>
+ <path d="M278 353L355 353L360 446L275 446z" fill="#bd8563"/>
+ <ellipse cx="220" cy="295" rx="31" ry="54" fill="#a96f55"/><ellipse cx="418" cy="295" rx="31" ry="54" fill="#c58b68"/>
+ <path d="M236 129L276 88L342 78L402 106L433 178L425 292L390 361L322 397L254 363L220 297L211 205z" fill="url(#skin)"/>
+ <path d="M323 82L402 108L433 178L420 289L387 351L323 391z" fill="#dda77d" opacity=".62"/>
+ <path d="M235 130L277 88L322 82L307 211L286 298L254 363L220 297L211 205z" fill="#8e5c4a" opacity=".45"/>
+ <!-- hair -->
+ <path d="M219 178L226 126L268 83L321 58L371 59L411 83L436 129L432 173L403 141L363 125L324 133L281 121L246 146z" fill="#2c2925"/>
+ <path d="M234 143L270 94L303 77L286 132zM306 79L346 62L376 72L349 125zM376 73L410 92L428 123L391 111z" fill="#726b5e"/>
+ <!-- brows/eyes -->
+ <path d="M248 202L294 193M348 193L396 205" stroke="#2c2824" stroke-width="13" stroke-linecap="round"/>
+ <path d="M256 218L291 217M351 217L388 220" stroke="#2c2824" stroke-width="5" stroke-linecap="round"/>
+ <!-- nose -->
+ <path d="M318 213L329 285L310 306L297 296" fill="#a97056"/>
+ <path d="M315 235L304 285" stroke="#7c5140" stroke-width="4"/>
+ <!-- mouth/jaw -->
+ <path d="M276 331L315 338L357 329" stroke="#70473d" stroke-width="5" fill="none"/>
+ <path d="M286 348L347 347" stroke="#9f6751" stroke-width="2.5"/>
+ <path d="M239 184Q213 284 257 365Q320 410 389 364Q429 296 423 183" fill="none" stroke="#78503f" stroke-width="3.5" opacity=".65"/>
+ <!-- medals -->
+ <g transform="translate(365 525)">
+  <rect x="0" y="0" width="40" height="24" fill="#a92b22"/><rect x="7" y="5" width="26" height="12" fill="#d3aa4f"/>
+  <path d="M20 25l9 17h19L33 53l6 19-19-11L1 72l6-19-15-11h19z" fill="#d6ad51"/>
+  <rect x="55" y="0" width="40" height="24" fill="#a92b22"/><rect x="62" y="5" width="26" height="12" fill="#d3aa4f"/>
+  <path d="M75 25l9 17h19L88 53l6 19-19-11-19 11 6-19-15-11h19z" fill="#d6ad51"/>
+ </g>
+</g>
+<!-- footer -->
+<rect x="30" y="844" width="708" height="138" fill="#8e211b"/>
+<rect x="45" y="858" width="678" height="110" fill="none" stroke="#e5ca91" stroke-width="3"/>
+<text x="384" y="902" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="900" fill="#f3dfae">ГЕНЕРАЛЬНЫЙ СЕКРЕТАРЬ ЦК КПСС</text>
+<text x="384" y="942" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#dbbd83">ЛЕОНИД ИЛЬИЧ БРЕЖНЕВ</text>
+<rect width="768" height="1024" fill="url(#grain)" opacity=".28"/>
 </svg>
