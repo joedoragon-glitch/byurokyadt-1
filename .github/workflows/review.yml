@@ -1,7 +1,7 @@
 name: Inspect review build
 on:
   push:
-    branches: ["v8-operator-review"]
+    branches: ["v9-aesthetic-review"]
 permissions:
   contents: read
 jobs:
