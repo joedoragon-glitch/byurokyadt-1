@@ -17,7 +17,13 @@ Scope: Joel requested a complete aesthetic pass matching the two original illust
 
 ## Verification record
 
-Review rendering and browser acceptance are in progress. Final release evidence is recorded after the visual review and live acceptance complete.
+The complete browser acceptance suite passed on review commit `7b578203bf9d65c928f23ea7d740f22ac7979ed1`, [review run 36089217304](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/36089217304). It covered 15 categories: asset decode, WebGL, document selection, the mechanical cycle, PNG export, reset, cached reload, offline reload, audio controls, offline audio, cabinet dimensions, furniture footprints, actual walking collision, narrow layouts, and idle rendering. No JavaScript page errors were recorded.
+
+The rendered audit corrected excessive enamel bump, an output sheet sinking into its chute, oversized sheet layers, low-frame-rate walking, continuously rendering an idle room, and the camera framing near the lower UI. Screenshot checks wait for camera fades to finish. A software renderer receives bounded extra time for the full cycle; the production animation durations are unchanged.
+
+The static scene reported approximately 327 draw calls and 31,440 triangles. The complete cached runtime is about 2.4 MB. Machine bounds are approximately 1.32 m wide, 1.20 m high and 0.94 m deep including projecting mechanisms and handles.
+
+Final camera framing is checked by the last review run. Publication runs the same acceptance suite before deployment and again against the live Pages URL. Current release results and screenshots are available in [GitHub Actions](https://github.com/joedoragon-glitch/byurokyadt-1/actions).
 
 ## Practical limits
 
