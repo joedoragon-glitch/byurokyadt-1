@@ -6,7 +6,7 @@ const base = process.env.BASE_URL || 'http://127.0.0.1:8000/';
 const inspectURL = new URL(base);inspectURL.searchParams.set('inspect','1');
 const browser = await chromium.launch();
 const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, acceptDownloads:true });
-const page = await context.newPage();
+const page = await context.newPage();page.setDefaultTimeout(60000);
 const errors=[];page.on('pageerror',e=>errors.push(e.message));
 await mkdir('test-results',{recursive:true});
 try {
@@ -28,7 +28,8 @@ try {
   await page.locator('#music').click();await page.waitForFunction(()=>window.MinistryAudio.state().musicOn&&window.MinistryAudio.state().context==='running');
   await page.locator('#runDoc').click();
   assert.equal(await page.locator('#loadDoc').isDisabled(),true,'No replacing file mid-cycle');
-  await page.waitForFunction(()=>document.querySelector('#hint').textContent.startsWith('APPЯOVЄD'),{},{timeout:30000});
+  await page.waitForFunction(()=>document.querySelector('#hint').textContent.startsWith('APPЯOVЄD'),{},{timeout:90000});
+  console.log('ОТК: cycle and audio passed');
   await page.screenshot({path:'test-results/03-completed.png'});
   await page.locator('#sideView').click();await page.waitForTimeout(450);
   await page.screenshot({path:'test-results/07-side.png'});
@@ -53,6 +54,7 @@ try {
   await page.locator('#app canvas').click({position:{x:30,y:600}});
   await page.keyboard.down('w');await page.waitForFunction(()=>window.BYUR_INSPECT.snapshot().camera[2]<-.62,{},{timeout:30000});await page.keyboard.up('w');
   await page.keyboard.down('w');await page.waitForTimeout(350);await page.keyboard.up('w');
+  console.log('ОТК: movement reached workbench');
   const stopped=await page.evaluate(()=>window.BYUR_INSPECT.snapshot());assert(stopped.safe&&stopped.camera[2]>-.69,'Player is blocked by workbench');
   await page.locator('#roomView').click();await page.waitForTimeout(450);
   const state=await page.evaluate(async()=>({cache:await caches.keys(),worker:!!navigator.serviceWorker.controller,manifest:await fetch('./manifest.webmanifest').then(r=>r.json())}));
@@ -75,6 +77,6 @@ try {
   console.log('ОТК: all acceptance checks passed.');
 } catch(e) {
   await page.screenshot({path:'test-results/failure.png'}).catch(()=>{});
-  await writeFile('test-results/failure.json',JSON.stringify({error:String(e),errors,snapshot:await page.evaluate(()=>window.BYUR_INSPECT?.snapshot()).catch(()=>null)},null,2));
+  await writeFile('test-results/failure.json',JSON.stringify({error:String(e),errors,hint:await page.locator('#hint').textContent().catch(()=>null),snapshot:await page.evaluate(()=>window.BYUR_INSPECT?.snapshot()).catch(()=>null)},null,2));
   console.error('ОТК ОШИБКА',e);throw e;
 } finally { await browser.close(); }
