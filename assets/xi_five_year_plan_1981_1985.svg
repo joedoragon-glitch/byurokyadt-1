@@ -1,19 +1,58 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1600" viewBox="0 0 1200 1600">
-<rect width="1200" height="1600" fill="#ead9ae"/><rect width="1200" height="270" fill="#99241c"/>
-<path d="M0 270H1200V850L0 1110z" fill="#b5392b"/><path d="M0 1110L1200 790V1600H0z" fill="#e2cc9b"/>
-<rect x="34" y="34" width="1132" height="1532" fill="none" stroke="#791d18" stroke-width="6"/>
-<text x="72" y="195" fill="#f2dfae" font-family="Arial" font-size="172" font-weight="900">XI</text><text x="1110" y="128" text-anchor="end" fill="#f2dfae" font-family="Arial" font-size="94" font-weight="900">ПЯТИЛЕТКА</text><text x="1110" y="218" text-anchor="end" fill="#dfc48e" font-family="Arial" font-size="58" font-weight="800">1981–1985</text>
-<!-- industrial plan -->
-<g fill="#3d3e3a"><rect x="90" y="735" width="170" height="290"/><rect x="265" y="675" width="180" height="350"/><rect x="450" y="790" width="155" height="235"/><rect x="610" y="720" width="170" height="305"/>
-<rect x="150" y="560" width="44" height="465"/><rect x="325" y="525" width="44" height="500"/><rect x="650" y="615" width="44" height="410"/></g>
-<g stroke="#4d4b43" stroke-width="7" fill="none"><path d="M830 570L735 1025M830 570L925 1025M725 675H935M690 780H970M655 900H1005"/><path d="M725 675L830 780 935 675M690 780L830 900 970 780"/></g>
-<g fill="none" stroke="#831e18" stroke-width="34"><circle cx="995" cy="930" r="122"/></g><circle cx="995" cy="930" r="42" fill="#e2cc9b"/>
-<g stroke="#831e18" stroke-width="28"><path d="M995 765V720M995 1140V1095M830 930H785M1205 930H1160M878 813L845 780M1112 1047L1145 1080M1112 813L1145 780M878 1047L845 1080"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 1024">
+<defs>
+ <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#efdeb2"/><stop offset="1" stop-color="#d9c89d"/></linearGradient>
+ <pattern id="grain" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="2" cy="4" r=".7" fill="#49351e" opacity=".16"/><path d="M0 13L16 11" stroke="#694527" stroke-width=".35" opacity=".12"/></pattern>
+</defs>
+<rect width="768" height="1024" fill="url(#paper)"/>
+<rect x="18" y="18" width="732" height="988" fill="none" stroke="#8f211a" stroke-width="5"/>
+<rect x="28" y="28" width="712" height="122" fill="#a82b22"/>
+<text x="58" y="93" font-family="Arial,sans-serif" font-size="54" font-weight="900" fill="#f4dfad">XI</text>
+<text x="712" y="82" text-anchor="end" font-family="Arial,sans-serif" font-size="35" font-weight="900" fill="#f4dfad">ПЯТИЛЕТКА</text>
+<text x="712" y="120" text-anchor="end" font-family="Arial,sans-serif" font-size="21" font-weight="800" fill="#e4c98f">1981–1985</text>
+<!-- landscape/dam -->
+<path d="M28 337Q108 265 190 285Q261 302 320 270Q384 237 470 261L470 487H28z" fill="#575851"/>
+<path d="M28 350Q98 300 175 311Q251 323 319 294Q377 268 467 288" fill="none" stroke="#8d8a7a" stroke-width="16"/>
+<path d="M48 386H348V548H48z" fill="#605f58"/>
+<path d="M66 398H330V415H66z" fill="#d7c59b"/>
+<g fill="#d9cba6"><path d="M82 415h36l-12 117H94z"/><path d="M134 415h36l-10 117h-16z"/><path d="M186 415h36l-10 117h-16z"/><path d="M238 415h36l-10 117h-16z"/><path d="M290 415h28l-7 117h-14z"/></g>
+<!-- factories -->
+<g fill="#3e403d">
+ <rect x="430" y="288" width="88" height="254"/><rect x="520" y="350" width="72" height="192"/><rect x="596" y="320" width="112" height="222"/>
+ <rect x="446" y="218" width="25" height="324"/><rect x="485" y="197" width="27" height="345"/><rect x="622" y="248" width="26" height="294"/>
+</g>
+<g stroke="#4b4b46" fill="none"><path d="M575 232L520 535M575 232L630 535M524 322H626M500 390H651M482 464H671" stroke-width="8"/></g>
+<!-- red ray -->
+<path d="M410 160L738 160L738 430z" fill="#bd3327" opacity=".9"/>
+<path d="M462 160L738 258L738 328z" fill="#d1523c" opacity=".75"/>
+<!-- foreground workers -->
+<g transform="translate(126 445)">
+ <!-- man -->
+ <path d="M0 405L51 238L144 169L230 183L292 274L314 405z" fill="#34383b"/>
+ <ellipse cx="154" cy="147" rx="72" ry="84" fill="#c9926d"/>
+ <path d="M85 143Q102 57 166 50Q229 56 244 145Q203 112 157 116Q117 114 85 143z" fill="#b9a270"/>
+ <path d="M80 140H246" stroke="#8f2a21" stroke-width="20"/>
+ <path d="M115 152L150 145M178 145L211 155" stroke="#342d27" stroke-width="7"/>
+ <path d="M163 160L173 212L155 225" stroke="#875844" stroke-width="5" fill="none"/>
+ <path d="M127 246L169 251L208 241" stroke="#765044" stroke-width="4" fill="none"/>
+ <!-- woman -->
+ <path d="M252 405L289 254L365 193L449 205L516 297L536 405z" fill="#6c1e1b"/>
+ <ellipse cx="383" cy="169" rx="67" ry="80" fill="#d2a077"/>
+ <path d="M324 161Q341 91 391 83Q440 90 455 165Q422 139 385 141Q350 139 324 161z" fill="#2f2924"/>
+ <path d="M319 158Q349 112 392 108Q431 113 461 159L450 234L423 203Q389 185 349 200L325 235z" fill="#aa2b22" opacity=".94"/>
+ <path d="M347 177L374 171M400 172L428 180" stroke="#302924" stroke-width="6"/>
+ <path d="M388 187L397 227L382 239" stroke="#8b5b45" stroke-width="4" fill="none"/>
+ <path d="M356 257L391 263L426 255" stroke="#765044" stroke-width="4" fill="none"/>
+</g>
 <!-- wheat -->
-<g stroke="#b99139" stroke-width="10" fill="#caa244"><path d="M1090 1050L1072 730M1135 1050L1117 730"/><ellipse cx="1048" cy="775" rx="23" ry="11"/><ellipse cx="1094" cy="775" rx="23" ry="11"/><ellipse cx="1050" cy="820" rx="23" ry="11"/><ellipse cx="1096" cy="820" rx="23" ry="11"/><ellipse cx="1095" cy="865" rx="23" ry="11"/><ellipse cx="1140" cy="865" rx="23" ry="11"/></g>
-<!-- heroic workers -->
-<path d="M75 1490L145 1190 275 1050 385 1070 485 1190 548 1490z" fill="#6c1a16"/><ellipse cx="327" cy="990" rx="82" ry="92" fill="#c4956f"/><path d="M245 970L275 910 345 888 398 920 414 970 370 940 312 947 275 985z" fill="#3e372f"/>
-<path d="M405 1490L492 1195 602 1082 712 1110 810 1230 868 1490z" fill="#393c3e"/><ellipse cx="642" cy="990" rx="82" ry="92" fill="#d0a17a"/><path d="M560 970L592 915 662 895 712 925 725 970 682 940 620 946 586 985z" fill="#50473a"/>
-<path d="M740 1305L860 1160 935 1210 1110 995 1152 1030 950 1360 865 1295 785 1370z" fill="#ad3024"/>
-<rect x="60" y="1305" width="1080" height="227" fill="#2f2e29"/><text x="600" y="1370" text-anchor="middle" fill="#f0dcac" font-family="Arial" font-size="45" font-weight="900">НАУЧНО-ТЕХНИЧЕСКИЙ ПРОГРЕСС</text><text x="600" y="1430" text-anchor="middle" fill="#dfc799" font-family="Arial" font-size="32" font-weight="700">КАЧЕСТВО ТРУДА • ЭКОНОМИЯ РЕСУРСОВ</text><text x="600" y="1492" text-anchor="middle" fill="#d0ad55" font-family="Arial" font-size="34" font-weight="900">ПЛАН • ДИСЦИПЛИНА • РЕЗУЛЬТАТ</text>
+<g transform="translate(660 497)" stroke="#b98c35" stroke-width="6" fill="#d5a94e">
+ <path d="M0 300L-18 30M38 300L20 24" fill="none"/>
+ <ellipse cx="-45" cy="68" rx="18" ry="9"/><ellipse cx="-12" cy="69" rx="18" ry="9"/><ellipse cx="-43" cy="105" rx="18" ry="9"/><ellipse cx="-9" cy="106" rx="18" ry="9"/><ellipse cx="-38" cy="143" rx="18" ry="9"/><ellipse cx="-3" cy="144" rx="18" ry="9"/>
+ <ellipse cx="-4" cy="60" rx="18" ry="9"/><ellipse cx="31" cy="62" rx="18" ry="9"/><ellipse cx="0" cy="98" rx="18" ry="9"/><ellipse cx="35" cy="100" rx="18" ry="9"/><ellipse cx="6" cy="137" rx="18" ry="9"/><ellipse cx="40" cy="139" rx="18" ry="9"/>
+</g>
+<!-- footer -->
+<rect x="30" y="844" width="708" height="138" fill="#2f302c"/>
+<rect x="45" y="858" width="678" height="110" fill="none" stroke="#d1ad55" stroke-width="3"/>
+<text x="384" y="898" text-anchor="middle" font-family="Arial,sans-serif" font-size="25" font-weight="900" fill="#f0dcaa">НАУЧНО-ТЕХНИЧЕСКИЙ ПРОГРЕСС</text>
+<text x="384" y="934" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="700" fill="#dfc496">ПЛАН • ДИСЦИПЛИНА • КАЧЕСТВО • РЕЗУЛЬТАТ</text>
+<rect width="768" height="1024" fill="url(#grain)" opacity=".3"/>
 </svg>
