@@ -76,8 +76,8 @@ for(const x of [-5.0,-3.35,-1.70,0,1.70,3.35,5.0]){
 
 /* party wall: large, unobstructed framed propaganda */
 const texLoader=new T.TextureLoader();
-const brezh=texLoader.load('./assets/brezhnev_1982.svg');brezh.colorSpace=T.SRGBColorSpace;
-const plan=texLoader.load('./assets/xi_five_year_plan_1981_1985.svg');plan.colorSpace=T.SRGBColorSpace;
+const brezh=texLoader.load('./assets/brezhnev_party_poster.jpg');brezh.colorSpace=T.SRGBColorSpace;
+const plan=texLoader.load('./assets/xi_five_year_plan_party_poster.jpg');plan.colorSpace=T.SRGBColorSpace;
 const glassMat=new T.MeshStandardMaterial({color:0xf6f2df,transparent:true,opacity:.07,roughness:.10,metalness:0});
 
 function framed(tex,x,y,w=2.55,h=3.42){
