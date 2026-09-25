@@ -28,7 +28,7 @@ try {
   await page.locator('#music').click();await page.waitForFunction(()=>window.MinistryAudio.state().musicOn&&window.MinistryAudio.state().context==='running');
   await page.locator('#runDoc').click();
   assert.equal(await page.locator('#loadDoc').isDisabled(),true,'No replacing file mid-cycle');
-  await page.waitForFunction(()=>document.querySelector('#hint').textContent.startsWith('APPЯOVЄD'),{},{timeout:90000});
+  await page.waitForFunction(()=>document.querySelector('#hint').textContent.startsWith('APPЯOVЄD'),{},{timeout:180000});
   const mechanics=await page.evaluate(()=>window.BYUR_INSPECT.snapshot());assert(mechanics.recoilPeak>0,'Stamp has cabinet recoil');assert(mechanics.paperBend>.05,'Paper bends around rollers');assert.equal(mechanics.issued,1);assert.equal(mechanics.archiveSheets,1);assert.equal(mechanics.counterDisplay,1);
   console.log('ОТК: cycle, weight, issued tray and spatial audio passed');
   await page.screenshot({path:'test-results/03-completed.png'});

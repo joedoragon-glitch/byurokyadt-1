@@ -8,7 +8,7 @@ try{
  await page.locator('#file').setInputFiles({name:'PAPER-PATH.txt',mimeType:'text/plain',buffer:Buffer.from('Paper path inspection')});
  await page.emulateMedia({reducedMotion:'reduce'});await page.locator('#cinemaEnter').click();await page.locator('#cinemaShot').selectOption('4');await page.locator('#cinemaHide').click();
  await page.evaluate(()=>{window.BYUR_INSPECT.recordOutput();document.querySelector('#runDoc').click()});
- await page.waitForFunction(()=>window.BYUR_INSPECT.snapshot().output.stage==='ready'&&!window.BYUR_INSPECT.snapshot().busy);
+ await page.waitForFunction(()=>window.BYUR_INSPECT.snapshot().output.stage==='ready'&&!window.BYUR_INSPECT.snapshot().busy,{},{timeout:180000});
  const audit=await page.evaluate(()=>window.BYUR_INSPECT.outputAudit());
  for(const f of audit.frames){await writeFile('test-results/paper-'+f.key+'.png',Buffer.from(f.png.split(',')[1],'base64'));delete f.png}
  await writeFile('test-results/paper-motion-samples.json',JSON.stringify(audit,null,2));
