@@ -15,6 +15,7 @@ try {
   assert.equal(await page.locator('#fatal').isVisible(),false,'Renderer must initialize');
   await page.waitForFunction(()=>window.BYUR_POSTERS?.brezhnev?.naturalWidth===768&&window.BYUR_POSTERS?.plan?.naturalHeight===1024);
   await page.screenshot({path:'test-results/01-room.png'});
+  const idleBefore=await page.evaluate(()=>window.BYUR_INSPECT.snapshot().frames);await page.waitForTimeout(800);const idleAfter=await page.evaluate(()=>window.BYUR_INSPECT.snapshot().frames);assert(idleAfter-idleBefore<=2,'Static room must not render continuously');
   await page.locator('#deskView').click();
   await page.waitForTimeout(850);
   await page.screenshot({path:'test-results/02-desk.png'});
@@ -70,9 +71,10 @@ try {
   await page.setViewportSize({width:390,height:844});await page.locator('#roomView').click();await page.waitForTimeout(450);await page.screenshot({path:'test-results/08-mobile.png'});
   assert.equal(await page.locator('#runDoc').isVisible(),true);
   assert.deepEqual(errors,[]);
-  await writeFile('test-results/result.json',JSON.stringify({passed:true,base,checks:['poster decode','WebGL scene','document selection','mechanical cycle','PNG certificate','reset','cached reload','offline reload','audio decode and controls','offline audio','cabinet dimensions','furniture collision','walking collision','narrow viewport'],state,sceneInfo},null,2));
+  await writeFile('test-results/result.json',JSON.stringify({passed:true,base,checks:['poster decode','WebGL scene','document selection','mechanical cycle','PNG certificate','reset','cached reload','offline reload','audio decode and controls','offline audio','cabinet dimensions','furniture collision','walking collision','narrow viewport','idle rendering'],state,sceneInfo},null,2));
   console.log('ОТК: all acceptance checks passed.');
 } catch(e) {
   await page.screenshot({path:'test-results/failure.png'}).catch(()=>{});
+  await writeFile('test-results/failure.json',JSON.stringify({error:String(e),errors,snapshot:await page.evaluate(()=>window.BYUR_INSPECT?.snapshot()).catch(()=>null)},null,2));
   console.error('ОТК ОШИБКА',e);throw e;
 } finally { await browser.close(); }
