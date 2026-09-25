@@ -2,7 +2,7 @@
 (()=>{
  let context,master,sfx,music,ambience,loading,musicSource,roomSource,windSource;
  let effectsOn=false,musicOn=false,volume=.65,cycling=false,nextTick=0,nextSteps=0;
- const buffers=new Map(),voices=new Set(),anchors={relay:[-.50,1.66,-1.29],feed:[-.17,1.11,-1.28],scan:[-.17,1.19,-1.28],stamp:[.39,1.15,-1.33],bell:[0,1.85,-1.32],wind:[-5.7,2.7,-2.6],tick:[0,.65,-6.4],step:[6.08,.4,-.8]};
+ const buffers=new Map(),voices=new Set(),anchors={relay:[-.50,1.66,-1.29],feed:[-.17,1.11,-1.28],scan:[-.17,1.19,-1.28],stamp:[.39,1.15,-1.33],bell:[0,1.85,-1.32],wind:[-5.7,2.7,-2.6],tick:[0,.65,-6.4],step:[6.24,.4,-.8]};
  const corridor={near:false,since:null,handled:false,nextApproach:0,passes:0,lastPass:null};
  const names=['relay','feed','scan','stamp','bell','room','ministry'];let listenerState=null,lastEvent=null;
  function gain(parent,value){const g=context.createGain();g.gain.value=value;g.connect(parent);return g}
@@ -32,7 +32,7 @@
  function setCycle(on){cycling=on;if(music)fade(music,musicOn?(cycling?.075:.15):0,.3)}
  function corridorPass(t,reason){
   const direction=Math.random()<.5?1:-1,positions=[];
-  for(let i=0;i<6;i++){const position=[6.08,.35,-.8+direction*(i-2.5)*.52];positions.push(position);positioned('step',position,.62*[.60,.82,1,1,.82,.60][i],i*.61)}
+  for(let i=0;i<6;i++){const position=[6.24,.35,-.8+direction*(i-2.5)*.52];positions.push(position);positioned('step',position,.62*[.60,.82,1,1,.82,.60][i],i*.61)}
   corridor.passes++;corridor.lastPass={time:t,reason,positions};corridor.handled=corridor.near;corridor.nextApproach=t+22;nextSteps=t+35+Math.random()*25;
  }
  setInterval(()=>{if(!effectsOn||!context||context.state!=='running'||document.hidden)return;const t=context.currentTime;
