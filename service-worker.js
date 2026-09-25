@@ -1,8 +1,8 @@
-const CACHE='byurokyadt-v7-local-4';
+const CACHE='byurokyadt-v7-local-5';
 const CORE=[
  './','./index.html','./styles.css','./manifest.webmanifest','./icons/icon.svg',
  './js/app.js','./vendor/three.min.js',
- './assets/brezhnev_1982.svg','./assets/xi_five_year_plan_1981_1985.svg'
+ './assets/brezhnev_party_poster.jpg','./assets/xi_five_year_plan_party_poster.jpg'
 ];
 
 self.addEventListener('install',event=>{
