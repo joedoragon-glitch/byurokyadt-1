@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#8e261e">
+<title>БЮРОКЯДТ-1 — V7 ПРИЛОЖЕНИЕ</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div id="loading">
+  <div class="loadCard">
+    <div class="loadEmblem">★</div>
+    <div class="loadTitle">БЮРОКЯДТ-1</div>
+    <div class="loadSub">ЗАГРУЗКА ПРИЛОЖЕНИЯ • ОПЕРАТОРСКАЯ № 3 • 1982</div>
+    <div id="loadTask" class="loadTask">ПРОВЕРКА ГОСУДАРСТВЕННОГО ПАКЕТА...</div>
+    <div class="loadBarShell"><div id="loadBar" class="loadBar"></div></div>
+    <div class="loadMeta"><span id="loadPct">0%</span><span id="loadBytes">ОЖИДАНИЕ ГОСПЛАНА</span></div>
+    <div id="loadTip" class="loadTip">БРЕЖНЕВ СМОТРИТ. COMЯДDЄ, LOOK PRODUCTIVE.</div>
+    <div class="loadFooter">МИНИСТЕРСТВО НЕНУЖНЫХ ПРОЦЕДУР • СКБ №41 • XI ПЯТИЛЕТКА</div>
+  </div>
+</div>
+<div id="fatal">ОШИБКА. ГОСУДАРСТВЕННАЯ ЗАГРУЗКА ИЄT.</div>
+<div id="app"></div>
+<div id="hud">
+  <b>МИНИСТЕРСТВО НЕНУЖНЫХ ПРОЦЕДУР • СКБ №41</b>
+  <div class="small">WASD = ХОДИТЬ • HOLD MOUSE = СМОТРЕТЬ • CLICK PART = ИСПОЛЬЗОВАТЬ<br>
+  CLICK ЛОТОК → ДОКУМЕНТ • ЯЄD КНОПКА → ПОДТВЕРДИТЬ • РЕЖИМ → СБРОС</div>
+</div>
+<div id="cross"></div>
+<div id="hint">COMЯДDЄ, ДPPЯOДCH MACHINE.</div>
+<button id="fs">ПОЛНЫЙ ЭКРАН</button>
+<button id="installBtn">УСТАНОВИТЬ ПРИЛОЖЕНИЕ</button>
+<div id="badge">V7 • ПРИЛОЖЕНИЕ</div>
+<div id="appMode">РЕЖИМ: ВЕБ</div>
+<input id="file" type="file">
+<script>
+(()=>{
+const L={
+ bar:document.getElementById('loadBar'),pct:document.getElementById('loadPct'),
+ task:document.getElementById('loadTask'),bytes:document.getElementById('loadBytes'),
+ tip:document.getElementById('loadTip'),root:document.getElementById('loading'),value:0,
+ tips:[
+  'БРЕЖНЕВ СМОТРИТ. COMЯДDЄ, LOOK PRODUCTIVE.',
+  'XI ПЯТИЛЕТКА ЇS LOADING. ПЛАН ЇS AHEAD OF REALITY BY APPROVED MARGIN.',
+  'ГОСПЛАН HДS ALLOCATED ENOUGH BYTES. REQUEST FOЯ MORE ЇS UNDER REVIEW.',
+  'ОТК ЇS MEASURING POSTER MARGIN ШЇTH RULER OF STATE IMPORTANCE.',
+  'СОГЛАСОВАНИЕ ШЇTH THREE COMMITTEES... TWO COMMITTEES ДЯЄ OИ ОБЕД.',
+  'ДЕФИЦИТ ИЄT. НУЖНЫЕ ФАЙЛЫ HДVЄ BЄЄИ ALLOCATED BY STATE.',
+  'МИНИСТЕРСТВО REQUEST FORM 27-Б TO AUTHORIZE LOADING OF FORM 27-Б.',
+  'ПОРТРЕТ БРЕЖНЕВА ЇS LEVEL. TILTING ЇT REQUIRE CENTRAL COMMITTEE APPROVAL.',
+  'ЗАГРУЗКА БЕТОНА... БЕТОН HДS ARRIVED ACCORDING TO XI ПЯТИЛЕТКА.',
+  'ЛАМПЫ ДНЕВНОГО СВЕТА ДЯЄ COLD. WARM LIGHT ЇS IDEOLOGICALLY SUSPICIOUS.',
+  'ПРОВЕРКА ПЕЧАТИ... ДА. ПЕЧАТЬ ЇS VERY OFFICIAL.',
+  'КРАСНЫЙ ТЕЛЕФОН ЇS FOR IMPORTANT CALL. YOU ДЯЄ ИOT IMPORTANT CALL.'
+ ],tipIndex:0,
+ set(p,msg,meta){this.value=Math.max(this.value,Math.min(100,p));this.bar.style.width=this.value+'%';this.pct.textContent=Math.round(this.value)+'%';if(msg)this.task.textContent=msg;if(meta!==undefined)this.bytes.textContent=meta},
+ stage(name){const map={engine_ready:[68,'3D ДВИЖОК ПРИНЯТ ГОСУДАРСТВОМ.'],renderer_ready:[76,'ЗАПУСК WEBGL ЦЕХА...'],materials_ready:[83,'ВЫДАЧА БЕТОНА, СТАЛИ ДИD БАКЕЛИТА...'],room_ready:[91,'ПРОВЕРКА БРЕЖНЕВА ДИD XI ПЯТИЛЕТКИ...'],machine_ready:[96,'СБОРКА БЮРОКЯДТ-1 OИ РАБОЧИЙ СТОЛ...'],first_frame:[100,'ПРИЁМКА ОПЕРАТОРСКОЙ. ГОТОВО.']};if(map[name])this.set(map[name][0],map[name][1],'ОТК: '+map[name][0]+'%')},
+ complete(){this.set(100,'ГОТОВО. COMЯДDЄ MAY ENTER ОПЕРАТОРСКАЯ.','ПРИЁМКА: ПРОЙДЕНА');setTimeout(()=>{this.root.classList.add('done');setTimeout(()=>this.root.style.display='none',380)},260)},
+ fatal(msg){const f=document.getElementById('fatal');f.style.display='grid';f.textContent=msg;this.root.style.display='none'}
+};
+window.BYUR_LOAD=L;
+setInterval(()=>{L.tipIndex=(L.tipIndex+1)%L.tips.length;L.tip.textContent=L.tips[L.tipIndex]},1700);
+
+const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+if(standalone)document.getElementById('appMode').textContent='РЕЖИМ: УСТАНОВЛЕННОЕ ПРИЛОЖЕНИЕ';
+let deferredPrompt=null;const installBtn=document.getElementById('installBtn');
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.classList.add('show')});
+installBtn.onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.classList.remove('show')};
+addEventListener('appinstalled',()=>document.getElementById('appMode').textContent='РЕЖИМ: ПРИЛОЖЕНИЕ УСТАНОВЛЕНО');
+
+async function registerSW(){
+ if(!('serviceWorker'in navigator))return;
+ L.set(3,'РЕГИСТРАЦИЯ ГОСУДАРСТВЕННОГО КЭША...','SERVICE WORKER');
+ await navigator.serviceWorker.register('./service-worker.js');
+ await navigator.serviceWorker.ready;
+ L.set(8,'ЛОКАЛЬНЫЙ СКЛАД ПРИЛОЖЕНИЯ ГОТОВ.','OFFLINE SHELL');
+}
+async function fetchTextProgress(url,start,end,label){
+ const r=await fetch(url,{cache:'no-cache'});if(!r.ok)throw new Error(url+' HTTP '+r.status);
+ const total=Number(r.headers.get('content-length'))||0;
+ if(!r.body||!r.body.getReader()){const t=await r.text();L.set(end,label,Math.round(t.length/1024)+' KB');return t}
+ const reader=r.body.getReader(),chunks=[];let got=0;
+ while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);got+=value.length;const frac=total?got/total:Math.min(.97,got/700000);L.set(start+(end-start)*frac,label,Math.round(got/1024)+' KB'+(total?' / '+Math.round(total/1024)+' KB':''))}
+ const all=new Uint8Array(got);let off=0;for(const c of chunks){all.set(c,off);off+=c.length}return new TextDecoder().decode(all)
+}
+async function preloadAsset(url,start,end,label){
+ const r=await fetch(url,{cache:'no-cache'});if(!r.ok)throw new Error(url+' HTTP '+r.status);
+ const total=Number(r.headers.get('content-length'))||0;let got=0;
+ if(r.body&&r.body.getReader()){const rd=r.body.getReader();while(true){const {done,value}=await rd.read();if(done)break;got+=value.length;const frac=total?got/total:.6;L.set(start+(end-start)*frac,label,Math.round(got/1024)+' KB')}}else{await r.blob()}
+ L.set(end,label,'LOCAL ASSET');
+}
+function runCode(code,name){(0,eval)(code+'\n//# sourceURL='+name)}
+(async()=>{
+ try{
+  L.set(1,'ЧТЕНИЕ МАНИФЕСТА ПРИЛОЖЕНИЯ...','V7');
+  await registerSW();
+  await preloadAsset('./assets/brezhnev_1982.svg',8,14,'ПОРТРЕТ БРЕЖНЕВА ДОСТАВЛЯЕТСЯ...');
+  await preloadAsset('./assets/xi_five_year_plan_1981_1985.svg',14,20,'XI ПЯТИЛЕТКА ДОСТАВЛЯЕТСЯ...');
+  const engine=await fetchTextProgress('./vendor/three.min.js',20,62,'ПОЛУЧЕНИЕ ЛОКАЛЬНОГО 3D ДВИЖКА...');
+  runCode(engine,'three-r152.min.js');if(!window.THREE)throw new Error('THREE global not created');
+  const app=await fetchTextProgress('./js/app.js',62,68,'КОД ОПЕРАТОРСКОЙ...');
+  runCode(app,'byurokyadt-app.js');
+ }catch(e){L.fatal('ОШИБКА ЗАГРУЗКИ V7: '+(e.message||e))}
+})();
+})();
+</script>
+</body></html>
