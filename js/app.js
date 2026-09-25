@@ -298,7 +298,7 @@ const outputUV=outPaper.geometry.attributes.uv.array.slice();let outputStage='id
 function feedOutput(head){
  outputHead=head;outPaper.visible=head>0;const a=outPaper.geometry.attributes.position,uv=outPaper.geometry.attributes.uv;
  for(let i=0;i<a.count;i++){const p=outputVertex(head,outputUV[i*2+1]);a.setXYZ(i,(outputUV[i*2]-.5)*1.15,p.y,p.z);uv.setY(i,p.v)}
- a.needsUpdate=uv.needsUpdate=true;outPaper.geometry.computeVertexNormals();outPaper.geometry.computeBoundingSphere();needsFrame=true;
+ a.needsUpdate=uv.needsUpdate=true;outPaper.geometry.computeVertexNormals();outPaper.geometry.computeBoundingBox();outPaper.geometry.computeBoundingSphere();needsFrame=true;
 }
 function outputSnapshot(){
  const a=outPaper.geometry.attributes.position;let clearance=Infinity;for(let i=0;i<a.count;i++)clearance=Math.min(clearance,a.getY(i)-outputHeight(a.getZ(i)));
@@ -400,7 +400,10 @@ const musicButton=document.getElementById('music');musicButton.onclick=async()=>
 document.getElementById('volume').oninput=e=>audio.setVolume(Number(e.target.value)/100);
 const st={cap:cap.position.z,inZ:inPaper.position.z,stampY:stamp.position.y,linkY:stampLink.position.y,scanX:scan.position.x};
 const wait=ms=>new Promise(r=>setTimeout(r,ms)),smooth=t=>t*t*(3-2*t);
-function tween(ms,fn,easing=smooth){return new Promise(res=>{const s=performance.now();function step(n){const t=Math.min(1,(n-s)/ms);fn(easing(t));needsFrame=true;t<1?requestAnimationFrame(step):res()}requestAnimationFrame(step)})}
+function tween(ms,fn,easing=smooth){return new Promise(res=>{let previous=performance.now(),elapsed=0;function step(n){
+ // Preserve visible feed/contact steps on slow devices and after a suspended tab.
+ const paperMoving=['printing','pressing','impact','delivery'].includes(outputStage);elapsed+=Math.max(0,Math.min(n-previous,paperMoving?100:Infinity));previous=n;
+ const t=Math.min(1,elapsed/ms);fn(easing(t));needsFrame=true;t<1?requestAnimationFrame(step):res()}requestAnimationFrame(step)})}
 let recoil=0,recoilPeak=0,knobTime=0;
 function tickWeight(dt){if(knobTime>0){knobTime=Math.max(0,knobTime-dt);resetKnob.rotation.z=-.55-.45*Math.sin(Math.min(1,knobTime/.24)*Math.PI);needsFrame=true}if(recoil>0){recoil=Math.max(0,recoil-dt);const t=.48-recoil,a=reducedMotion.matches?0:.0025*Math.exp(-t*10)*Math.sin(t*58);machine.rotation.x=a;machine.rotation.z=-a*.45;recoilPeak=Math.max(recoilPeak,Math.abs(a));needsFrame=true;if(!recoil){machine.rotation.set(0,0,0)}}}
 function setLamp(i,on){needsFrame=true;const m=lamps[i].material;m.emissive.setHex(on?[0x54ff66,0xffad35,0xd12620][i]:0);m.emissiveIntensity=on?2:0}
