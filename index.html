@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#8e261e">
-<title>БЮРОКЯДТ-1 — V7 ПРИЛОЖЕНИЕ</title>
+<title>БЮРОКЯДТ-1 — Операторская № 3</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./styles.css">
+<link rel="stylesheet" href="./styles.css?v=8.0">
 </head>
 <body>
 <div id="loading">
@@ -30,12 +30,22 @@
   CLICK ЛОТОК → ДОКУМЕНТ • ЯЄD КНОПКА → ПОДТВЕРДИТЬ • РЕЖИМ → СБРОС</div>
 </div>
 <div id="cross"></div>
-<div id="hint">COMЯДDЄ, ДPPЯOДCH MACHINE.</div>
+<div id="hint" role="status" aria-live="polite">COMЯДDЄ, ДPPЯOДCH MACHINE.</div>
+<nav id="viewControls" aria-label="ОСМОТР — view">
+  <button id="roomView">1 · КОМНАТА</button><button id="deskView">2 · К МАШИНЕ</button>
+  <button id="sound" aria-pressed="false">ЗВУК: ВЫКЛ</button>
+</nav>
+<section id="operator" aria-label="УПРАВЛЕНИЕ — operator controls">
+  <div class="operatorHead"><span>РАБОЧЕЕ МЕСТО № 03</span><span id="cycleCount">ВЫДАНО: 000</span></div>
+  <div class="operatorActions"><button id="loadDoc">F · ДОКУМЕНТ</button><button id="runDoc" class="redButton">↵ · ПРОВЕРКА</button><button id="resetDoc">R · СБРОС</button><button id="receipt" disabled>СПРАВКА ↗</button></div>
+  <div class="privacy">ФАЙЛ stays on this machine. МИНИСТЕРСТВО receive ИO uploads.</div>
+</section>
 <button id="fs">ПОЛНЫЙ ЭКРАН</button>
 <button id="installBtn">УСТАНОВИТЬ ПРИЛОЖЕНИЕ</button>
-<div id="badge">V7.2 • ПАРТИЙНЫЕ ПЛАКАТЫ</div>
+<div id="badge">V8 · ОПЫТНЫЙ ОБРАЗЕЦ</div>
 <div id="appMode">РЕЖИМ: ВЕБ</div>
 <input id="file" type="file">
+<dialog id="certificate"><div class="receiptHeader"><strong>СПРАВКА · CERTЇFЇCДTЄ</strong><button id="closeReceipt" aria-label="Close certificate">ЗАКРЫТЬ ×</button></div><canvas id="certificateCanvas" width="1280" height="1760"></canvas><button id="downloadReceipt" class="redButton">СОХРАНИТЬ · SAVE ПЕЧАТЬ</button></dialog>
 <script>
 (()=>{
 const L={
@@ -62,7 +72,7 @@ const L={
  fatal(msg){const f=document.getElementById('fatal');f.style.display='grid';f.textContent=msg;this.root.style.display='none'}
 };
 window.BYUR_LOAD=L;
-setInterval(()=>{L.tipIndex=(L.tipIndex+1)%L.tips.length;L.tip.textContent=L.tips[L.tipIndex]},1700);
+const tipTimer=setInterval(()=>{if(L.root.style.display==='none'){clearInterval(tipTimer);return}L.tipIndex=(L.tipIndex+1)%L.tips.length;L.tip.textContent=L.tips[L.tipIndex]},1700);
 
 const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
 if(standalone)document.getElementById('appMode').textContent='РЕЖИМ: УСТАНОВЛЕННОЕ ПРИЛОЖЕНИЕ';
@@ -74,7 +84,7 @@ addEventListener('appinstalled',()=>document.getElementById('appMode').textConte
 async function registerSW(){
  if(!('serviceWorker'in navigator))return;
  L.set(3,'РЕГИСТРАЦИЯ ГОСУДАРСТВЕННОГО КЭША...','SERVICE WORKER');
- await navigator.serviceWorker.register('./service-worker.js');
+ await navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'});
  await navigator.serviceWorker.ready;
  L.set(8,'ЛОКАЛЬНЫЙ СКЛАД ПРИЛОЖЕНИЯ ГОТОВ.','OFFLINE SHELL');
 }
@@ -106,19 +116,30 @@ function xhrProgress(url,start,end,label,responseType='text'){
  });
 }
 function fetchTextProgress(url,start,end,label){return xhrProgress(url,start,end,label,'text')}
-function preloadAsset(url,start,end,label){return xhrProgress(url,start,end,label,'blob')}
+window.BYUR_POSTERS={};
+async function preloadAsset(url,start,end,label,key){
+ const blob=await xhrProgress(url,start,end-1,label,'blob');
+ const objectURL=URL.createObjectURL(blob),img=new Image();
+ try{
+  img.src=objectURL;await img.decode();
+  if(img.naturalWidth<256||img.naturalHeight<256)throw new Error('POSTER SIZE ИЄT');
+  window.BYUR_POSTERS[key]=img;
+  L.set(end,label,img.naturalWidth+' × '+img.naturalHeight+' • ПРОВЕРЕНО');
+ }catch(e){throw new Error('ПЛАКАТ НЕ ЧИТАЕТСЯ: '+url+' — '+e.message)}
+ finally{URL.revokeObjectURL(objectURL)}
+}
 function runCode(code,name){(0,eval)(code+'\n//# sourceURL='+name)}
 (async()=>{
  try{
-  L.set(1,'ЧТЕНИЕ МАНИФЕСТА ПРИЛОЖЕНИЯ...','V7');
-  await registerSW();
-  await preloadAsset('./assets/brezhnev_party_poster.jpg',8,14,'ПОРТРЕТ БРЕЖНЕВА ДОСТАВЛЯЕТСЯ...');
-  await preloadAsset('./assets/xi_five_year_plan_party_poster.jpg',14,20,'XI ПЯТИЛЕТКА ДОСТАВЛЯЕТСЯ...');
+  L.set(1,'ЧТЕНИЕ МАНИФЕСТА ПРИЛОЖЕНИЯ...','V8');
+  await Promise.race([registerSW().catch(()=>{}),new Promise(resolve=>setTimeout(resolve,4000))]);
+  await preloadAsset('./assets/brezhnev-party-v8.jpg',8,14,'ПОРТРЕТ БРЕЖНЕВА ДОСТАВЛЯЕТСЯ...','brezhnev');
+  await preloadAsset('./assets/xi-plan-v8.jpg',14,20,'XI ПЯТИЛЕТКА ДОСТАВЛЯЕТСЯ...','plan');
   const engine=await fetchTextProgress('./vendor/three.min.js',20,62,'ПОЛУЧЕНИЕ ЛОКАЛЬНОГО 3D ДВИЖКА...');
   runCode(engine,'three-r152.min.js');if(!window.THREE)throw new Error('THREE global not created');
-  const app=await fetchTextProgress('./js/app.js',62,68,'КОД ОПЕРАТОРСКОЙ...');
+  const app=await fetchTextProgress('./js/app.js?v=8.0',62,68,'КОД ОПЕРАТОРСКОЙ...');
   runCode(app,'byurokyadt-app.js');
- }catch(e){L.fatal('ОШИБКА ЗАГРУЗКИ V7.2: '+(e.message||e))}
+ }catch(e){L.fatal('ОШИБКА ЗАГРУЗКИ V8: '+(e.message||e))}
 })();
 })();
 </script>

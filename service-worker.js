@@ -1,8 +1,9 @@
-const CACHE='byurokyadt-v7-local-5';
+const CACHE='byurokyadt-v8-0';
 const CORE=[
- './','./index.html','./styles.css','./manifest.webmanifest','./icons/icon.svg',
- './js/app.js','./vendor/three.min.js',
- './assets/brezhnev_party_poster.jpg','./assets/xi_five_year_plan_party_poster.jpg'
+ './','./index.html','./styles.css?v=8.0','./manifest.webmanifest','./icons/icon.svg',
+ './js/app.js?v=8.0','./vendor/three.min.js',
+ './assets/brezhnev-party-v8.jpg','./assets/xi-plan-v8.jpg',
+ './icons/icon-192.png','./icons/icon-512.png'
 ];
 
 self.addEventListener('install',event=>{
@@ -12,7 +13,7 @@ self.addEventListener('install',event=>{
 self.addEventListener('activate',event=>{
  event.waitUntil(
   caches.keys()
-   .then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))
+   .then(keys=>Promise.all(keys.filter(k=>k.startsWith('byurokyadt-')&&k!==CACHE).map(k=>caches.delete(k))))
    .then(()=>self.clients.claim())
  );
 });
@@ -27,9 +28,8 @@ self.addEventListener('fetch',event=>{
   event.respondWith(
    fetch(event.request,{cache:'no-cache'}).then(resp=>{
     if(resp&&resp.ok){
-     const copy=resp.clone();
-     caches.open(CACHE).then(c=>c.put(event.request,copy));
-     caches.open(CACHE).then(c=>c.put('./index.html',resp.clone()));
+     const copy=resp.clone(),indexCopy=resp.clone();
+     event.waitUntil(caches.open(CACHE).then(c=>Promise.all([c.put(event.request,copy),c.put('./index.html',indexCopy)])));
     }
     return resp;
    }).catch(()=>caches.match(event.request).then(hit=>hit||caches.match('./index.html')))
