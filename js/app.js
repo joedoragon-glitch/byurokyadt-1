@@ -5,8 +5,8 @@ const mobile=matchMedia('(max-width:800px)').matches||/Android|iPhone|iPad/i.tes
 const root=document.getElementById('app'),hint=document.getElementById('hint'),fileInput=document.getElementById('file');
 
 const scene=new T.Scene();scene.background=new T.Color(0x171711);scene.fog=new T.FogExp2(0x171711,.018);
-const camera=new T.PerspectiveCamera(62,innerWidth/innerHeight,.05,80);camera.position.set(0,1.68,4.25);camera.rotation.order='YXZ';
-let yaw=0,pitch=-.04;camera.rotation.set(pitch,yaw,0);
+const camera=new T.PerspectiveCamera(62,innerWidth/innerHeight,.05,80);camera.position.set(0,1.68,2.7);camera.rotation.order='YXZ';
+let yaw=0,pitch=.025;camera.rotation.set(pitch,yaw,0);
 
 let renderer;
 try{
@@ -75,16 +75,20 @@ for(const x of [-5.0,-3.35,-1.70,0,1.70,3.35,5.0]){
 }
 
 /* party wall: large, unobstructed framed propaganda */
-const texLoader=new T.TextureLoader();
-const brezh=texLoader.load('./assets/brezhnev_party_poster.jpg');brezh.colorSpace=T.SRGBColorSpace;
-const plan=texLoader.load('./assets/xi_five_year_plan_party_poster.jpg');plan.colorSpace=T.SRGBColorSpace;
+function posterTexture(key){
+ const img=window.BYUR_POSTERS?.[key];
+ if(!img?.naturalWidth)throw new Error('ПЛАКАТ НЕ ПРОШЁЛ ПРОВЕРКУ: '+key);
+ const tex=new T.Texture(img);tex.colorSpace=T.SRGBColorSpace;
+ tex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());tex.needsUpdate=true;return tex;
+}
+const brezh=posterTexture('brezhnev'),plan=posterTexture('plan');
 const glassMat=new T.MeshStandardMaterial({color:0xf6f2df,transparent:true,opacity:.07,roughness:.10,metalness:0});
 
 function framed(tex,x,y,w=2.55,h=3.42){
  box(w+.18,h+.18,.075,dark,x,y,-6.61);
  box(w+.09,h+.09,.052,steel2,x,y,-6.565);
- plane(w,h,new T.MeshStandardMaterial({map:tex,roughness:.69,metalness:.01}),x,y,-6.525);
- plane(w-.025,h-.025,glassMat,x,y,-6.505);
+ plane(w,h,new T.MeshStandardMaterial({map:tex,roughness:.88,metalness:0,emissive:0xffffff,emissiveMap:tex,emissiveIntensity:.16}),x,y,-6.525);
+ // Matte poster paper avoids reflections obscuring the printed artwork.
 }
 framed(brezh,-4.15,3.45,2.60,3.48);
 framed(plan,4.15,3.45,2.60,3.48);
@@ -100,8 +104,8 @@ for(const z of [-4.8,-1.7,1.4,4.5])box(11.7,.28,.34,ceilingBeam,0,5.72,z);
 for(const x of [-4.3,0,4.3])box(.30,.24,13.1,ceilingBeam,x,5.75,0);
 
 /* cold fluorescent luminaires nested between coffers */
-scene.add(new T.HemisphereLight(0xc9c7b8,0x23231f,1.18));
-const key=new T.DirectionalLight(0xf0f2eb,1.35);key.position.set(-2,6,4);key.castShadow=true;key.shadow.mapSize.set(mobile?1024:1536,mobile?1024:1536);scene.add(key);
+scene.add(new T.HemisphereLight(0xd6e0df,0x30312a,.95));
+const key=new T.DirectionalLight(0xf0f2eb,1.05);key.position.set(-2,6,4);key.castShadow=true;key.shadow.bias=-.0002;key.shadow.normalBias=.015;key.shadow.mapSize.set(mobile?1024:1536,mobile?1024:1536);scene.add(key);
 for(const x of [-3.1,0,3.1]){
  box(2.18,.09,.40,steel2,x,5.54,-.15);
  const tubeMat=M(0xf3f5ec,.02,.32,0xeef3ef,1.8);
@@ -110,23 +114,46 @@ for(const x of [-3.1,0,3.1]){
 }
 
 /* institutional furniture: metal archives, radiator, telephone, side desk */
-for(let row=0;row<3;row++)for(let col=0;col<4;col++){
- box(.72,.72,.58,dark,-4.55+col*.78,.46+row*.74,2.85);
- box(.40,.045,.025,steel2,-4.55+col*.78,.51+row*.74,3.15);
+for(let col=0;col<2;col++){
+ const x=-4.65+col*.79;box(.75,1.48,.62,M(0x657168,.32,.74),x,.74,-5.55);
+ for(let row=0;row<3;row++){
+  const y=.28+row*.46;box(.68,.41,.035,steel,x,y,-5.21);
+  box(.23,.035,.06,dark,x,y+.02,-5.17);
+  plane(.25,.10,sign([{text:'ДЕЛО '+(row+col*3+1),size:32}],'#c2b799','#34372c',null,400,160),x,y+.13,-5.184);
+ }
 }
-box(2.45,.08,.42,wood,3.95,.92,2.65);
-for(const x of [2.85,5.05])box(.10,.90,.10,dark,x,.43,2.65);
-box(.44,.24,.31,M(0x8c251d,.34,.55),4.55,1.08,2.62);
+box(1.7,.08,.65,wood,3.9,.86,-5.20);
+for(const x of [3.15,4.65])for(const z of [-5.43,-4.97])box(.07,.84,.07,dark,x,.42,z);
+const phoneRed=M(0x86291f,.18,.36);
+box(.43,.12,.32,phoneRed,4.18,.96,-5.2);
+cyl(.105,.035,black,4.18,1.04,-5.14,0,0,0,scene,28);
+for(const x of [3.96,4.4])box(.09,.13,.14,phoneRed,x,1.08,-5.29);
+box(.53,.08,.12,phoneRed,4.18,1.15,-5.29);
+for(let i=0;i<4;i++)box(.32,.035,.42,paper,3.48,.935+i*.036,-5.15);
+// Socket and skirting sit low; nothing crosses the poster faces.
+box(11.7,.11,.055,dark,0,.07,-6.66);
+plane(.26,.35,sign([{text:'220 В',size:40}],'#a8a898','#20251f',null,300,400),-1.75,.47,-6.535);
+
 
 /* long steel radiator low on back wall, clear of posters */
 const rad=M(0x77796f,.38,.67);
 for(let i=0;i<11;i++)box(.12,.70,.11,rad,-.60+i*.12,.62,-6.48);
 box(1.50,.06,.14,dark,0,.27,-6.48);box(1.50,.06,.14,dark,0,.97,-6.48);
 
-/* simple official wall clock on right return wall */
-const clockMat=sign([{text:'12       3',size:23},{text:'9        6',size:23}],'#d9d2bc','#1e1d18','#34342e',500,500);
-cyl(.35,.07,dark,5.88,4.72,-3.85,0,0,Math.PI/2,scene,40);
-plane(.57,.57,clockMat,5.82,4.72,-3.85,0,-Math.PI/2,0);
+/* Working wall clock: dial has real hour positions. */
+const clockMap=canvasTex(512,512,(g,w,h)=>{
+ g.fillStyle='#dbd7c6';g.fillRect(0,0,w,h);g.translate(w/2,h/2);
+ g.strokeStyle='#272e2a';g.lineWidth=8;g.beginPath();g.arc(0,0,242,0,Math.PI*2);g.stroke();
+ for(let i=0;i<60;i++){g.save();g.rotate(i*Math.PI/30);g.fillStyle='#343d35';g.fillRect(-2,-224,i%5===0?5:2,i%5===0?22:9);g.restore()}
+ g.fillStyle='#28342d';g.font='bold 41px Arial';g.textAlign='center';g.textBaseline='middle';
+ for(let i=1;i<=12;i++){const a=i*Math.PI/6;g.fillText(i,Math.sin(a)*175,-Math.cos(a)*175)}
+});
+cyl(.4,.07,dark,0,3.83,-6.60,Math.PI/2,0,0,scene,48);
+plane(.75,.75,new T.MeshStandardMaterial({map:clockMap,roughness:.9}),0,3.83,-6.549);
+const clockHands=[];
+for(const len of [.17,.27]){const pivot=new T.Group();pivot.position.set(0,3.83,-6.51);scene.add(pivot);box(.014,len,.014,dark,0,len/2,0,pivot);clockHands.push(pivot)}
+function updateClock(){const d=new Date();clockHands[0].rotation.z=-(d.getHours()%12+d.getMinutes()/60)*Math.PI/6;clockHands[1].rotation.z=-(d.getMinutes()+d.getSeconds()/60)*Math.PI/30}
+updateClock();setInterval(updateClock,1000);
 
 window.BYUR_LOAD?.stage('room_ready');
 
@@ -184,33 +211,89 @@ function drawOut(name,serial){og.fillStyle='#ded3b3';og.fillRect(0,0,850,620);og
 
 window.BYUR_LOAD?.stage('machine_ready');
 
-/* mechanics */
-let current=null,busy=false;const st={cap:cap.position.z,inZ:inPaper.position.z,outZ:outPaper.position.z,stampY:stamp.position.y,linkY:stampLink.position.y,scanX:scan.position.x};
+/* Mechanics and operator controls. Files remain entirely local. */
+let current=null,busy=false,certificateReady=false,serial='';
+const ui=Object.fromEntries(['loadDoc','runDoc','resetDoc','receipt','certificate','certificateCanvas','cycleCount','sound','roomView','deskView'].map(id=>[id,document.getElementById(id)]));
+let issued=0;try{issued=Number(localStorage.getItem('byur-issued')||0)||0}catch{}
+function updateCount(){ui.cycleCount.textContent='ВЫДАНО: '+String(issued).padStart(3,'0')}updateCount();
+function controls(){ui.loadDoc.disabled=ui.runDoc.disabled=ui.resetDoc.disabled=busy;ui.receipt.disabled=!certificateReady||busy}
+function status(text){hint.textContent=text}
+let audioContext=null,soundOn=false;
+function sound(freq,duration=.08,type='square',volume=.025){
+ if(!soundOn)return;
+ try{audioContext??=new (window.AudioContext||window.webkitAudioContext)();audioContext.resume();const o=audioContext.createOscillator(),gain=audioContext.createGain(),t=audioContext.currentTime;o.type=type;o.frequency.setValueAtTime(freq,t);o.frequency.exponentialRampToValueAtTime(Math.max(25,freq*.6),t+duration);gain.gain.setValueAtTime(volume,t);gain.gain.exponentialRampToValueAtTime(.0001,t+duration);o.connect(gain);gain.connect(audioContext.destination);o.start();o.stop(t+duration)}catch{}
+}
+ui.sound.onclick=()=>{soundOn=!soundOn;ui.sound.textContent='ЗВУК: '+(soundOn?'ВКЛ':'ВЫКЛ');ui.sound.setAttribute('aria-pressed',String(soundOn));sound(620)};
+const st={cap:cap.position.z,inZ:inPaper.position.z,outZ:outPaper.position.z,stampY:stamp.position.y,linkY:stampLink.position.y,scanX:scan.position.x};
 const wait=ms=>new Promise(r=>setTimeout(r,ms)),smooth=t=>t*t*(3-2*t);
 function tween(ms,fn){return new Promise(res=>{const s=performance.now();function step(n){const t=Math.min(1,(n-s)/ms);fn(smooth(t));t<1?requestAnimationFrame(step):res()}requestAnimationFrame(step)})}
 function setLamp(i,on){const m=lamps[i].material;m.emissive.setHex(on?[0x54ff66,0xffad35,0xd12620][i]:0);m.emissiveIntensity=on?2:0}
 function resetVisual(){setLamp(1,false);setLamp(2,false);cap.position.z=st.cap;scan.position.x=st.scanX;stamp.position.y=st.stampY;stampLink.position.y=st.linkY;inPaper.position.z=st.inZ;outPaper.position.z=st.outZ;outPaper.visible=false;g1.rotation.z=g2.rotation.z=T.MathUtils.degToRad(28)}
 async function gauges(a,b){const s1=g1.rotation.z,s2=g2.rotation.z,e1=T.MathUtils.degToRad(28-56*a),e2=T.MathUtils.degToRad(28-56*b);await tween(700,t=>{g1.rotation.z=s1+(e1-s1)*t;g2.rotation.z=s2+(e2-s2)*t})}
-async function run(){if(busy)return;if(!current){setLamp(2,true);crt(['ОШИБКА.','','ДОКУМЕНТ ИЄT.']);return}busy=true;setLamp(2,false);setLamp(1,true);
+function createCertificate(name,number){
+ const c=ui.certificateCanvas,g=c.getContext('2d');g.fillStyle='#ede4c9';g.fillRect(0,0,c.width,c.height);
+ g.strokeStyle='#383c31';g.lineWidth=3;g.strokeRect(54,54,1172,1652);g.strokeRect(66,66,1148,1628);
+ g.textAlign='center';g.fillStyle='#98382c';g.font='bold 76px serif';g.fillText('★',640,185);
+ g.fillStyle='#30392f';g.font='bold 28px monospace';g.fillText('МИНИСТЕРСТВО НЕНУЖНЫХ ПРОЦЕДУР',640,255);
+ g.font='22px monospace';g.fillText('СПЕЦИАЛЬНОЕ КОНСТРУКТОРСКОЕ БЮРО № 41',640,299);
+ g.font='bold 92px serif';g.fillText('СПРАВКА',640,470);g.font='28px monospace';g.fillText('№ 27-Б / '+number+'     •     1982',640,534);
+ g.textAlign='left';g.font='25px monospace';g.fillText('ПРЕДСТАВЛЕННЫЙ ДОКУМЕНТ',130,675);
+ let size=38;while(size>16){g.font='bold '+size+'px monospace';if(g.measureText(name).width<1000)break;size--}
+ const clipped=name.length>100?name.slice(0,97)+'…':name;g.fillText(clipped,130,742,1000);
+ g.font='26px monospace';g.fillText('АНАЛИЗ                       ПРОЙДЕН',130,875);g.fillText('ПРОВЕРКА                     ЗАВЕРШЕНА',130,935);g.fillText('БЮРОКРАТИЧЕСКАЯ УВЕРЕННОСТЬ   100 %',130,995);
+ g.save();g.translate(640,1208);g.rotate(-.055);g.strokeStyle='#993c30';g.lineWidth=9;g.strokeRect(-465,-98,930,196);g.strokeRect(-451,-84,902,168);g.fillStyle='#993c30';g.textAlign='center';g.font='bold 43px monospace';g.fillText('ДОКУМЕНТ ЯВЛЯЕТСЯ',0,-13);g.font='bold 59px monospace';g.fillText('ДОКУМЕНТОМ',0,61);g.restore();
+ g.font='25px monospace';g.fillStyle='#30392f';g.fillText('ОПЕРАТОРСКАЯ № 3',130,1480);g.fillText('ПЕЧАТЬ: БЮРОКЯДТ-1',130,1530);
+ g.font='20px monospace';g.textAlign='center';g.fillText('ПОВТОРНАЯ ПРОВЕРКА ПОДТВЕРДИТ ПРЕДЫДУЩУЮ ПРОВЕРКУ.',640,1620);
+}
+function showCertificate(){if(certificateReady&&!busy){ui.certificate.showModal();sound(350,.08,'sine')}}
+ui.receipt.onclick=showCertificate;outPaper.userData.action='receipt';interactives.push(outPaper);
+document.getElementById('closeReceipt').onclick=()=>ui.certificate.close();
+document.getElementById('downloadReceipt').onclick=()=>{ui.certificateCanvas.toBlob(blob=>{if(!blob)return;const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='SPRAVKA-27B-'+serial+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)},'image/png')};
+async function run(){
+ if(busy)return;
+ if(!current){setLamp(2,true);crt(['ОШИБКА.','','ДОКУМЕНТ ИЄT.']);status('ОШИБКА. First provide ДОКУМЕНТ, товаЯish.');sound(90,.22);return}
+ busy=true;certificateReady=false;resetVisual();controls();setLamp(1,true);sound(160,.09);
+ try{
  await tween(110,t=>cap.position.z=st.cap-.10*t);await tween(140,t=>cap.position.z=st.cap-.10*(1-t));
- crt(['АНАЛИЗ...','','ОБРАБОТКА: 20%']);await Promise.all([tween(1700,t=>{inPaper.position.z=st.inZ+(-.58-st.inZ)*t;rollers[0].rotation.x+=.22;rollers[1].rotation.x-=.22}),gauges(.28,.34)]);
- crt(['АНАЛИЗ...','','СКАНЕР WORKЇИG.']);await tween(1350,t=>{scan.position.x=-.82+1.64*t;lens.material.emissiveIntensity=2.2+.5*Math.sin(t*18)});await tween(550,t=>scan.position.x=.82-1.64*t);
- crt(['ПРОВЕРКА...','','ОБРАБОТКА: 68%']);await gauges(.66,.72);await wait(500);
- crt(['ПЕЧАТЬ...','','OFFЇCЇДL ПЕЧАТЬ.']);const serial=String(Math.floor(100000+Math.random()*899999));drawOut(current.name,serial);
- await tween(330,t=>{stamp.position.y=st.stampY+(.02-st.stampY)*t;stampLink.position.y=st.linkY-.20*t});await wait(120);await tween(420,t=>{stamp.position.y=.02+(st.stampY-.02)*t;stampLink.position.y=st.linkY-.20*(1-t)});
- outPaper.visible=true;outPaper.position.z=-.55;await tween(1300,t=>{outPaper.position.z=-.55+.95*t;outRollers[0].rotation.x+=.20;outRollers[1].rotation.x-=.20});await gauges(1,1);setLamp(1,false);
- crt(['ПРОВЕРКА ЗАВЕРШЕНА.','','СТАТУС: ХОРОШО.','','ДОКУМЕНТ ЯВЛЯЕТСЯ ДОКУМЕНТОМ.']);hint.textContent='ГОТОВО. СПАСИБО, COMЯДDЄ.';busy=false}
-function reset(){if(busy)return;current=null;fileInput.value='';inPaper.visible=false;resetVisual();crt(['БЮРОКЯДТ-1','ВНИМАНИЕ.','СИСТЕМА ГОТОВА.']);hint.textContent='COMЯДDЄ, CLICK INPUT ЛОТОК.'}
-fileInput.onchange=()=>{if(!fileInput.files[0])return;current=fileInput.files[0];drawInput(current.name);inPaper.visible=true;inPaper.position.z=st.inZ;crt(['ДОКУМЕНТ ПРИНЯТ.','','PЯЄSS ПОДТВЕРДИТЬ.']);setLamp(2,false)};
+ status('АНАЛИЗ · Machine consider existence of ДОКУМЕНТ.');crt(['АНАЛИЗ...','','ОБРАБОТКА: 20%']);sound(76,1.7,'sawtooth',.018);
+ await Promise.all([tween(1700,t=>{inPaper.position.z=st.inZ+(-.58-st.inZ)*t;rollers[0].rotation.x+=.22;rollers[1].rotation.x-=.22}),gauges(.28,.34)]);
+ crt(['АНАЛИЗ...','','СКАНЕР WORKЇИG.']);sound(240,1.3,'triangle',.025);await tween(1350,t=>{scan.position.x=-.82+1.64*t;lens.material.emissiveIntensity=2.2+.5*Math.sin(t*18)});await tween(550,t=>scan.position.x=.82-1.64*t);
+ status('ПРОВЕРКА · Second department confirm first department.');crt(['ПРОВЕРКА...','','ОБРАБОТКА: 68%']);await gauges(.66,.72);await wait(500);
+ status('ПЕЧАТЬ · State apply physical certainty.');crt(['ПЕЧАТЬ...','','OFFЇCЇДL ПЕЧАТЬ.']);serial=String(Math.floor(100000+Math.random()*900000));drawOut(current.name,serial);
+ await tween(330,t=>{stamp.position.y=st.stampY+(.02-st.stampY)*t;stampLink.position.y=st.linkY-.20*t});sound(65,.19,'sawtooth',.11);await wait(120);await tween(420,t=>{stamp.position.y=.02+(st.stampY-.02)*t;stampLink.position.y=st.linkY-.20*(1-t)});
+ outPaper.visible=true;outPaper.position.z=-.55;sound(85,1.3,'sawtooth',.017);await tween(1300,t=>{outPaper.position.z=-.55+.95*t;outRollers[0].rotation.x+=.20;outRollers[1].rotation.x-=.20});await gauges(1,1);setLamp(1,false);
+ crt(['ПРОВЕРКА ЗАВЕРШЕНА.','','СТАТУС: ХОРОШО.','','ДОКУМЕНТ ЯВЛЯЕТСЯ ДОКУМЕНТОМ.']);
+ createCertificate(current.name,serial);certificateReady=true;issued++;try{localStorage.setItem('byur-issued',String(issued))}catch{}updateCount();
+ status('ГОТОВО · СПРАВКА ready. Collect approved certainty.');sound(780,.18,'sine');
+ }catch(e){setLamp(2,true);status('ОШИБКА · Temporary deviation. СБРОС and retry.');console.error(e)}
+ finally{busy=false;controls()}
+}
+function reset(){if(busy)return;current=null;certificateReady=false;fileInput.value='';inPaper.visible=false;resetVisual();controls();crt(['БЮРОКЯДТ-1','ВНИМАНИЕ.','СИСТЕМА ГОТОВА.']);status('COMЯДDЄ, CLICK INPUT ЛОТОК.');sound(120)}
+function loadDocument(){if(!busy)fileInput.click()}
+ui.loadDoc.onclick=loadDocument;ui.runDoc.onclick=run;ui.resetDoc.onclick=reset;
+fileInput.onchange=()=>{if(busy||!fileInput.files[0])return;resetVisual();certificateReady=false;current=fileInput.files[0];drawInput(current.name);inPaper.visible=true;inPaper.position.z=st.inZ;crt(['ДОКУМЕНТ ПРИНЯТ.','','PЯЄSS ПОДТВЕРДИТЬ.']);setLamp(2,false);status('ПРИНЯТ · '+current.name+' · PЯЄSS ПРОВЕРКА.');controls();sound(430,.10,'sine')};
+let viewMoving=false;
+async function setView(desk){if(viewMoving)return;viewMoving=true;const start=camera.position.clone(),end=new T.Vector3(0,desk?1.58:1.68,desk ? .32 : 2.7),sy=yaw,sp=pitch,ep=desk?-.025:.025;await tween(700,t=>{camera.position.lerpVectors(start,end,t);yaw=sy*(1-t);pitch=sp+(ep-sp)*t;camera.rotation.set(pitch,yaw,0)});viewMoving=false}
+ui.roomView.onclick=()=>setView(false);ui.deskView.onclick=()=>setView(true);
+controls();
 
 /* interaction */
-const ray=new T.Raycaster(),mouse=new T.Vector2();renderer.domElement.onclick=e=>{if(dragMoved){dragMoved=false;return}const r=renderer.domElement.getBoundingClientRect();mouse.x=(e.clientX-r.left)/r.width*2-1;mouse.y=-(e.clientY-r.top)/r.height*2+1;ray.setFromCamera(mouse,camera);const hits=ray.intersectObjects(interactives,true);if(!hits.length)return;let o=hits[0].object;while(o&&!o.userData.action)o=o.parent;if(!o)return;if(o.userData.action==='load'&&!busy)fileInput.click();if(o.userData.action==='confirm')run();if(o.userData.action==='reset')reset()};
+const ray=new T.Raycaster(),mouse=new T.Vector2();renderer.domElement.onclick=e=>{if(dragMoved){dragMoved=false;return}const r=renderer.domElement.getBoundingClientRect();mouse.x=(e.clientX-r.left)/r.width*2-1;mouse.y=-(e.clientY-r.top)/r.height*2+1;ray.setFromCamera(mouse,camera);const hits=ray.intersectObjects(interactives,true);if(!hits.length)return;let o=hits[0].object;while(o&&!o.userData.action)o=o.parent;if(!o)return;if(o.userData.action==='load'&&!busy)fileInput.click();if(o.userData.action==='confirm')run();if(o.userData.action==='reset')reset();if(o.userData.action==='receipt')showCertificate()};
 
 /* look / walk */
-let dragging=false,lastX=0,lastY=0,dragMoved=false;renderer.domElement.onmousedown=e=>{dragging=true;lastX=e.clientX;lastY=e.clientY};addEventListener('mouseup',()=>dragging=false);addEventListener('mousemove',e=>{if(!dragging)return;const dx=e.clientX-lastX,dy=e.clientY-lastY;if(Math.abs(dx)+Math.abs(dy)>3)dragMoved=true;yaw-=dx*.004;pitch=Math.max(-1.05,Math.min(.72,pitch-dy*.003));camera.rotation.y=yaw;camera.rotation.x=pitch;lastX=e.clientX;lastY=e.clientY});
-const keys={};addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
-function move(dt){const sp=2.4*dt,f=new T.Vector3(-Math.sin(yaw),0,-Math.cos(yaw)),r=new T.Vector3(Math.cos(yaw),0,-Math.sin(yaw));if(keys.w)camera.position.addScaledVector(f,sp);if(keys.s)camera.position.addScaledVector(f,-sp);if(keys.a)camera.position.addScaledVector(r,-sp);if(keys.d)camera.position.addScaledVector(r,sp);camera.position.x=Math.max(-5.4,Math.min(5.4,camera.position.x));camera.position.z=Math.max(-5.9,Math.min(6.2,camera.position.z))}
+let dragging=false,lastX=0,lastY=0,dragMoved=false;renderer.domElement.onmousedown=e=>{dragging=true;lastX=e.clientX;lastY=e.clientY};addEventListener('mouseup',()=>dragging=false);addEventListener('mousemove',e=>{if(!dragging||viewMoving)return;const dx=e.clientX-lastX,dy=e.clientY-lastY;if(Math.abs(dx)+Math.abs(dy)>3)dragMoved=true;yaw-=dx*.004;pitch=Math.max(-1.05,Math.min(.72,pitch-dy*.003));camera.rotation.y=yaw;camera.rotation.x=pitch;lastX=e.clientX;lastY=e.clientY});
+const keys={};addEventListener('keydown',e=>{
+ if(ui.certificate.open||/INPUT|BUTTON|TEXTAREA/.test(e.target.tagName))return;
+ const k=e.key.toLowerCase();keys[k]=true;if(e.repeat)return;
+ if(k==='f'){e.preventDefault();loadDocument()}if(k==='r')reset();
+ if(k==='enter'){e.preventDefault();run()}if(k==='1')setView(false);if(k==='2')setView(true);
+});addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);addEventListener('blur',()=>{for(const k in keys)keys[k]=false;dragging=false});
+function move(dt){if(viewMoving||ui.certificate.open)return;const old=camera.position.clone();const sp=2.4*dt,f=new T.Vector3(-Math.sin(yaw),0,-Math.cos(yaw)),r=new T.Vector3(Math.cos(yaw),0,-Math.sin(yaw));if(keys.w)camera.position.addScaledVector(f,sp);if(keys.s)camera.position.addScaledVector(f,-sp);if(keys.a)camera.position.addScaledVector(r,-sp);if(keys.d)camera.position.addScaledVector(r,sp);camera.position.x=Math.max(-5.4,Math.min(5.4,camera.position.x));camera.position.z=Math.max(-5.9,Math.min(6.2,camera.position.z));if(Math.abs(camera.position.x)<1.3&&camera.position.z>-2.4&&camera.position.z<-.68)camera.position.copy(old)}
 document.getElementById('fs').onclick=()=>document.fullscreenElement?document.exitFullscreen?.():document.documentElement.requestFullscreen?.();
+renderer.domElement.style.touchAction='none';
+let tx=0,ty=0;
+renderer.domElement.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;dragMoved=false},{passive:true});
+renderer.domElement.addEventListener('touchmove',e=>{if(viewMoving)return;const t=e.touches[0],dx=t.clientX-tx,dy=t.clientY-ty;if(Math.abs(dx)+Math.abs(dy)>2)dragMoved=true;yaw-=dx*.004;pitch=Math.max(-1.05,Math.min(.72,pitch-dy*.003));camera.rotation.set(pitch,yaw,0);tx=t.clientX;ty=t.clientY},{passive:true});
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 resetVisual();renderer.render(scene,camera);window.BYUR_LOAD?.stage('first_frame');setTimeout(()=>window.BYUR_LOAD?.complete(),180);
 let last=performance.now();(function loop(now){const dt=Math.min(.04,(now-last)/1000);last=now;move(dt);renderer.render(scene,camera);requestAnimationFrame(loop)})(last);

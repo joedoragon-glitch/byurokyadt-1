@@ -1,0 +1,53 @@
+// End-to-end acceptance gate. Run on a Chromium runner with WebGL support.
+import { chromium } from 'playwright';
+import assert from 'node:assert/strict';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+const base = process.env.BASE_URL || 'http://127.0.0.1:8000/';
+const browser = await chromium.launch();
+const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, acceptDownloads:true });
+const page = await context.newPage();
+const errors=[];page.on('pageerror',e=>errors.push(e.message));
+await mkdir('test-results',{recursive:true});
+try {
+  await page.goto(base,{waitUntil:'load'});
+  await page.locator('#loading').waitFor({state:'hidden',timeout:60000});
+  assert.equal(await page.locator('#fatal').isVisible(),false,'Renderer must initialize');
+  await page.waitForFunction(()=>window.BYUR_POSTERS?.brezhnev?.naturalWidth===768&&window.BYUR_POSTERS?.plan?.naturalHeight===1024);
+  await page.screenshot({path:'test-results/01-room.png'});
+  await page.locator('#deskView').click();
+  await page.waitForTimeout(850);
+  await page.screenshot({path:'test-results/02-desk.png'});
+  await page.locator('#runDoc').click();
+  await page.waitForFunction(()=>document.querySelector('#hint').textContent.startsWith('ОШИБКА'));
+  const sample='COMRADE DOCUMENT\nThis document requests certification of its own existence.\n';
+  await page.locator('#file').setInputFiles({name:'FORM-27B.txt',mimeType:'text/plain',buffer:Buffer.from(sample)});
+  await page.locator('#sound').click();
+  await page.locator('#runDoc').click();
+  assert.equal(await page.locator('#loadDoc').isDisabled(),true,'No replacing file mid-cycle');
+  await page.waitForFunction(()=>document.querySelector('#hint').textContent.startsWith('ГОТОВО'),{},{timeout:30000});
+  await page.screenshot({path:'test-results/03-completed.png'});
+  await page.locator('#receipt').click();
+  await page.screenshot({path:'test-results/04-certificate.png'});
+  const downloaded=page.waitForEvent('download');await page.locator('#downloadReceipt').click();
+  const download=await downloaded;await download.saveAs('test-results/certificate.png');
+  const png=await readFile('test-results/certificate.png');assert.equal(png.subarray(1,4).toString(),'PNG');
+  await page.locator('#closeReceipt').click();
+  await page.locator('#file').setInputFiles({name:'SECOND.txt',mimeType:'text/plain',buffer:Buffer.from('Second document')});
+  assert.equal(await page.locator('#receipt').isDisabled(),true,'New file clears previous certificate');
+  await page.locator('#resetDoc').click();assert.equal(await page.locator('#file').inputValue(),'');
+  await page.reload();await page.locator('#loading').waitFor({state:'hidden',timeout:60000});
+  assert.equal(await page.locator('#fatal').isVisible(),false);
+  const state=await page.evaluate(async()=>({cache:await caches.keys(),worker:!!navigator.serviceWorker.controller,manifest:await fetch('./manifest.webmanifest').then(r=>r.json())}));
+  assert(state.worker);assert(state.cache.includes('byurokyadt-v8-0'));assert.equal(state.manifest.display,'standalone');
+  await context.setOffline(true);await page.reload();await page.locator('#loading').waitFor({state:'hidden',timeout:60000});
+  assert.equal(await page.locator('#fatal').isVisible(),false,'Offline shell renders');
+  await page.screenshot({path:'test-results/05-offline.png'});
+  await context.setOffline(false);
+  await page.setViewportSize({width:1100,height:700});await page.screenshot({path:'test-results/06-chromebook.png'});
+  assert.deepEqual(errors,[]);
+  await writeFile('test-results/result.json',JSON.stringify({passed:true,base,checks:['poster decode','WebGL scene','document selection','mechanical cycle','PNG certificate','reset','cached reload','offline reload'],state},null,2));
+  console.log('ОТК: all acceptance checks passed.');
+} catch(e) {
+  await page.screenshot({path:'test-results/failure.png'}).catch(()=>{});
+  console.error('ОТК ОШИБКА',e);throw e;
+} finally { await browser.close(); }

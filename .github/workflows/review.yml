@@ -1,0 +1,30 @@
+name: Inspect review build
+on:
+  push:
+    branches: ["v8-operator-review"]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Install acceptance runner
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Inspect review build without deploying
+        run: |
+          python3 -m http.server 8000 &
+          npm test
+      - name: Save inspection evidence
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: byurokyadt-review
+          path: test-results/
+          retention-days: 14
