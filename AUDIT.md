@@ -1,3 +1,23 @@
+# V10 audit — prepared, not published
+
+Requested scope: cinematic inspection and photographs, mechanical weight and positional sound, winter atmosphere, and a persistent receiving tray/counter. Existing document-confirmation functions stay intact.
+
+## Completed local verification
+
+- JavaScript syntax checks and whitespace/diff checks pass.
+- The production cinematic controller was exercised with the vendored Three.js math and actual scene collision map. All 64 routes between eight viewpoints completed, with 10,664 sampled camera positions clear of furniture and walls. Camera position/FOV restored on exit.
+- Source review corrected stamp/paper contact and ejection continuity, a counter/label overlap, camera keyboard focus after using the view selector, a range-input browser-test interaction, and movement interruption of the guided tour.
+- Camera capture restores render size/pixel ratio in a finally block and exports scene pixels without UI. Continuous rendering is restricted to active movement and mechanisms; daylight requests at most one frame per second except during a brief passing-light event.
+- A new browser acceptance suite covers travel, photographs, camera restoration, guided tour, manual collision, reduced motion, portrait layout, offline export and spatial/winter audio. Existing end-to-end checks additionally verify recoil, paper deformation, counter and tray persistence.
+
+## Pending validation / publication
+
+Rendered visual review, the complete browser suites, and live deployment are NOT yet complete. Automatic approval review rejected uploading the modified source and workflows to the existing public repository, including after ownership/public visibility and the matching V9 commit were verified. The requested next authorization is to upload V10 to this same repository, run its review workflow, fix audit findings, and merge/publish the passing release to its existing GitHub Pages site.
+
+No V10 source has been uploaded and V9 remains live. This document does not claim a successful browser audit.
+
+---
+
 # V9 release audit
 
 Scope: Joel requested a complete aesthetic pass matching the two original illustrations, a richer office, original audio, readable Hollywood Soviet English controls, collision protection, and an autonomous audit/debug/release pass.
