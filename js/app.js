@@ -34,29 +34,100 @@ function sign(lines,bg='#888777',fg='#171713',border='#3b3a33',W=900,H=400){
 }
 window.BYUR_LOAD?.stage('materials_ready');
 
-/* ROOM — party-approved brutalism */
-box(12,.18,14,M(0x49463f,.04,.93),0,-.09,0);box(12,6,.2,concrete,0,3,-6.8);box(.2,6,14,concrete,-6,3,0);box(.2,6,14,concrete,6,3,0);box(12,.2,14,M(0x44443f,.06,.9),0,6,0);
-for(const x of [-4.5,-1.5,1.5,4.5])box(.16,6,.24,dark,x,3,-6.66);
-box(10.8,.10,.18,dark,0,1.1,-6.63);box(10.8,.10,.18,dark,0,5.1,-6.63);
+/* ROOM — PARTY-COMPLIANT LATE-SOVIET BRUTALIST RENOVATION */
+const concreteTex=canvasTex(512,512,(g,w,h)=>{
+ g.fillStyle='#8b897f';g.fillRect(0,0,w,h);
+ const img=g.getImageData(0,0,w,h),d=img.data;
+ for(let i=0;i<d.length;i+=4){const n=(Math.random()-.5)*18;d[i]=Math.max(0,Math.min(255,d[i]+n));d[i+1]=Math.max(0,Math.min(255,d[i+1]+n));d[i+2]=Math.max(0,Math.min(255,d[i+2]+n))}
+ g.putImageData(img,0,0);
+ g.globalAlpha=.18;g.strokeStyle='#4f4e49';g.lineWidth=1;
+ for(let i=0;i<75;i++){const x=Math.random()*w,y=Math.random()*h,l=12+Math.random()*80;g.beginPath();g.moveTo(x,y);g.lineTo(x+l,y+(Math.random()-.5)*4);g.stroke()}
+});
+concreteTex.wrapS=concreteTex.wrapT=T.RepeatWrapping;concreteTex.repeat.set(3.2,2.2);
+const wallConcrete=new T.MeshStandardMaterial({map:concreteTex,color:0xb3b0a5,metalness:.01,roughness:.97});
 
+const floorTex=canvasTex(512,512,(g,w,h)=>{
+ g.fillStyle='#393a36';g.fillRect(0,0,w,h);
+ for(let y=0;y<h;y+=64)for(let x=0;x<w;x+=64){const v=48+Math.floor(Math.random()*18);g.fillStyle='rgb('+v+','+(v-1)+','+(v-4)+')';g.fillRect(x+1,y+1,62,62)}
+ g.strokeStyle='rgba(205,202,190,.12)';g.lineWidth=1;
+ for(let i=0;i<=512;i+=64){g.beginPath();g.moveTo(i,0);g.lineTo(i,512);g.stroke();g.beginPath();g.moveTo(0,i);g.lineTo(512,i);g.stroke()}
+});
+floorTex.wrapS=floorTex.wrapT=T.RepeatWrapping;floorTex.repeat.set(5,6);
+const institutionalFloor=new T.MeshStandardMaterial({map:floorTex,metalness:.04,roughness:.88});
+
+box(12,.18,14,institutionalFloor,0,-.09,0);
+box(12,6,.2,wallConcrete,0,3,-6.8);
+box(.2,6,14,wallConcrete,-6,3,0);
+box(.2,6,14,wallConcrete,6,3,0);
+box(12,.2,14,M(0x6d6c66,.03,.94),0,6,0);
+
+/* recessed concrete panel seams — BEHIND propaganda, never in front */
+const seam=M(0x55554f,.02,.96);
+for(const x of [-5.35,-2.75,0,2.75,5.35])box(.035,5.55,.025,seam,x,3,-6.675);
+for(const y of [1.35,3.02,4.68])box(11.55,.035,.025,seam,0,y,-6.675);
+
+/* form-tie marks give concrete believable brutalist scale */
+const tieMat=M(0x57564f,.02,.92);
+for(const x of [-5.0,-3.35,-1.70,0,1.70,3.35,5.0]){
+ for(const y of [1.70,3.58,5.22]){
+  cyl(.038,.018,tieMat,x,y,-6.65,Math.PI/2,0,0,scene,18);
+ }
+}
+
+/* party wall: large, unobstructed framed propaganda */
 const texLoader=new T.TextureLoader();
 const brezh=texLoader.load('./assets/brezhnev_1982.svg');brezh.colorSpace=T.SRGBColorSpace;
 const plan=texLoader.load('./assets/xi_five_year_plan_1981_1985.svg');plan.colorSpace=T.SRGBColorSpace;
-function framed(tex,x){box(2.62,3.18,.08,dark,x,3.55,-6.73);box(2.50,3.06,.05,steel2,x,3.55,-6.70);plane(2.40,2.96,new T.MeshStandardMaterial({map:tex,roughness:.72}),x,3.55,-6.66)}
-framed(brezh,-3.95);framed(plan,3.95);
-plane(4.8,.72,sign([{text:'РЕШЕНИЯ XXVI СЪЕЗДА — В ЖИЗНЬ',size:48}],'#8d221b','#f1dfb1','#d1ba7d',1400,260),0,5.05,-6.64);
+const glassMat=new T.MeshStandardMaterial({color:0xf6f2df,transparent:true,opacity:.07,roughness:.10,metalness:0});
 
-const ministry=sign([{text:'МИНИСТЕРСТВО НЕНУЖНЫХ ПРОЦЕДУР',size:38},{text:'ОПЕРАТОРСКАЯ № 3 • СКБ № 41',size:31}],'#b6ab83','#1b1913','#3c3729',1100,330);
-plane(3.15,.92,ministry,0,1.74,-6.64);
+function framed(tex,x,y,w=2.55,h=3.42){
+ box(w+.18,h+.18,.075,dark,x,y,-6.61);
+ box(w+.09,h+.09,.052,steel2,x,y,-6.565);
+ plane(w,h,new T.MeshStandardMaterial({map:tex,roughness:.69,metalness:.01}),x,y,-6.525);
+ plane(w-.025,h-.025,glassMat,x,y,-6.505);
+}
+framed(brezh,-4.15,3.45,2.60,3.48);
+framed(plan,4.15,3.45,2.60,3.48);
 
-/* cold fluorescent office light */
-scene.add(new T.HemisphereLight(0xcac7b7,0x24231e,1.25));
-const key=new T.DirectionalLight(0xf1f2eb,1.45);key.position.set(-2,6,4);key.castShadow=true;key.shadow.mapSize.set(mobile?1024:1536,mobile?1024:1536);scene.add(key);
-for(const x of [-3,0,3]){box(2.25,.09,.48,steel2,x,5.72,-1.0);const l=new T.PointLight(0xe9edf0,21,7.5,2);l.position.set(x,5.45,-1);scene.add(l)}
-/* filing bank + clock + phone */
-for(let row=0;row<3;row++)for(let col=0;col<4;col++){box(.72,.72,.58,dark,-4.55+col*.78,.46+row*.74,2.85);box(.40,.045,.025,steel2,-4.55+col*.78,.51+row*.74,3.15)}
-const clockMat=sign([{text:'12     3',size:24},{text:'9      6',size:24}],'#d9d2bc','#1e1d18','#34342e',500,500);cyl(.35,.07,dark,4.65,4.85,-6.56,Math.PI/2);plane(.57,.57,clockMat,4.65,4.85,-6.51);
-box(.95,.08,.42,wood,4.6,1.08,-5.82);box(.42,.23,.30,M(0x8c251d,.35,.55),4.6,1.23,-5.82);
+/* central red banner and ministry plaque */
+plane(4.75,.72,sign([{text:'РЕШЕНИЯ XXVI СЪЕЗДА — В ЖИЗНЬ',size:48}],'#8d221b','#f1dfb1','#d1ba7d',1400,260),0,5.18,-6.52);
+const ministry=sign([{text:'МИНИСТЕРСТВО НЕНУЖНЫХ ПРОЦЕДУР',size:37},{text:'ОПЕРАТОРСКАЯ № 3 • СКБ № 41',size:30}],'#b6ab83','#1b1913','#3c3729',1100,330);
+plane(3.20,.92,ministry,0,1.56,-6.52);
+
+/* ceiling coffers: heavy concrete mass kept ABOVE sightline */
+const ceilingBeam=M(0x555650,.03,.94);
+for(const z of [-4.8,-1.7,1.4,4.5])box(11.7,.28,.34,ceilingBeam,0,5.72,z);
+for(const x of [-4.3,0,4.3])box(.30,.24,13.1,ceilingBeam,x,5.75,0);
+
+/* cold fluorescent luminaires nested between coffers */
+scene.add(new T.HemisphereLight(0xc9c7b8,0x23231f,1.18));
+const key=new T.DirectionalLight(0xf0f2eb,1.35);key.position.set(-2,6,4);key.castShadow=true;key.shadow.mapSize.set(mobile?1024:1536,mobile?1024:1536);scene.add(key);
+for(const x of [-3.1,0,3.1]){
+ box(2.18,.09,.40,steel2,x,5.54,-.15);
+ const tubeMat=M(0xf3f5ec,.02,.32,0xeef3ef,1.8);
+ box(1.90,.035,.18,tubeMat,x,5.47,-.15);
+ const l=new T.PointLight(0xe8edf0,16,6.8,2.1);l.position.set(x,5.25,-.15);scene.add(l);
+}
+
+/* institutional furniture: metal archives, radiator, telephone, side desk */
+for(let row=0;row<3;row++)for(let col=0;col<4;col++){
+ box(.72,.72,.58,dark,-4.55+col*.78,.46+row*.74,2.85);
+ box(.40,.045,.025,steel2,-4.55+col*.78,.51+row*.74,3.15);
+}
+box(2.45,.08,.42,wood,3.95,.92,2.65);
+for(const x of [2.85,5.05])box(.10,.90,.10,dark,x,.43,2.65);
+box(.44,.24,.31,M(0x8c251d,.34,.55),4.55,1.08,2.62);
+
+/* long steel radiator low on back wall, clear of posters */
+const rad=M(0x77796f,.38,.67);
+for(let i=0;i<11;i++)box(.12,.70,.11,rad,-.60+i*.12,.62,-6.48);
+box(1.50,.06,.14,dark,0,.27,-6.48);box(1.50,.06,.14,dark,0,.97,-6.48);
+
+/* simple official wall clock on right return wall */
+const clockMat=sign([{text:'12       3',size:23},{text:'9        6',size:23}],'#d9d2bc','#1e1d18','#34342e',500,500);
+cyl(.35,.07,dark,5.88,4.72,-3.85,0,0,Math.PI/2,scene,40);
+plane(.57,.57,clockMat,5.82,4.72,-3.85,0,-Math.PI/2,0);
+
 window.BYUR_LOAD?.stage('room_ready');
 
 /* WORKBENCH */
