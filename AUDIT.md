@@ -6,15 +6,16 @@ Requested scope: cinematic inspection and photographs, mechanical weight and pos
 
 - JavaScript syntax checks and whitespace/diff checks pass.
 - The production cinematic controller was exercised with the vendored Three.js math and actual scene collision map. All 64 routes between eight viewpoints completed with 10,664 camera positions clear of furniture and walls; operator position/FOV restored on exit. This count belongs to the initial camera layout; revised framing is checked again by the same test.
-- Both browser suites passed on review commit `842363c149c2d9f95b08c9f2e4f942e433927355`, run `36096369025`. They cover 32 categories across document processing, audio, collisions, counter/tray persistence, photographs, reduced motion, mobile layout and offline use.
+- Both browser suites passed on review commit `842363c149c2d9f95b08c9f2e4f942e433927355`, run `36096369025`. They cover 31 categories across document processing, audio, collisions, counter/tray persistence, photographs, reduced motion, mobile layout and offline use.
 - Actual scene PNG export is 2560 × 1440 and contains no controls. Render size is restored afterward. The ordinary scene reports about 335 draw calls and 31,500 triangles.
-- Visual review identified overly tight cabinet/CRT framing. The camera correction and correct output-roller audio source are included in the final review commit.
+- Final corrected runtime commit `81eb6f901183b2a32419aa7393e427c514abfbee` passed both browser suites in run `36096867616`. Its cabinet portrait and CRT/meter images were inspected and accepted. The output-roller sound originates at the output roller.
+- Final route verification sampled 10,604 clear positions across all 64 routes. A subsequent documentation-only commit records these results; it changes no runtime or test files.
 - Earlier source review corrected stamp/paper contact and ejection continuity, a counter/label overlap, keyboard focus after using the view selector, and manual interruption of the guided tour.
 - Counter stores only the issued total. Receiving tray displays at most 32 sheets; neither document names nor contents are persisted. The counter saturates at 999,999.
 
 ## Release gate
 
-Joel explicitly authorized uploading, auditing/fixing, merging and publishing V10 to the existing public repository and GitHub Pages site on 25 September 2026. Final corrected screenshots must pass visual review before merge. The deployment workflow repeats the same browser checks against the release files and live URL. Results are retained in GitHub Actions.
+Joel explicitly authorized uploading, auditing/fixing, merging and publishing V10 to the existing public repository and GitHub Pages site on 25 September 2026. Final corrected screenshots passed visual review before merge. The deployment workflow repeats the same browser checks against the release files and live URL. Results are retained in GitHub Actions.
 
 ## Practical limits
 
