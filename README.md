@@ -2,6 +2,10 @@
 
 Fictional 1982 Soviet document-confirmation apparatus. A local-first, installable browser experience, built for a Chromebook.
 
+## V10.1 paper path repair
+
+Certificates feed progressively from the printer mouth, stop for the red imprint at physical stamp contact, then follow a flat platen and curved metal chute. A shared arc-length surface keeps the sheet above the tray without stretching its artwork. Muffled footsteps pass outside the closed door shortly after an operator approaches with sound enabled, with a cooldown between visits; occasional background passes remain.
+
 ## V10 cinema bureau
 
 Cinematic inspection provides eight composed views: office, cabinet, CRT/meters, feed rollers, stamp press, winter window, corridor door, and receiving tray. The camera plans routes around the existing furniture footprints. It interpolates its position, orientation and lens smoothly; manual gliding retains collision protection. Reduced-motion mode changes views immediately and suppresses cabinet recoil and weather-light animation.

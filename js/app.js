@@ -264,16 +264,48 @@ const rail=cyl(.033,1.80,chrome,0,.72,-.07,0,0,Math.PI/2,input,16);const scan=ne
 box(1.78,.04,.10,M(0xffd79a,.02,.5,0xffbe6e,1.2),0,.92,-.14,input);const bayLight=new T.PointLight(0xffc277,.35,.75,2);bayLight.position.set(-.17,1.20,-1.28);scene.add(bayLight);
 /* Output: a proper open press with a piston, collar, stamp block and sloped chute. */
 const output=new T.Group();output.position.set(1.58,.33,1.03);machine.add(output);
-for(const x of [-.66,.66]){softBox(.11,.94,.69,enamel,x,.58,-.02,output,.025);cyl(.045,.79,chrome,x*.68,.62,-.16,0,0,0,output,16)}
+for(const x of [-.66,.66]){softBox(.11,.94,.69,enamel,x,.58,-.02,output,.025);cyl(.025,.79,chrome,x*.94,.62,-.16,0,0,0,output,16)}
 softBox(1.25,.16,.64,edgeMetal,0,.99,-.10,output,.04);
-const stampLink=new T.Group();stampLink.position.set(0,.87,-.06);output.add(stampLink);cyl(.104,.44,chrome,0,0,0,0,0,0,stampLink);cyl(.168,.09,red,0,.045,0,0,0,0,stampLink);
-const stamp=new T.Group();stamp.position.set(0,.68,-.06);output.add(stamp);softBox(1.05,.25,.54,edgeMetal,0,0,0,stamp,.03);box(.97,.045,.49,bakelite,0,-.14,0,stamp);for(const x of [-.43,.43])screw(x,0,.285,stamp);
-const chute=new T.Group();chute.position.set(0,.195,.40);chute.rotation.x=.30;output.add(chute);softBox(1.39,.055,1.56,edgeMetal,0,0,.24,chute,.028);for(const x of [-.69,.69])box(.045,.10,1.57,chrome,x,.055,.24,chute);
-const outRollers=[cyl(.071,1.15,bakelite,0,.27,.11,0,0,Math.PI/2,output),cyl(.067,1.15,chrome,0,.26,-.17,0,0,Math.PI/2,output)];
+// Paper path is measured in arc length, shared by metal, rollers and sheet.
+const outputPath={length:1.52,inletZ:-.26,height:.35,flat:.56,curve:.20,angle:.30,end:2.02,clearance:.006,stampS:.32};
+function outputSurface(s){
+ const p=outputPath,r=p.curve/p.angle,q=Math.max(0,s-p.flat),theta=Math.min(p.angle,q/r),tail=Math.max(0,q-p.curve);
+ return {y:p.height-r*(1-Math.cos(theta))-tail*Math.sin(p.angle),z:p.inletZ+Math.min(s,p.flat)+r*Math.sin(theta)+tail*Math.cos(p.angle)};
+}
+function outputHeight(z){
+ const p=outputPath,r=p.curve/p.angle,d=z-p.inletZ-p.flat,join=r*Math.sin(p.angle);
+ return p.height-(d<=0?0:d<join?r-Math.sqrt(r*r-d*d):r*(1-Math.cos(p.angle))+(d-join)*Math.tan(p.angle));
+}
+function outputVertex(head,v){
+ const s=Math.max(0,head-v*outputPath.length),point=outputSurface(s);
+ return {s,y:point.y+outputPath.clearance+.03*Math.exp(-Math.pow((s-.035)/.035,2)),z:point.z,v:Math.min(v,head/outputPath.length)};
+}
+// End paper path.
+function chuteStrip(width,height,x=0,offset=0){
+ const geometry=new T.BoxGeometry(width,height,outputPath.end+.04,1,1,160),a=geometry.attributes.position;
+ for(let i=0;i<a.count;i++){const s=a.getZ(i)+(outputPath.end-.04)/2,p=outputSurface(s);a.setXYZ(i,a.getX(i),a.getY(i)+p.y-height/2+offset,p.z)}
+ geometry.computeVertexNormals();const m=new T.Mesh(geometry,edgeMetal);m.position.x=x;m.castShadow=m.receiveShadow=true;output.add(m);return m;
+}
+const chute=chuteStrip(1.39,.055);for(const x of [-.69,.69])chuteStrip(.045,.10,x,.10);
+// A dark printer mouth hides the unprinted sheet; the lip and lower rollers mark its origin.
+box(1.24,.11,.045,black,0,.364,-.305,output);softBox(1.30,.29,.43,enamel,0,.555,-.49,output,.02);box(1.26,.036,.13,chrome,0,.307,-.275,output);
+const stampLink=new T.Group();stampLink.position.set(0,.87,.06);output.add(stampLink);cyl(.104,.44,chrome,0,0,0,0,0,0,stampLink);cyl(.168,.09,red,0,.045,0,0,0,0,stampLink);
+const stamp=new T.Group();stamp.position.set(0,.68,.06);output.add(stamp);softBox(1.05,.25,.44,edgeMetal,0,0,0,stamp,.03);box(.97,.045,.39,bakelite,0,-.14,0,stamp);for(const x of [-.43,.43])screw(x,0,.235,stamp);
+const outRollers=[cyl(.071,1.15,bakelite,0,.309,-.225,0,0,Math.PI/2,output),cyl(.067,1.15,chrome,0,.283,-.34,0,0,Math.PI/2,output)];
 const ocan=document.createElement('canvas');ocan.width=760;ocan.height=1050;const og=ocan.getContext('2d');const otex=new T.CanvasTexture(ocan);otex.colorSpace=T.SRGBColorSpace;otex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
-const outPaper=plane(1.15,1.52,new T.MeshStandardMaterial({map:otex,roughness:.9,side:T.DoubleSide}),0,.12,.31,-Math.PI/2+.30,0,0,output);outPaper.geometry.dispose();outPaper.geometry=new T.PlaneGeometry(1.15,1.52,2,48);outPaper.visible=false;
-function bendPaper(mesh,feeding=false){const pos=mesh.geometry.attributes.position;for(let i=0;i<pos.count;i++){const longitudinal=mesh.position.z-pos.getY(i)*Math.cos(mesh===inPaper?0:.3);let lift;if(mesh===inPaper)lift=.155*Math.exp(-Math.pow((longitudinal+.03)/.14,2))+.12*Math.exp(-Math.pow((longitudinal-1.48)/.13,2));else lift=.055*Math.exp(-Math.pow((longitudinal-.11)/.18,2))+(feeding?.018:0)*Math.sin(pos.getY(i)*3+longitudinal*5);pos.setZ(i,lift)}pos.needsUpdate=true;mesh.geometry.computeVertexNormals();}
-function drawOut(name,serial){og.fillStyle='#e0d2b3';og.fillRect(0,0,760,1050);og.strokeStyle='#8b7e66';og.strokeRect(35,35,690,980);og.fillStyle='#4a4636';og.textAlign='center';og.font='bold 24px monospace';og.fillText('МИНИСТЕРСТВО НЕНУЖНЫХ ПРОЦЕДУР',380,95);og.font='bold 43px serif';og.fillText('СПРАВКА № '+serial,380,180);og.font='22px monospace';og.fillText(name.toUpperCase().slice(0,30),380,250);og.fillStyle='#a69a7f';for(let i=0;i<9;i++)og.fillRect(75,307+i*24,610-(i%3)*50,3);og.save();og.translate(380,704);og.rotate(-.035);og.strokeStyle='#9b362b';og.lineWidth=7;og.strokeRect(-291,-111,582,218);og.fillStyle='#9b362b';og.font='bold 47px Arial';og.fillText('ДОКУМЕНТ',0,-44);og.fillText('ЯВЛЯЕТСЯ',0,12);og.fillText('ДОКУМЕНТОМ',0,69);og.restore();og.fillStyle='#9b362b';og.font='76px serif';og.fillText('☭',380,946);otex.needsUpdate=true;}
+const outPaper=plane(1.15,outputPath.length,new T.MeshStandardMaterial({map:otex,roughness:.9,side:T.DoubleSide}),0,0,0,0,0,0,output);outPaper.geometry.dispose();outPaper.geometry=new T.PlaneGeometry(1.15,outputPath.length,2,120);outPaper.visible=false;
+const outputUV=outPaper.geometry.attributes.uv.array.slice();let outputStage='idle',outputProgress=0,outputHead=0,outputStamped=false;
+function feedOutput(head){
+ outputHead=head;outPaper.visible=head>0;const a=outPaper.geometry.attributes.position,uv=outPaper.geometry.attributes.uv;
+ for(let i=0;i<a.count;i++){const p=outputVertex(head,outputUV[i*2+1]);a.setXYZ(i,(outputUV[i*2]-.5)*1.15,p.y,p.z);uv.setY(i,p.v)}
+ a.needsUpdate=uv.needsUpdate=true;outPaper.geometry.computeVertexNormals();outPaper.geometry.computeBoundingSphere();needsFrame=true;
+}
+function outputSnapshot(){
+ const a=outPaper.geometry.attributes.position;let clearance=Infinity;for(let i=0;i<a.count;i++)clearance=Math.min(clearance,a.getY(i)-outputHeight(a.getZ(i)));
+ return {stage:outputStage,progress:outputProgress,head:outputHead,visibleLength:Math.min(outputHead,outputPath.length),stamped:outputStamped,visible:outPaper.visible,clearance,stampBottom:stamp.position.y-.1625,stampSurface:outputPath.height+outputPath.clearance};
+}
+function bendPaper(mesh){const pos=mesh.geometry.attributes.position;for(let i=0;i<pos.count;i++){const z=mesh.position.z-pos.getY(i);pos.setZ(i,.155*Math.exp(-Math.pow((z+.03)/.14,2))+.12*Math.exp(-Math.pow((z-1.48)/.13,2)))}pos.needsUpdate=true;mesh.geometry.computeVertexNormals();}
+function drawOut(name,serial,stamped=false){og.fillStyle='#e0d2b3';og.fillRect(0,0,760,1050);og.strokeStyle='#8b7e66';og.strokeRect(35,35,690,980);og.fillStyle='#4a4636';og.textAlign='center';og.font='bold 24px monospace';og.fillText('МИНИСТЕРСТВО НЕНУЖНЫХ ПРОЦЕДУР',380,95);og.font='bold 43px serif';og.fillText('СПРАВКА № '+serial,380,180);og.font='22px monospace';og.fillText(name.toUpperCase().slice(0,30),380,250);og.fillStyle='#a69a7f';for(let i=0;i<9;i++)og.fillRect(75,307+i*24,610-(i%3)*50,3);if(stamped){og.save();og.translate(380,704);og.rotate(-.035);og.strokeStyle='#9b362b';og.lineWidth=7;og.strokeRect(-291,-111,582,218);og.fillStyle='#9b362b';og.font='bold 47px Arial';og.fillText('ДОКУМЕНТ',0,-44);og.fillText('ЯВЛЯЕТСЯ',0,12);og.fillText('ДОКУМЕНТОМ',0,69);og.restore()}og.fillStyle='#9b362b';og.font='76px serif';og.fillText('☭',380,946);otex.needsUpdate=true;}
 /* Office dressing follows the cinematic reference: cool window, warm desk light. */
 const timberTex=canvasTex(1024,512,(g,w,h)=>{g.fillStyle='#3d2b1f';g.fillRect(0,0,w,h);let seed=41;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};for(let i=0;i<900;i++){g.strokeStyle='rgba('+(rnd()>.6?'152,114,70':'16,13,9')+','+(.04+rnd()*.16)+')';g.lineWidth=.5+rnd()*2;const y=rnd()*h;g.beginPath();g.moveTo(0,y);g.bezierCurveTo(w*.3,y+(rnd()-.5)*12,w*.7,y+(rnd()-.5)*12,w,y);g.stroke()}});timberTex.wrapS=timberTex.wrapT=T.RepeatWrapping;timberTex.repeat.set(1,2);wood.map=timberTex;wood.color.setHex(0xffffff);wood.needsUpdate=true;
 // Thin worn green linoleum work surface and oak apron.
@@ -366,13 +398,13 @@ function sound(name,source=null){const object=source||{relay:resetKnob,feed:roll
 ui.sound.onclick=async()=>{soundOn=!soundOn;ui.sound.textContent='SOUИD: '+(soundOn?'OИ':'OFF');ui.sound.setAttribute('aria-pressed',String(soundOn));try{await audio.setEffects(soundOn);sound('relay')}catch{soundOn=false;ui.sound.textContent='SOUИD: RETRY';ui.sound.setAttribute('aria-pressed','false');status('Audio delivery delayed. Click SOUИD to retry, comЯade.')}};
 const musicButton=document.getElementById('music');musicButton.onclick=async()=>{musicOn=!musicOn;musicButton.textContent='MUSЇC: '+(musicOn?'OИ':'OFF');musicButton.setAttribute('aria-pressed',String(musicOn));try{await audio.setMusic(musicOn)}catch{musicOn=false;musicButton.textContent='MUSЇC: RETRY';musicButton.setAttribute('aria-pressed','false');status('Orchestra delayed. Click MUSЇC to retry.')}};
 document.getElementById('volume').oninput=e=>audio.setVolume(Number(e.target.value)/100);
-const st={cap:cap.position.z,inZ:inPaper.position.z,outZ:outPaper.position.z,stampY:stamp.position.y,linkY:stampLink.position.y,scanX:scan.position.x};
+const st={cap:cap.position.z,inZ:inPaper.position.z,stampY:stamp.position.y,linkY:stampLink.position.y,scanX:scan.position.x};
 const wait=ms=>new Promise(r=>setTimeout(r,ms)),smooth=t=>t*t*(3-2*t);
 function tween(ms,fn,easing=smooth){return new Promise(res=>{const s=performance.now();function step(n){const t=Math.min(1,(n-s)/ms);fn(easing(t));needsFrame=true;t<1?requestAnimationFrame(step):res()}requestAnimationFrame(step)})}
 let recoil=0,recoilPeak=0,knobTime=0;
 function tickWeight(dt){if(knobTime>0){knobTime=Math.max(0,knobTime-dt);resetKnob.rotation.z=-.55-.45*Math.sin(Math.min(1,knobTime/.24)*Math.PI);needsFrame=true}if(recoil>0){recoil=Math.max(0,recoil-dt);const t=.48-recoil,a=reducedMotion.matches?0:.0025*Math.exp(-t*10)*Math.sin(t*58);machine.rotation.x=a;machine.rotation.z=-a*.45;recoilPeak=Math.max(recoilPeak,Math.abs(a));needsFrame=true;if(!recoil){machine.rotation.set(0,0,0)}}}
 function setLamp(i,on){needsFrame=true;const m=lamps[i].material;m.emissive.setHex(on?[0x54ff66,0xffad35,0xd12620][i]:0);m.emissiveIntensity=on?2:0}
-function resetVisual(){phase(-1);setLamp(1,false);setLamp(2,false);cap.position.z=st.cap;scan.position.x=st.scanX;stamp.position.y=st.stampY;stampLink.position.y=st.linkY;inPaper.position.z=st.inZ;outPaper.position.z=st.outZ;outPaper.position.y=.264;outPaper.visible=false;g1.rotation.z=g2.rotation.z=T.MathUtils.degToRad(50)}
+function resetVisual(){phase(-1);setLamp(1,false);setLamp(2,false);cap.position.z=st.cap;scan.position.x=st.scanX;stamp.position.y=st.stampY;stampLink.position.y=st.linkY;inPaper.position.z=st.inZ;outputStage='idle';outputProgress=0;outputStamped=false;feedOutput(0);g1.rotation.z=g2.rotation.z=T.MathUtils.degToRad(50)}
 async function gauges(a,b){const s1=g1.rotation.z,s2=g2.rotation.z,e1=T.MathUtils.degToRad(50-100*a),e2=T.MathUtils.degToRad(50-100*b);await tween(900,t=>{const spring=t===1?1:1-Math.exp(-7*t)*Math.cos(11*t);g1.rotation.z=s1+(e1-s1)*spring;g2.rotation.z=s2+(e2-s2)*spring},t=>t)}
 function createCertificate(name,number){
  const c=ui.certificateCanvas,g=c.getContext('2d');g.fillStyle='#ede4c9';g.fillRect(0,0,c.width,c.height);
@@ -403,9 +435,15 @@ async function run(){
  await Promise.all([tween(1700,t=>{inPaper.position.z=st.inZ+(-.58-st.inZ)*t;rollers[0].rotation.x=t*18;rollers[1].rotation.x=-t*18;bendPaper(inPaper,true)}),gauges(.28,.34)]);
  crt(['АНАЛИЗ...','','СКАНЕР WORKЇИG.']);sound('scan');await tween(1350,t=>{scan.position.x=-.74+1.48*t;lens.material.emissiveIntensity=2.2+.5*Math.sin(t*18)});await tween(550,t=>scan.position.x=.74-1.48*t);
  phase(1);status('VЄЯЇFЇCATЇOИ · Second department confirms first department.');crt(['ПРОВЕРКА...','','ОБРАБОТКА: 68%']);await gauges(.66,.72);await wait(500);
- phase(2);status('STAMPЇИG · State applies physical certainty.');crt(['ПЕЧАТЬ...','','OFFЇCЇДL ПЕЧАТЬ.']);serial=String(Math.floor(100000+Math.random()*900000));drawOut(current.name,serial);outPaper.visible=true;outPaper.position.set(0,.3786,-.06);const pressVertices=outPaper.geometry.attributes.position;for(let i=0;i<pressVertices.count;i++)pressVertices.setZ(i,0);pressVertices.needsUpdate=true;outPaper.geometry.computeVertexNormals();
- await tween(330,t=>{stamp.position.y=st.stampY+(.545-st.stampY)*t;stampLink.position.y=st.linkY-.135*t},t=>t*t*t);sound('stamp');recoil=.48;await wait(120);await tween(420,t=>{stamp.position.y=.545+(st.stampY-.545)*t;stampLink.position.y=st.linkY-.135*(1-t)});
- sound('feed',outRollers[0]);await tween(1300,t=>{outPaper.position.z=-.06+.77*t;outPaper.position.y=.36-.31*outPaper.position.z;outRollers[0].rotation.x=t*16;outRollers[1].rotation.x=-t*16;bendPaper(outPaper,true)});await gauges(1,1);bendPaper(outPaper);setLamp(1,false);phase(3);
+ phase(2);status('PЯЇИTЇИG · Certificate emerges for official stamping.');crt(['ПЕЧАТЬ...','','ПОДАЧА БУМАГИ.']);serial=String(Math.floor(100000+Math.random()*900000));drawOut(current.name,serial);outputStage='printing';
+ const stampHead=outputPath.stampS+(1-704/1050)*outputPath.length,contactY=outputPath.height+outputPath.clearance+.1625,stroke=st.stampY-contactY;
+ sound('feed',outRollers[0]);await tween(2100,t=>{outputProgress=t;feedOutput(stampHead*t);outRollers[0].rotation.x=-stampHead*t/.071;outRollers[1].rotation.x=-stampHead*t/.067},t=>t);
+ outputStage='pressing';outputProgress=0;status('STAMPЇИG · State applies physical certainty.');crt(['ПЕЧАТЬ...','','OFFЇCЇДL ПЕЧАТЬ.']);
+ await tween(430,t=>{outputProgress=t;stamp.position.y=st.stampY-stroke*t;stampLink.position.y=st.linkY-stroke*t},t=>t*t*t);
+ outputStage='impact';outputStamped=true;drawOut(current.name,serial,true);sound('stamp');recoil=.48;await wait(240);
+ await tween(420,t=>{stamp.position.y=contactY+stroke*t;stampLink.position.y=st.linkY-stroke*(1-t)});
+ outputStage='delivery';outputProgress=0;sound('feed',outRollers[0]);await tween(2200,t=>{outputProgress=t;const head=stampHead+(1.94-stampHead)*t;feedOutput(head);outRollers[0].rotation.x=-head/.071;outRollers[1].rotation.x=-head/.067},t=>t);
+ outputStage='ready';await gauges(1,1);setLamp(1,false);phase(3);
  crt(['ПРОВЕРКА ЗАВЕРШЕНА.','','СТАТУС: ХОРОШО.','','ДОКУМЕНТ ЯВЛЯЕТСЯ ДОКУМЕНТОМ.']);
  createCertificate(current.name,serial);certificateReady=true;issued=Math.min(999999,issued+1);try{localStorage.setItem('byur-issued',String(issued))}catch{}updateCount(true);
  status('APPЯOVЄD · Your certificate is ready. Click CERTЇFЇCATЄ.');sound('bell');
@@ -458,9 +496,16 @@ function move(dt){
 }
 document.getElementById('fs').onclick=()=>document.fullscreenElement?document.exitFullscreen?.():document.documentElement.requestFullscreen?.();
 renderer.domElement.style.touchAction='none';
-if(new URLSearchParams(location.search).has('inspect'))window.BYUR_INSPECT={viewReady:()=>!viewMoving&&Number(getComputedStyle(renderer.domElement).opacity)>.999,snapshot:()=>({camera:camera.position.toArray(),safe:canStand(camera.position.x,camera.position.z),machine:new T.Box3().setFromObject(machine).getSize(new T.Vector3()).toArray(),calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,frames:renderedFrames,cinema:cinema.snapshot(),recoilPeak,issued,archiveSheets:issuedSheets.count,counterDisplay,paperBend:Math.max(...inPaper.geometry.attributes.position.array.filter((v,i)=>i%3===2)),winter:{time:winterTime,daylight:daylight.intensity,passing:passingGlow.intensity},busy}),canStand,shots:cinema.shots};
+let outputAudit=null;
+function recordOutputFrame(){
+ if(!outputAudit||outputAudit.done||outputStage==='idle')return;const state=outputSnapshot();outputAudit.samples.push(state);
+ const marks={printing:[.10,.40,.80],pressing:[.25],impact:[0],delivery:[.25,.60,.95],ready:[0]};
+ for(const mark of marks[outputStage]||[]){const key=outputStage+'-'+mark;if(outputProgress>=mark&&!outputAudit.frames.some(f=>f.key===key))outputAudit.frames.push({key,state,png:renderer.domElement.toDataURL('image/png')})}
+ if(outputStage==='ready')outputAudit.done=true;
+}
+if(new URLSearchParams(location.search).has('inspect'))window.BYUR_INSPECT={viewReady:()=>!viewMoving&&Number(getComputedStyle(renderer.domElement).opacity)>.999,recordOutput:()=>{outputAudit={samples:[],frames:[]}},outputAudit:()=>outputAudit,snapshot:()=>({output:outputSnapshot(),camera:camera.position.toArray(),safe:canStand(camera.position.x,camera.position.z),machine:new T.Box3().setFromObject(machine).getSize(new T.Vector3()).toArray(),calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,frames:renderedFrames,cinema:cinema.snapshot(),recoilPeak,issued,archiveSheets:issuedSheets.count,counterDisplay,paperBend:Math.max(...inPaper.geometry.attributes.position.array.filter((v,i)=>i%3===2)),winter:{time:winterTime,daylight:daylight.intensity,passing:passingGlow.intensity},busy}),canStand,shots:cinema.shots};
 addEventListener('resize',()=>cinema.resize());
 resetVisual();renderer.render(scene,camera);window.BYUR_LOAD?.stage('first_frame');setTimeout(()=>window.BYUR_LOAD?.complete(),180);
 const listenerForward=new T.Vector3(),listenerUp=new T.Vector3();let last=performance.now(),sceneTime=0;
-(function loop(now){const dt=Math.min(.20,(now-last)/1000);last=now;if(!document.hidden){sceneTime+=dt;cinema.tick(dt);move(dt);tickWeight(dt);tickCounter(dt);updateWinter(sceneTime*1000);if(needsFrame&&!cinema.capturing){camera.getWorldDirection(listenerForward);listenerUp.set(0,1,0).applyQuaternion(camera.quaternion);audio.listener(camera.position.toArray(),listenerForward.toArray(),listenerUp.toArray());renderer.render(scene,camera);renderedFrames++;needsFrame=false}}requestAnimationFrame(loop)})(last);
+(function loop(now){const dt=Math.min(.20,(now-last)/1000);last=now;if(!document.hidden){sceneTime+=dt;cinema.tick(dt);move(dt);tickWeight(dt);tickCounter(dt);updateWinter(sceneTime*1000);if(needsFrame&&!cinema.capturing){camera.getWorldDirection(listenerForward);listenerUp.set(0,1,0).applyQuaternion(camera.quaternion);audio.listener(camera.position.toArray(),listenerForward.toArray(),listenerUp.toArray());renderer.render(scene,camera);renderedFrames++;recordOutputFrame();needsFrame=false}}requestAnimationFrame(loop)})(last);
 })();

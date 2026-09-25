@@ -1,3 +1,15 @@
+# V10.1 paper and corridor correction
+
+User review found that the output sheet appeared whole under the press, then intersected the chute during delivery. The V10 end-state screenshots did not catch those intermediate defects; its earlier claim of corrected ejection continuity was insufficient.
+
+- Replaced the approximate sheet translation with a shared, arc-length platen/curved chute surface. The sheet is cropped at the printer mouth with matching UVs, and remains a fixed distance above the metal. Guide rods sit outside the paper width.
+- Feed, press contact, red imprint, stamp retraction and delivery form one continuous sequence. The red stamp is drawn only at impact and follows the same sheet.
+- Door approach schedules six muffled positional steps outside the wall after a short dwell. A cooldown prevents repeated triggering; occasional background passes remain. Mute stops scheduled voices.
+- The production path passes 116,885 sampled vertex-clearance checks, arc-length checks and stamp registration. Existing camera checks pass 64 routes / 10,604 samples.
+- A new browser gate records nine rendered intermediate views and checks the actual sheet geometry, stamp timing, door approach, source positions, cooldown and mute. Browser/visual results are recorded after review.
+
+---
+
 # V10 audit — release review
 
 Requested scope: cinematic inspection and photographs, mechanical weight and positional sound, winter atmosphere, and a persistent receiving tray/counter. Existing document-confirmation functions stay intact.
