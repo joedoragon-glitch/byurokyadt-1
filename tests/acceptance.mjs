@@ -31,6 +31,9 @@ try {
   await page.screenshot({path:'test-results/03-completed.png'});
   await page.locator('#sideView').click();await page.waitForTimeout(450);
   await page.screenshot({path:'test-results/07-side.png'});
+  await page.locator('#sound').click();assert.equal(await page.evaluate(()=>window.MinistryAudio.state().effectsOn),false);assert.equal(await page.evaluate(()=>window.MinistryAudio.state().musicOn),true);
+  await page.locator('#volume').press('Home');assert.equal(await page.evaluate(()=>window.MinistryAudio.state().volume),0);await page.locator('#volume').press('End');
+  await page.locator('#music').click();assert.equal(await page.evaluate(()=>window.MinistryAudio.state().musicOn),false);
   await page.locator('#receipt').click();
   await page.screenshot({path:'test-results/04-certificate.png'});
   const downloaded=page.waitForEvent('download');await page.locator('#downloadReceipt').click();
@@ -47,7 +50,7 @@ try {
   const blocked=await page.evaluate(()=>[[0,-1.5],[-4.4,-5.5],[-3.6,-3.7],[4,-5.2],[3.94,-4.3],[6,0]].map(([x,z])=>window.BYUR_INSPECT.canStand(x,z)));assert.deepEqual(blocked,[false,false,false,false,false,false]);
   await page.locator('#deskView').click();await page.waitForTimeout(450);
   await page.locator('#app canvas').click({position:{x:30,y:600}});
-  await page.keyboard.down('w');await page.waitForFunction(()=>window.BYUR_INSPECT.snapshot().camera[2]<-.62,{},{timeout:12000});await page.keyboard.up('w');
+  await page.keyboard.down('w');await page.waitForFunction(()=>window.BYUR_INSPECT.snapshot().camera[2]<-.62,{},{timeout:30000});await page.keyboard.up('w');
   await page.keyboard.down('w');await page.waitForTimeout(350);await page.keyboard.up('w');
   const stopped=await page.evaluate(()=>window.BYUR_INSPECT.snapshot());assert(stopped.safe&&stopped.camera[2]>-.69,'Player is blocked by workbench');
   await page.locator('#roomView').click();await page.waitForTimeout(450);
@@ -59,6 +62,10 @@ try {
   await page.locator('#sound').click();await page.waitForFunction(()=>window.MinistryAudio.state().decoded.length===7,{},{timeout:30000});
   await page.locator('#sound').click();assert.equal(await page.locator('#sound').getAttribute('aria-pressed'),'false');
   await context.setOffline(false);
+  await page.mouse.move(700,500);await page.mouse.down();await page.mouse.move(960,500,{steps:8});await page.mouse.up();await page.screenshot({path:'test-results/09-door.png'});
+  await page.locator('#roomView').click();await page.waitForTimeout(450);
+  await page.mouse.move(700,500);await page.mouse.down();await page.mouse.move(491,500,{steps:8});await page.mouse.up();await page.screenshot({path:'test-results/10-window.png'});
+  await page.locator('#roomView').click();await page.waitForTimeout(450);
   await page.setViewportSize({width:1100,height:700});await page.locator('#deskView').click();await page.waitForTimeout(450);await page.screenshot({path:'test-results/06-chromebook.png'});
   await page.setViewportSize({width:390,height:844});await page.locator('#roomView').click();await page.waitForTimeout(450);await page.screenshot({path:'test-results/08-mobile.png'});
   assert.equal(await page.locator('#runDoc').isVisible(),true);

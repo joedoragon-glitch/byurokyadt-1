@@ -12,8 +12,8 @@
  }
  function fade(g,value,d=.15){const t=context.currentTime;g.gain.cancelScheduledValues(t);g.gain.setTargetAtTime(value,t,d)}
  function loop(name,bus){const src=context.createBufferSource();src.buffer=buffers.get(name);src.loop=true;src.connect(bus);src.start();return src}
- async function setEffects(on){effectsOn=on;await ready();fade(sfx,effectsOn?.58:0,.035);if(effectsOn&&!roomSource)roomSource=loop('room',ambience);}
- async function setMusic(on){musicOn=on;await ready();if(musicOn&&!musicSource)musicSource=loop('ministry',music);fade(music,musicOn?(cycling?.075:.15):0,.45)}
+ async function setEffects(on){effectsOn=on;try{await ready()}catch(e){effectsOn=false;throw e}fade(sfx,effectsOn?.58:0,.035);if(effectsOn&&!roomSource)roomSource=loop('room',ambience);}
+ async function setMusic(on){musicOn=on;try{await ready()}catch(e){musicOn=false;throw e}if(musicOn&&!musicSource)musicSource=loop('ministry',music);fade(music,musicOn?(cycling?.075:.15):0,.45)}
  function play(name){if(!effectsOn||!context||!buffers.has(name))return;const src=context.createBufferSource();src.buffer=buffers.get(name);src.connect(sfx);src.start()}
  function setVolume(v){volume=Math.max(0,Math.min(1,v));if(master)fade(master,volume,.035)}
  function setCycle(on){cycling=on;if(music)fade(music,musicOn?(cycling?.075:.15):0,.3)}

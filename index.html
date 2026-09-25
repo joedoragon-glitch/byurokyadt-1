@@ -31,21 +31,21 @@
 <div id="cross"></div>
 <div id="hint" role="status" aria-live="polite">COMЯADE, press 2 to approach the machine.</div>
 <nav id="viewControls" aria-label="Camera and audio controls">
-  <button id="roomView">1 · ЯOOM VЇЄW</button><button id="deskView">2 · TO THЄ MACHЇИЄ</button><button id="sideView">3 · SЇDЄ ЇИSPЄCTЇOИ</button>
-  <button id="sound" aria-pressed="false">SOUИD: OFF</button><button id="music" aria-pressed="false">MUSЇC: OFF</button>
+  <button aria-label="Room view" id="roomView">1 · ЯOOM VЇЄW</button><button aria-label="Approach machine" id="deskView">2 · TO THЄ MACHЇИЄ</button><button aria-label="Inspect machine from the side" id="sideView">3 · SЇDЄ ЇИSPЄCTЇOИ</button>
+  <button aria-label="Toggle mechanical sound" id="sound" aria-pressed="false">SOUИD: OFF</button><button aria-label="Toggle background music" id="music" aria-pressed="false">MUSЇC: OFF</button>
   <label class="volumeLabel" for="volume">VOLUMЄ <input id="volume" type="range" min="0" max="100" value="65" aria-label="Audio volume"></label>
 </nav>
 <section id="operator" aria-label="Operator controls">
   <div class="operatorHead"><span>OПЄЯATOЯ STATЇOИ № 03</span><span id="cycleCount">ЇSSUЄD: 000</span></div>
-  <div class="operatorActions"><button id="loadDoc">F · SЄLЄCT DOC</button><button id="runDoc" class="redButton">↵ · COИFЇЯM</button><button id="resetDoc">R · ЯЄSЄT</button><button id="receipt" disabled>CERTЇFЇCATЄ ↗</button></div>
+  <div class="operatorActions"><button aria-label="Select a document" id="loadDoc">F · SЄLЄCT DOC</button><button aria-label="Confirm and process document" id="runDoc" class="redButton">↵ · COИFЇЯM</button><button aria-label="Reset machine" id="resetDoc">R · ЯЄSЄT</button><button aria-label="Collect certificate" id="receipt" disabled>CERTЇFЇCATЄ ↗</button></div>
   <div class="privacy">File stays on your device. Ministry receives no uploads.</div>
 </section>
-<button id="fs">FULL SCЯЄЄИ</button>
-<button id="installBtn">ЇИSTALL APP</button>
+<button aria-label="Toggle full screen" id="fs">FULL SCЯЄЄИ</button>
+<button aria-label="Install application" id="installBtn">ЇИSTALL APP</button>
 <div id="badge">V9 · FACTOЯY ЯЄFЇT</div>
 <div id="appMode">MODЄ: WЄB</div>
 <input id="file" type="file">
-<dialog id="certificate"><div class="receiptHeader"><strong>OFFЇCЇAL CERTЇFЇCATЄ</strong><button id="closeReceipt" aria-label="Close certificate">CLOSЄ ×</button></div><canvas id="certificateCanvas" width="1280" height="1760"></canvas><button id="downloadReceipt" class="redButton">SAVЄ CERTЇFЇCATЄ · PNG</button></dialog>
+<dialog id="certificate"><div class="receiptHeader"><strong>OFFЇCЇAL CERTЇFЇCATЄ</strong><button id="closeReceipt" aria-label="Close certificate">CLOSЄ ×</button></div><canvas id="certificateCanvas" width="1280" height="1760"></canvas><button aria-label="Save certificate as PNG" id="downloadReceipt" class="redButton">SAVЄ CERTЇFЇCATЄ · PNG</button></dialog>
 <script>
 (()=>{
 const L={
