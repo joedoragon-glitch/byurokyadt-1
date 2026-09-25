@@ -1,7 +1,23 @@
-const CACHE='byurokyadt-v7-local-1';
-const CORE=['./','./index.html','./styles.css','./manifest.webmanifest','./icons/icon.svg'];
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==CACHE).map(x=>caches.delete(x)))).then(()=>self.clients.claim())));
-self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;const u=new URL(e.request.url);if(u.origin!==self.location.origin)return;
- e.respondWith(caches.match(e.request).then(hit=>hit||fetch(e.request).then(r=>{if(r&&r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy))}return r}).catch(()=>e.request.mode==='navigate'?caches.match('./index.html'):Promise.reject('offline'))))
+const CACHE='byurokyadt-v7-local-2';
+const CORE=[
+ './','./index.html','./styles.css','./manifest.webmanifest','./icons/icon.svg',
+ './js/app.js','./vendor/three.min.js',
+ './assets/brezhnev_1982.svg','./assets/xi_five_year_plan_1981_1985.svg'
+];
+self.addEventListener('install',event=>{
+ event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
+});
+self.addEventListener('activate',event=>{
+ event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
+});
+self.addEventListener('fetch',event=>{
+ if(event.request.method!=='GET')return;
+ const url=new URL(event.request.url);if(url.origin!==self.location.origin)return;
+ event.respondWith(caches.match(event.request).then(cached=>{
+  if(cached)return cached;
+  return fetch(event.request).then(resp=>{
+   if(resp&&resp.ok){const copy=resp.clone();caches.open(CACHE).then(c=>c.put(event.request,copy))}
+   return resp;
+  }).catch(()=>event.request.mode==='navigate'?caches.match('./index.html'):Promise.reject('offline asset unavailable'));
+ }));
 });
