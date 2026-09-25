@@ -33,7 +33,7 @@
 <div id="hint">COMЯДDЄ, ДPPЯOДCH MACHINE.</div>
 <button id="fs">ПОЛНЫЙ ЭКРАН</button>
 <button id="installBtn">УСТАНОВИТЬ ПРИЛОЖЕНИЕ</button>
-<div id="badge">V7 • ПРИЛОЖЕНИЕ</div>
+<div id="badge">V7.0.1 • ПРИЛОЖЕНИЕ</div>
 <div id="appMode">РЕЖИМ: ВЕБ</div>
 <input id="file" type="file">
 <script>
@@ -78,20 +78,35 @@ async function registerSW(){
  await navigator.serviceWorker.ready;
  L.set(8,'ЛОКАЛЬНЫЙ СКЛАД ПРИЛОЖЕНИЯ ГОТОВ.','OFFLINE SHELL');
 }
-async function fetchTextProgress(url,start,end,label){
- const r=await fetch(url,{cache:'no-cache'});if(!r.ok)throw new Error(url+' HTTP '+r.status);
- const total=Number(r.headers.get('content-length'))||0;
- if(!r.body||!r.body.getReader()){const t=await r.text();L.set(end,label,Math.round(t.length/1024)+' KB');return t}
- const reader=r.body.getReader(),chunks=[];let got=0;
- while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);got+=value.length;const frac=total?got/total:Math.min(.97,got/700000);L.set(start+(end-start)*frac,label,Math.round(got/1024)+' KB'+(total?' / '+Math.round(total/1024)+' KB':''))}
- const all=new Uint8Array(got);let off=0;for(const c of chunks){all.set(c,off);off+=c.length}return new TextDecoder().decode(all)
+function xhrProgress(url,start,end,label,responseType='text'){
+ return new Promise((resolve,reject)=>{
+  const x=new XMLHttpRequest();
+  x.open('GET',url,true);
+  x.responseType=responseType;
+  x.onprogress=e=>{
+   const kb=Math.round(e.loaded/1024)+' KB'+(e.lengthComputable?' / '+Math.round(e.total/1024)+' KB':'');
+   if(e.lengthComputable&&e.total>0){
+    L.set(start+(end-start)*(e.loaded/e.total),label,kb);
+   }else{
+    // Honest progress: bytes are real; percentage waits for known completion.
+    L.set(start,label,kb+' • SIZE ИЄT');
+   }
+  };
+  x.onload=()=>{
+   if(x.status>=200&&x.status<300){
+    const size=responseType==='text' ? (x.responseText||'').length : (x.response?.size||0);
+    L.set(end,label,Math.round(size/1024)+' KB • ГОТОВО');
+    resolve(responseType==='text'?x.responseText:x.response);
+   }else reject(new Error(url+' HTTP '+x.status));
+  };
+  x.onerror=()=>reject(new Error(url+' NETWORK ОШИБКА'));
+  x.ontimeout=()=>reject(new Error(url+' TIMEOUT'));
+  x.timeout=30000;
+  x.send();
+ });
 }
-async function preloadAsset(url,start,end,label){
- const r=await fetch(url,{cache:'no-cache'});if(!r.ok)throw new Error(url+' HTTP '+r.status);
- const total=Number(r.headers.get('content-length'))||0;let got=0;
- if(r.body&&r.body.getReader()){const rd=r.body.getReader();while(true){const {done,value}=await rd.read();if(done)break;got+=value.length;const frac=total?got/total:.6;L.set(start+(end-start)*frac,label,Math.round(got/1024)+' KB')}}else{await r.blob()}
- L.set(end,label,'LOCAL ASSET');
-}
+function fetchTextProgress(url,start,end,label){return xhrProgress(url,start,end,label,'text')}
+function preloadAsset(url,start,end,label){return xhrProgress(url,start,end,label,'blob')}
 function runCode(code,name){(0,eval)(code+'\n//# sourceURL='+name)}
 (async()=>{
  try{
@@ -103,7 +118,7 @@ function runCode(code,name){(0,eval)(code+'\n//# sourceURL='+name)}
   runCode(engine,'three-r152.min.js');if(!window.THREE)throw new Error('THREE global not created');
   const app=await fetchTextProgress('./js/app.js',62,68,'КОД ОПЕРАТОРСКОЙ...');
   runCode(app,'byurokyadt-app.js');
- }catch(e){L.fatal('ОШИБКА ЗАГРУЗКИ V7: '+(e.message||e))}
+ }catch(e){L.fatal('ОШИБКА ЗАГРУЗКИ V7.0.1: '+(e.message||e))}
 })();
 })();
 </script>
