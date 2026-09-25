@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1600" viewBox="0 0 1200 1600">
+<rect width="1200" height="1600" fill="#e8d8b0"/><rect width="1200" height="210" fill="#99241c"/>
+<path d="M0 1170L1200 850V1600H0z" fill="#801d18"/><path d="M1200 210V960L650 780z" fill="#b33a2b"/>
+<rect x="34" y="34" width="1132" height="1532" fill="none" stroke="#7b1d18" stroke-width="6"/>
+<text x="600" y="124" text-anchor="middle" fill="#f2dfae" font-family="Arial" font-size="61" font-weight="800">ЛЕОНИД ИЛЬИЧ БРЕЖНЕВ</text>
+<!-- solemn stylized late-Soviet portrait -->
+<path d="M205 1328L302 922 452 815 748 815 898 922 995 1328z" fill="#262b31"/>
+<path d="M465 836L600 1038 735 836 675 795 525 795z" fill="#eee5cf"/><path d="M560 820L600 1038 640 820 622 790 578 790z" fill="#671f20"/>
+<path d="M525 690H675L680 840H520z" fill="#c99770"/>
+<path d="M468 355L535 292 645 278 735 335 780 460 760 620 700 735 605 785 505 742 445 630 424 480z" fill="#d0a27b"/>
+<path d="M603 286L735 338 777 460 742 618 688 704 605 774z" fill="#dfb087"/><path d="M468 355L535 292 602 286 585 455 550 610 505 742 445 630 424 480z" fill="#a8775d"/>
+<ellipse cx="430" cy="515" rx="39" ry="72" fill="#b98262"/><ellipse cx="781" cy="515" rx="39" ry="72" fill="#c99972"/>
+<path d="M438 410L452 330 512 270 590 244 674 252 742 300 774 382 726 338 659 313 594 322 527 308 475 356z" fill="#302d28"/>
+<path d="M463 340L512 286 560 267 540 326zM566 269L620 252 665 266 625 321zM674 270L724 306 744 337 692 315z" fill="#6c675d"/>
+<path d="M477 445L556 430M640 429L724 447" stroke="#302a26" stroke-width="25"/><path d="M492 469L548 467M654 468L708 470" stroke="#302a26" stroke-width="9"/>
+<path d="M590 465L616 465 626 575 596 604 575 588z" fill="#a77458"/><path d="M536 650L598 661 669 646M555 684L651 683" fill="none" stroke="#6b463b" stroke-width="8"/>
+<g fill="#d0ad55"><path d="M772 1018l13 30h33l-26 20 10 31-30-18-29 18 10-31-26-20h32z"/><path d="M830 1018l13 30h33l-26 20 10 31-30-18-29 18 10-31-26-20h32z"/></g>
+<rect x="68" y="1220" width="1064" height="288" fill="#6f1a16"/><rect x="91" y="1243" width="1018" height="242" fill="none" stroke="#e6cd95" stroke-width="5"/>
+<text x="600" y="1340" text-anchor="middle" fill="#f2dfae" font-family="Arial" font-size="49" font-weight="800">ГЕНЕРАЛЬНЫЙ СЕКРЕТАРЬ ЦК КПСС</text>
+<text x="600" y="1410" text-anchor="middle" fill="#dfc38d" font-family="Arial" font-size="36" font-weight="700">ЛЕОНИД ИЛЬИЧ БРЕЖНЕВ</text>
+<text x="600" y="1470" text-anchor="middle" fill="#d0ad55" font-family="Arial" font-size="31" font-weight="800">СССР • 1982</text>
+</svg>
