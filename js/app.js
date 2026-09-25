@@ -362,7 +362,7 @@ function controls(){ui.loadDoc.disabled=ui.runDoc.disabled=ui.resetDoc.disabled=
 function status(text){hint.textContent=text}
 const audio=window.MinistryAudio;let soundOn=false,musicOn=false;
 const soundPosition=new T.Vector3();
-function sound(name){const object={relay:resetKnob,feed:rollers[1],scan:lens,stamp,bell:screen}[name];if(object){object.updateWorldMatrix(true,false);audio.play(name,object.getWorldPosition(soundPosition).toArray())}else audio.play(name)}
+function sound(name,source=null){const object=source||{relay:resetKnob,feed:rollers[1],scan:lens,stamp,bell:screen}[name];if(object){object.updateWorldMatrix(true,false);audio.play(name,object.getWorldPosition(soundPosition).toArray())}else audio.play(name)}
 ui.sound.onclick=async()=>{soundOn=!soundOn;ui.sound.textContent='SOUИD: '+(soundOn?'OИ':'OFF');ui.sound.setAttribute('aria-pressed',String(soundOn));try{await audio.setEffects(soundOn);sound('relay')}catch{soundOn=false;ui.sound.textContent='SOUИD: RETRY';ui.sound.setAttribute('aria-pressed','false');status('Audio delivery delayed. Click SOUИD to retry, comЯade.')}};
 const musicButton=document.getElementById('music');musicButton.onclick=async()=>{musicOn=!musicOn;musicButton.textContent='MUSЇC: '+(musicOn?'OИ':'OFF');musicButton.setAttribute('aria-pressed',String(musicOn));try{await audio.setMusic(musicOn)}catch{musicOn=false;musicButton.textContent='MUSЇC: RETRY';musicButton.setAttribute('aria-pressed','false');status('Orchestra delayed. Click MUSЇC to retry.')}};
 document.getElementById('volume').oninput=e=>audio.setVolume(Number(e.target.value)/100);
@@ -405,7 +405,7 @@ async function run(){
  phase(1);status('VЄЯЇFЇCATЇOИ · Second department confirms first department.');crt(['ПРОВЕРКА...','','ОБРАБОТКА: 68%']);await gauges(.66,.72);await wait(500);
  phase(2);status('STAMPЇИG · State applies physical certainty.');crt(['ПЕЧАТЬ...','','OFFЇCЇДL ПЕЧАТЬ.']);serial=String(Math.floor(100000+Math.random()*900000));drawOut(current.name,serial);outPaper.visible=true;outPaper.position.set(0,.3786,-.06);const pressVertices=outPaper.geometry.attributes.position;for(let i=0;i<pressVertices.count;i++)pressVertices.setZ(i,0);pressVertices.needsUpdate=true;outPaper.geometry.computeVertexNormals();
  await tween(330,t=>{stamp.position.y=st.stampY+(.545-st.stampY)*t;stampLink.position.y=st.linkY-.135*t},t=>t*t*t);sound('stamp');recoil=.48;await wait(120);await tween(420,t=>{stamp.position.y=.545+(st.stampY-.545)*t;stampLink.position.y=st.linkY-.135*(1-t)});
- sound('feed');await tween(1300,t=>{outPaper.position.z=-.06+.77*t;outPaper.position.y=.36-.31*outPaper.position.z;outRollers[0].rotation.x=t*16;outRollers[1].rotation.x=-t*16;bendPaper(outPaper,true)});await gauges(1,1);bendPaper(outPaper);setLamp(1,false);phase(3);
+ sound('feed',outRollers[0]);await tween(1300,t=>{outPaper.position.z=-.06+.77*t;outPaper.position.y=.36-.31*outPaper.position.z;outRollers[0].rotation.x=t*16;outRollers[1].rotation.x=-t*16;bendPaper(outPaper,true)});await gauges(1,1);bendPaper(outPaper);setLamp(1,false);phase(3);
  crt(['ПРОВЕРКА ЗАВЕРШЕНА.','','СТАТУС: ХОРОШО.','','ДОКУМЕНТ ЯВЛЯЕТСЯ ДОКУМЕНТОМ.']);
  createCertificate(current.name,serial);certificateReady=true;issued=Math.min(999999,issued+1);try{localStorage.setItem('byur-issued',String(issued))}catch{}updateCount(true);
  status('APPЯOVЄD · Your certificate is ready. Click CERTЇFЇCATЄ.');sound('bell');

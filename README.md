@@ -2,7 +2,7 @@
 
 Fictional 1982 Soviet document-confirmation apparatus. A local-first, installable browser experience, built for a Chromebook.
 
-## V10 cinema bureau (prepared; browser audit and release pending)
+## V10 cinema bureau
 
 Cinematic inspection provides eight composed views: office, cabinet, CRT/meters, feed rollers, stamp press, winter window, corridor door, and receiving tray. The camera plans routes around the existing furniture footprints. It interpolates its position, orientation and lens smoothly; manual gliding retains collision protection. Reduced-motion mode changes views immediately and suppresses cabinet recoil and weather-light animation.
 

@@ -3,8 +3,8 @@ window.createMinistryCinema=({T,camera,renderer,scene,canStand,invalidate,syncLo
  const $=id=>document.getElementById(id),reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const shots=[
   {name:'01 · THЄ OFFЇCЄ',p:[1.9,2.35,3.5],at:[-.55,2.05,-3.9],fov:57},
-  {name:'02 · CABЇИЄT POЯTЯAЇT',p:[1.12,1.78,-.40],at:[0,1.51,-1.43],fov:49},
-  {name:'03 · CRT & MЄTЄЯS',p:[-.20,1.81,-.52],at:[-.14,1.67,-1.26],fov:39},
+  {name:'02 · CABЇИЄT POЯTЯAЇT',p:[1.48,1.93,.05],at:[0,1.52,-1.46],fov:48},
+  {name:'03 · CRT & MЄTЄЯS',p:[-.29,1.89,-.35],at:[-.15,1.75,-1.27],fov:54},
   {name:'04 · FЄЄD ЯOLLЄЯS',p:[-.42,1.38,-.51],at:[-.18,1.09,-1.20],fov:34},
   {name:'05 · STAMP PЯЄSS',p:[.52,1.27,-.52],at:[.385,1.16,-1.24],fov:28},
   {name:'06 · WЇИTЄЯ WЇИDOW',p:[-2.55,2.13,-.48],at:[-5.75,2.62,-2.60],fov:54},
