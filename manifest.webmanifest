@@ -1,0 +1,28 @@
+{
+  "id": "./",
+  "name": "БЮРОКЯДТ-1 — Операторская",
+  "short_name": "БЮРОКЯДТ-1",
+  "description": "Fictional 1982 Soviet document-confirmation apparatus simulator.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+  "orientation": "landscape",
+  "background_color": "#11120e",
+  "theme_color": "#8e261e",
+  "categories": [
+    "games",
+    "entertainment"
+  ],
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
