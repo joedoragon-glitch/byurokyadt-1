@@ -33,7 +33,7 @@
 <div id="hint">COMЯДDЄ, ДPPЯOДCH MACHINE.</div>
 <button id="fs">ПОЛНЫЙ ЭКРАН</button>
 <button id="installBtn">УСТАНОВИТЬ ПРИЛОЖЕНИЕ</button>
-<div id="badge">V7.1 • ПАРТИЙНАЯ РЕКОНСТРУКЦИЯ</div>
+<div id="badge">V7.2 • ПАРТИЙНЫЕ ПЛАКАТЫ</div>
 <div id="appMode">РЕЖИМ: ВЕБ</div>
 <input id="file" type="file">
 <script>
@@ -112,13 +112,13 @@ function runCode(code,name){(0,eval)(code+'\n//# sourceURL='+name)}
  try{
   L.set(1,'ЧТЕНИЕ МАНИФЕСТА ПРИЛОЖЕНИЯ...','V7');
   await registerSW();
-  await preloadAsset('./assets/brezhnev_1982.svg',8,14,'ПОРТРЕТ БРЕЖНЕВА ДОСТАВЛЯЕТСЯ...');
-  await preloadAsset('./assets/xi_five_year_plan_1981_1985.svg',14,20,'XI ПЯТИЛЕТКА ДОСТАВЛЯЕТСЯ...');
+  await preloadAsset('./assets/brezhnev_party_poster.jpg',8,14,'ПОРТРЕТ БРЕЖНЕВА ДОСТАВЛЯЕТСЯ...');
+  await preloadAsset('./assets/xi_five_year_plan_party_poster.jpg',14,20,'XI ПЯТИЛЕТКА ДОСТАВЛЯЕТСЯ...');
   const engine=await fetchTextProgress('./vendor/three.min.js',20,62,'ПОЛУЧЕНИЕ ЛОКАЛЬНОГО 3D ДВИЖКА...');
   runCode(engine,'three-r152.min.js');if(!window.THREE)throw new Error('THREE global not created');
   const app=await fetchTextProgress('./js/app.js',62,68,'КОД ОПЕРАТОРСКОЙ...');
   runCode(app,'byurokyadt-app.js');
- }catch(e){L.fatal('ОШИБКА ЗАГРУЗКИ V7.1: '+(e.message||e))}
+ }catch(e){L.fatal('ОШИБКА ЗАГРУЗКИ V7.2: '+(e.message||e))}
 })();
 })();
 </script>
