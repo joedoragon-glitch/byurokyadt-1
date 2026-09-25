@@ -1,4 +1,4 @@
-const CACHE='byurokyadt-v7-local-3';
+const CACHE='byurokyadt-v7-local-4';
 const CORE=[
  './','./index.html','./styles.css','./manifest.webmanifest','./icons/icon.svg',
  './js/app.js','./vendor/three.min.js',
