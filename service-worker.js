@@ -1,8 +1,8 @@
-const CACHE='byurokyadt-v10-0';
+const CACHE='byurokyadt-v10-1';
 const CORE=[
- './','./index.html','./styles.css?v=10.0','./manifest.webmanifest','./icons/icon.svg',
- './js/cinematic.js?v=10.0','./js/app.js?v=10.0','./vendor/three.min.js',
- './assets/enamel-v9.webp','./js/audio.js?v=10.0',
+ './','./index.html','./styles.css?v=10.1','./manifest.webmanifest','./icons/icon.svg',
+ './js/cinematic.js?v=10.1','./js/app.js?v=10.1','./vendor/three.min.js',
+ './assets/enamel-v9.webp','./js/audio.js?v=10.1',
  './assets/audio/ministry.ogg','./assets/audio/room.ogg','./assets/audio/relay.ogg','./assets/audio/feed.ogg','./assets/audio/scan.ogg','./assets/audio/stamp.ogg','./assets/audio/bell.ogg',
  './assets/brezhnev-party-v8.jpg','./assets/xi-plan-v8.jpg',
  './icons/icon-192.png','./icons/icon-512.png'

@@ -59,7 +59,7 @@ try {
   const stopped=await page.evaluate(()=>window.BYUR_INSPECT.snapshot());assert(stopped.safe&&stopped.camera[2]>-.69,'Player is blocked by workbench');
   await page.locator('#roomView').click();await page.waitForFunction(()=>window.BYUR_INSPECT.viewReady());
   const state=await page.evaluate(async()=>({cache:await caches.keys(),worker:!!navigator.serviceWorker.controller,manifest:await fetch('./manifest.webmanifest').then(r=>r.json())}));
-  assert(state.worker);assert(state.cache.includes('byurokyadt-v10-0'));assert.equal(state.manifest.display,'standalone');
+  assert(state.worker);assert(state.cache.includes('byurokyadt-v10-1'));assert.equal(state.manifest.display,'standalone');
   await context.setOffline(true);await page.reload();await page.locator('#loading').waitFor({state:'hidden',timeout:60000});
   assert.equal(await page.locator('#fatal').isVisible(),false,'Offline shell renders');
   await page.screenshot({path:'test-results/05-offline.png'});

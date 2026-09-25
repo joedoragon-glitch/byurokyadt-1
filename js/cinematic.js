@@ -6,7 +6,7 @@ window.createMinistryCinema=({T,camera,renderer,scene,canStand,invalidate,syncLo
   {name:'02 · CABЇИЄT POЯTЯAЇT',p:[1.48,1.93,.05],at:[0,1.52,-1.46],fov:48},
   {name:'03 · CRT & MЄTЄЯS',p:[-.29,1.89,-.35],at:[-.15,1.75,-1.27],fov:54},
   {name:'04 · FЄЄD ЯOLLЄЯS',p:[-.42,1.38,-.51],at:[-.18,1.09,-1.20],fov:34},
-  {name:'05 · STAMP PЯЄSS',p:[.52,1.27,-.52],at:[.385,1.16,-1.24],fov:28},
+  {name:'05 · STAMP PЯЄSS',p:[.62,1.43,-.35],at:[.385,1.12,-1.22],fov:40},
   {name:'06 · WЇИTЄЯ WЇИDOW',p:[-2.55,2.13,-.48],at:[-5.75,2.62,-2.60],fov:54},
   {name:'07 · COЯЯЇDOЯ DOOЯ',p:[3.64,1.77,1.15],at:[5.7,1.48,-.8],fov:57},
   {name:'08 · ЯЄCЄЇVЇИG TЯAY',p:[1.58,1.42,-.48],at:[.97,1.02,-1.32],fov:36}

@@ -1,1 +1,1 @@
-{"name":"byurokyadt-1","private":true,"version":"10.0.0","type":"module","scripts":{"test":"node tests/camera-math.mjs && node tests/acceptance.mjs && node tests/cinematic.mjs"},"devDependencies":{"playwright":"1.62.1"}}
+{"name":"byurokyadt-1","private":true,"version":"10.1.0","type":"module","scripts":{"test":"node tests/camera-math.mjs && node tests/paper-path.mjs && node tests/acceptance.mjs && node tests/cinematic.mjs && node tests/paper-motion.mjs"},"devDependencies":{"playwright":"1.62.1"}}
