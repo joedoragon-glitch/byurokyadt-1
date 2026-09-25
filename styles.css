@@ -39,3 +39,24 @@ button:hover{background:#4c594b;border-color:#ded4aa}button:focus-visible{outlin
 #app>canvas{transition:opacity .18s ease}#viewControls{top:88px}#viewControls button{min-width:164px}.volumeLabel{font:10px 'Courier New',monospace;padding:8px 10px;background:#253028dd;border:1px solid #6b735f;display:flex;flex-direction:column;gap:8px}#volume{width:140px;accent-color:#bcb290}#hud .small{line-height:1.7}#operator{width:min(600px,calc(100vw - 32px))}#hint{max-width:72vw}
 @media(max-width:700px){#viewControls{top:12px}#viewControls button{min-width:149px;font-size:9px}.volumeLabel{font-size:9px;padding:6px 8px}#volume{width:130px}#hud{max-width:calc(100vw - 205px)}#hud .small{font-size:8px}.operatorActions button{font-size:8px;padding:11px 4px}}
 @media(max-height:650px){#viewControls{gap:4px}#viewControls button{padding:7px 10px}.volumeLabel{padding:5px 8px;gap:3px}#hud .small{font-size:9px}}
+
+/* V10: a quiet viewfinder; photos are rendered from the scene, never this UI. */
+[hidden]{display:none!important}
+body.cinematic{background:#070a08}
+body.cinematic :is(#hud,#operator,#viewControls,#hint,#cross,#fs,#installBtn,#badge,#appMode){display:none!important}
+#cinema{position:fixed;inset:0;pointer-events:none;z-index:40}
+#cinemaBar{position:absolute;left:20px;right:20px;bottom:20px;max-width:1120px;margin:auto;background:#14201dec;border:1px solid #758572;box-shadow:0 10px 40px #0008;padding:14px 16px;pointer-events:auto}
+.cinemaHeading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;font-size:11px;letter-spacing:1.2px;color:#d8c796}
+.cinemaHeading small{display:block;margin-top:6px;font-size:8px;color:#8eaa9b}
+.cinemaTools{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.cinemaTools button,.cinemaHeading button{font-size:10px;padding:10px}
+.cinemaTools select{background:#253c33;color:#e6dfc8;border:1px solid #7d927d;padding:10px 6px;font:10px 'Courier New',monospace;max-width:100%}
+.cinemaTools label{display:flex;align-items:center;gap:6px;font-size:9px;color:#afbeaf;margin:0 6px}
+#cinemaLens{width:90px;accent-color:#bdaf83}#cinemaLensValue{min-width:26px}
+.cinemaHelp{font-size:9px;line-height:1.9;color:#adc1b3;margin-top:9px}
+#cinemaStatus{color:#d9c895}
+#cinemaReveal{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font-size:9px;opacity:.16;pointer-events:auto;transition:opacity .2s}
+#cinemaReveal:hover,#cinemaReveal:focus-visible{opacity:1}
+#cinemaToast{position:absolute;top:24px;left:50%;transform:translateX(-50%);background:#162d23de;border:1px solid #8f9c7e;padding:12px;font-size:11px}
+@media(max-width:700px){#cinemaBar{left:9px;right:9px;bottom:9px;padding:11px}.cinemaHeading{font-size:9px;letter-spacing:0}.cinemaHeading button{font-size:8px}.cinemaTools{gap:5px}.cinemaTools button,.cinemaTools select{font-size:9px;padding:9px 6px}.cinemaHelp{font-size:8px}#cinemaLens{width:70px}#cinemaReveal{width:max-content}}
+@media(max-height:500px){#cinemaBar{bottom:6px;padding:8px}.cinemaHeading{margin-bottom:6px}.cinemaHeading small,.cinemaHelp{display:none}.cinemaTools button,.cinemaTools select{padding:7px}}

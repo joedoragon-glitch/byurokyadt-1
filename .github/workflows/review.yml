@@ -1,13 +1,13 @@
 name: Inspect review build
 on:
   push:
-    branches: ["v9-aesthetic-review"]
+    branches: ["v9-aesthetic-review", "v10-cinema-review"]
 permissions:
   contents: read
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
