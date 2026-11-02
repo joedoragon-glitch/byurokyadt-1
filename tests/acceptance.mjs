@@ -3,6 +3,8 @@ import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 const base = process.env.BASE_URL || 'http://127.0.0.1:8000/';
+const version = JSON.parse(await readFile('package.json','utf8')).version;
+const expectedCache = 'byurokyadt-v'+version.replaceAll('.','-');
 const inspectURL = new URL(base);inspectURL.searchParams.set('inspect','1');
 const browser = await chromium.launch();
 const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, acceptDownloads:true });
@@ -56,6 +58,9 @@ try {
   assert.equal(await page.locator('#fatal').isVisible(),false);
   const sceneInfo=await page.evaluate(()=>window.BYUR_INSPECT.snapshot());
   assert.equal(sceneInfo.issued,1,'Issued counter survives reload');assert.equal(sceneInfo.archiveSheets,1,'Receiving tray restores');assert(sceneInfo.safe);assert(sceneInfo.machine[0]>1.1&&sceneInfo.machine[0]<1.5);
+  const saved=await page.evaluate(()=>({entries:Object.entries(localStorage),pageText:document.body.textContent}));
+  assert.deepEqual(saved.entries,[['byur-issued','1']],'Only the numeric issued total may persist in local storage');
+  assert(!saved.pageText.includes('FORM-27B.txt')&&!saved.pageText.includes('SECOND.txt'),'Reload must not restore a private filename into the page');
   const blocked=await page.evaluate(()=>[[0,-1.5],[-4.4,-5.5],[-3.6,-3.7],[4,-5.2],[3.94,-4.3],[6,0]].map(([x,z])=>window.BYUR_INSPECT.canStand(x,z)));assert.deepEqual(blocked,[false,false,false,false,false,false]);
   await auxiliary('deskView');await page.waitForFunction(()=>window.BYUR_INSPECT.viewReady());
   await page.locator('#app canvas').click({position:{x:30,y:600}});
@@ -65,7 +70,7 @@ try {
   const stopped=await page.evaluate(()=>window.BYUR_INSPECT.snapshot());assert(stopped.safe&&stopped.camera[2]>-.69,'Player is blocked by workbench');
   await auxiliary('roomView');await page.waitForFunction(()=>window.BYUR_INSPECT.viewReady());
   const state=await page.evaluate(async()=>({cache:await caches.keys(),worker:!!navigator.serviceWorker.controller,manifest:await fetch('./manifest.webmanifest').then(r=>r.json())}));
-  assert(state.worker);assert(state.cache.includes('byurokyadt-v10-2-1'));assert.equal(state.manifest.display,'standalone');
+  assert(state.worker);assert(state.cache.includes(expectedCache));assert.equal(state.manifest.display,'standalone');
   await context.setOffline(true);await page.reload();await page.locator('#loading').waitFor({state:'hidden',timeout:60000});
   assert.equal(await page.locator('#fatal').isVisible(),false,'Offline shell renders');
   await page.screenshot({path:'test-results/05-offline.png'});
@@ -79,8 +84,20 @@ try {
   await page.setViewportSize({width:1100,height:700});await auxiliary('deskView');await page.waitForFunction(()=>window.BYUR_INSPECT.viewReady());await page.screenshot({path:'test-results/06-chromebook.png'});
   await page.setViewportSize({width:390,height:844});await auxiliary('roomView');await page.waitForFunction(()=>window.BYUR_INSPECT.viewReady());await page.screenshot({path:'test-results/08-mobile.png'});
   assert.equal(await page.locator('#runDoc').isVisible(),true);
+  // Large/corrupt counters must not overflow the six-digit display or 32-sheet tray.
+  // A reload exercises the real persistence initialization instead of duplicating its clamp in a test.
+  for(const [stored,expectedIssued,expectedSheets] of [['33',33,32],['1000000',999999,32],['-7',0,0]]){
+    await page.evaluate(value=>localStorage.setItem('byur-issued',value),stored);
+    await page.reload();await page.locator('#loading').waitFor({state:'hidden',timeout:60000});
+    assert.equal(await page.locator('#fatal').isVisible(),false,'Counter fixture must not break startup');
+    const bounded=await page.evaluate(()=>window.BYUR_INSPECT.snapshot());
+    assert.equal(bounded.issued,expectedIssued,'Issued total is clamped on reload: '+stored);
+    assert.equal(bounded.archiveSheets,expectedSheets,'Tray never exceeds 32 visible sheets: '+stored);
+    assert.equal(bounded.counterDisplay,expectedIssued,'Mechanical counter follows capped issued total: '+stored);
+  }
+  await page.evaluate(()=>localStorage.setItem('byur-issued','1'));
   assert.deepEqual(errors,[]);
-  await writeFile('test-results/result.json',JSON.stringify({passed:true,base,checks:['poster decode','WebGL scene','document selection','mechanical cycle','PNG certificate','reset','cached reload','offline reload','audio decode and controls','offline audio','cabinet dimensions','furniture collision','walking collision','narrow viewport','idle rendering','mechanism weight','bending paper','persistent physical counter and tray'],state,sceneInfo},null,2));
+  await writeFile('test-results/result.json',JSON.stringify({passed:true,base,checks:['poster decode','WebGL scene','document selection','mechanical cycle','PNG certificate','reset','cached reload','offline reload','audio decode and controls','offline audio','cabinet dimensions','furniture collision','walking collision','narrow viewport','idle rendering','mechanism weight','bending paper','persistent physical counter and tray','counter/tray upper and lower bounds','private filename not restored on reload'],state,sceneInfo},null,2));
   console.log('ОТК: all acceptance checks passed.');
 } catch(e) {
   await page.screenshot({path:'test-results/failure.png'}).catch(()=>{});

@@ -20,7 +20,7 @@ The intended tone is restrained, tactile and gently absurd: institutional bureau
 
 ## Controls
 
-The **10.2.1 integration candidate** brings the lighting, room architecture and contextual UI improvements together. The complete package is subject to final combined tests and publication authorization.
+The **10.2.1 polishing release** brings the lighting, complete room architecture and contextual accessible UI together with performance profiling and maintenance guards. Consult the current [Development state](docs/DEVELOPMENT_STATE.md) and [Pages workflow](https://github.com/joedoragon-glitch/byurokyadt-1/actions/workflows/pages.yml) for the exact deployed source; final appearance is yours to assess in the game.
 
 
 **First procedure:** Select a local document → Confirm → watch the machine inspect and stamp its certificate → Collect certificate → Save PNG. The operator strip shows the current step, file name and progress in ordinary English; the file is not uploaded. The **Menu** button at the top right opens Room/Machine/Side views, Sound, Music, volume, fullscreen, installation (when supported) and How to operate. Escape closes the menu. The menu is optional for the main procedure and keeps the office unobstructed when closed.

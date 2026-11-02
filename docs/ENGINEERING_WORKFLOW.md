@@ -27,6 +27,7 @@ Use narrow, reproducible checks matched to the affected subsystem:
 | Core document/file/receipt/persistence | Relevant `tests/acceptance.mjs` behavior |
 | Sound or environmental events | `node tests/audio-corridor.mjs`, relevant game/browser audio checks and honest listening status |
 | README, agent guides or audio-preview page | Run `node tests/documentation-links.mjs` and `node tests/audio-preview.mjs`; use `node tests/audio-preview-browser.mjs` when player/browser behavior changes |
+| Release metadata, cache or test roster | `node tests/maintenance.mjs` plus relevant offline Chromium checks |
 | Release candidate | Broader `npm test` **only after explicit permission** |
 
 `npm ci --ignore-scripts` installs development dependencies. Browser tests require Playwright Chromium and a local server at `http://127.0.0.1:8000/`. Do not claim completion of an unrun command or infer real device performance from headless Chromium.
