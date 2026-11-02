@@ -233,19 +233,40 @@ for(const x of [-.211,.211]){
  box(.092,.030,.115,phoneInk,x,.181,-.177,deskPhone).name=x<0?'phone-cradle-left':'phone-cradle-right';
  box(.064,.020,.071,phoneTrim,x,.186,-.177,deskPhone);
 }
-const gripCurve=new T.CatmullRomCurve3([
- new T.Vector3(-.224,.266,-.176),new T.Vector3(-.11,.300,-.177),
- new T.Vector3(0,.306,-.178),new T.Vector3(.11,.300,-.177),
- new T.Vector3(.224,.266,-.176)
-]);
-const grip=new T.Mesh(new T.TubeGeometry(gripCurve,26,.038,12,false),phoneRed);
-grip.name='phone-shaped-handset-grip';grip.castShadow=true;deskPhone.add(grip);
+// The handset is a SINGLE shallow molded shell with gently flared, squared
+// ear/mouth ends, rather than a thin tube joining two balls. This contour is
+// essential to its TA-72-era silhouette from ordinary room distances.
+const handsetOutline=new T.Shape();
+handsetOutline.moveTo(-.280,.209);
+handsetOutline.lineTo(-.288,.296);
+handsetOutline.quadraticCurveTo(-.290,.316,-.263,.318);
+handsetOutline.lineTo(-.170,.318);
+handsetOutline.quadraticCurveTo(-.152,.315,-.136,.286);
+handsetOutline.lineTo(.136,.286);
+handsetOutline.quadraticCurveTo(.152,.315,.170,.318);
+handsetOutline.lineTo(.263,.318);
+handsetOutline.quadraticCurveTo(.290,.316,.288,.296);
+handsetOutline.lineTo(.280,.209);
+handsetOutline.lineTo(.207,.209);
+handsetOutline.quadraticCurveTo(.160,.223,.132,.250);
+handsetOutline.lineTo(-.132,.250);
+handsetOutline.quadraticCurveTo(-.160,.223,-.207,.209);
+handsetOutline.closePath();
+const handsetGeo=new T.ExtrudeGeometry(handsetOutline,{
+ depth:.106,steps:1,curveSegments:8,
+ bevelEnabled:true,bevelThickness:.009,bevelSize:.008,bevelSegments:2
+});
+handsetGeo.translate(0,0,-.053);
+const grip=new T.Mesh(handsetGeo,phoneRed);
+grip.position.z=-.176;
+grip.name='phone-shaped-handset-grip';grip.castShadow=grip.receiveShadow=true;
+deskPhone.add(grip);
 for(const x of [-.228,.228]){
- const cap=new T.Mesh(new T.SphereGeometry(1,18,10),phoneRed);
- cap.scale.set(.078,.068,.063);cap.position.set(x,.264,-.176);
+ // A thin dark earpiece grille belongs underneath each molded end.
+ const cap=cyl(.040,.010,phoneTrim,x,.205,-.176,0,0,0,deskPhone,20);
  cap.name=x<0?'phone-earpiece':'phone-mouthpiece';
- cap.castShadow=true;deskPhone.add(cap);
- cyl(.040,.008,phoneInk,x,.203,-.176,0,0,0,deskPhone,20).castShadow=false;
+ cap.castShadow=true;
+ cyl(.030,.006,phoneInk,x,.196,-.176,0,0,0,deskPhone,20).castShadow=false;
 }
 // Coiled receiver lead, suspended beside the left of the set and ending at
 // the body jack. The spring geometry belongs to the phone, not to the desk.
