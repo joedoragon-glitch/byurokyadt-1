@@ -39,6 +39,7 @@ button:disabled{opacity:.57;cursor:default}
 .volumeLabel{font:11px "Courier New",monospace;color:#e8e4d2;display:flex;flex-direction:column;gap:8px;padding:10px;border:1px solid #697664;background:#273329}
 #volume{width:100%;accent-color:#e5c789;min-height:22px;margin:0}
 #utilityPanel>#helpToggle,#utilityPanel>#fs,#utilityPanel>#installBtn{width:100%;text-align:left;margin-top:7px;font-size:11px}
+#fs{position:static;right:auto;top:auto;z-index:auto;box-shadow:none}
 #installBtn{display:none;position:static;box-shadow:none}#installBtn.show{display:block}
 .utilityMeta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-top:15px;font-size:9px;color:#b7c2ad}
 #badge,#appMode{position:static;background:none;border:none;padding:0;color:inherit;font-size:inherit}
@@ -53,10 +54,10 @@ button:disabled{opacity:.57;cursor:default}
 #operator:not([data-stage="ready"]) #receipt{display:none}
 #operator[data-stage="empty"] #resetDoc{display:none}
 #operator[data-stage="empty"] #runDoc{opacity:.78}
-#operator[data-stage="ready"] #runDoc{display:none}
+#operator[data-stage="ready"] #receipt{background:#82502e;border-color:#d1a47c}
 #operator[data-stage="empty"] .operatorActions{grid-template-columns:repeat(2,minmax(0,1fr))}
 #operator[data-stage="selected"] .operatorActions,#operator[data-stage="busy"] .operatorActions{grid-template-columns:repeat(3,minmax(0,1fr))}
-#operator[data-stage="ready"] .operatorActions{grid-template-columns:repeat(3,minmax(0,1fr))}
+#operator[data-stage="ready"] .operatorActions{grid-template-columns:repeat(4,minmax(0,1fr))}
 #hint{position:static;left:auto;bottom:auto;transform:none;max-width:none;width:auto;box-sizing:border-box;text-align:left;white-space:normal;line-height:1.45;background:none;border:none;border-top:1px solid #526353;padding:9px 0 0;margin-top:9px;color:#e1e7d7;font-size:12px}
 .privacy{font-size:10px;color:#becfbb;margin-top:7px}
 #certificate,#helpDialog{box-sizing:border-box;width:min(570px,calc(100vw - 26px));max-height:calc(100dvh - 34px);overflow:auto;background:#202b23;color:#eee4c9;border:1px solid #9fa78d;padding:17px;box-shadow:0 25px 90px #000b}
@@ -84,7 +85,7 @@ button:disabled{opacity:.57;cursor:default}
 }
 @media(max-height:490px){
  #hud{padding:5px 9px}#hud span{display:none}
- #menuToggle{min-height:40px;padding:5px 10px}
+ #menuToggle{min-height:44px;padding:5px 10px}
  #utilityPanel{top:58px;max-height:calc(100dvh - 66px)}
  #operator{padding:7px 10px}
  .operatorHead{font-size:9px}
