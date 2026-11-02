@@ -3,6 +3,12 @@
 **Maintained status snapshot, prepared 1 November 2026.** Status is sourced from the repository at the stated checkpoints. Future changes must update this document when they affect current behavior or release claims.
 
 
+## Issue #8 — evidence-led performance profiling (2 November 2026)
+
+- [PR #12](https://github.com/joedoragon-glitch/byurokyadt-1/pull/12) provides reproducible paired CPU/WebGL workload instrumentation, cold/warm/offline cache traces, renderer/resource snapshots, comparison checks and a non-deploying profiling workflow. It preserves the original Three.js runtime, artwork, audio, documents and PWA behavior.
+- Initial separate-head software-Chromium profiling showed similar rendering/callback counts before and after instrumentation; no physical-device speedup is claimed. The combination with lighting, completed room and accessible UI needs its own exact-head repeat; see PR #12's latest Actions run and [profiling protocol](PERFORMANCE_PROFILING.md).
+- The old 10.1.1 main snapshots below remain historical; don't interpret branch-specific performance numbers as hardware-native results or final release validation.
+
 ## Cross-issue integration candidate (2 November 2026)
 
 - [PR #13](https://github.com/joedoragon-glitch/byurokyadt-1/pull/13) (lighting) was merged into `main` and [PR #14](https://github.com/joedoragon-glitch/byurokyadt-1/pull/14) (room) was combined on its branch with the lighting code. The independent PR snapshots below are historical and may predate the combined build.
