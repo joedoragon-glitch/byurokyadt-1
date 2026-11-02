@@ -31,9 +31,12 @@ try {
   await page.waitForFunction(()=>document.querySelector('#hint').textContent.startsWith('ERROR'));
   const sample='COMRADE DOCUMENT\nThis document requests certification of its own existence.\n';
   await page.locator('#file').setInputFiles({name:'FORM-27B.txt',mimeType:'text/plain',buffer:Buffer.from(sample)});
-  await auxiliary('sound');
+  // First Room/Machine button gesture activates both buses; the player never
+  // needs to explicitly turn Sound and Music on from Menu.
   await page.waitForFunction(()=>window.MinistryAudio.state().decoded.length===10,{},{timeout:30000});
-  await auxiliary('music');await page.waitForFunction(()=>window.MinistryAudio.state().musicOn&&window.MinistryAudio.state().context==='running');
+  assert.equal(await page.evaluate(()=>window.MinistryAudio.state().effectsOn),true);
+  assert.equal(await page.evaluate(()=>window.MinistryAudio.state().musicOn),true);
+  assert.equal(await page.evaluate(()=>window.MinistryAudio.state().context),'running');
   await page.locator('#runDoc').click();
   assert.equal(await page.locator('#loadDoc').isDisabled(),true,'No replacing file mid-cycle');
   await page.waitForFunction(()=>document.querySelector('#hint').textContent.startsWith('APPROVED'),{},{timeout:180000});
@@ -74,8 +77,10 @@ try {
   await context.setOffline(true);await page.reload();await page.locator('#loading').waitFor({state:'hidden',timeout:60000});
   assert.equal(await page.locator('#fatal').isVisible(),false,'Offline shell renders');
   await page.screenshot({path:'test-results/05-offline.png'});
+  // On an offline fresh page, first menu gesture still decodes cached audio.
   await auxiliary('sound');await page.waitForFunction(()=>window.MinistryAudio.state().decoded.length===10,{},{timeout:30000});
-  await auxiliary('sound');assert.equal(await page.locator('#sound').getAttribute('aria-pressed'),'false');
+  assert.equal(await page.locator('#sound').getAttribute('aria-pressed'),'false');
+  assert.equal(await page.evaluate(()=>window.MinistryAudio.state().musicOn),true);
   await context.setOffline(false);
   await page.mouse.move(700,500);await page.mouse.down();await page.mouse.move(960,500,{steps:8});await page.mouse.up();await page.screenshot({path:'test-results/09-door.png'});
   await auxiliary('roomView');await page.waitForFunction(()=>window.BYUR_INSPECT.viewReady());

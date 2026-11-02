@@ -45,3 +45,7 @@ The owner authorized implementation and visual review of a more complete 1982 ro
 ## Future design decisions
 
 A feature suggested in chat remains **proposed** until the owner authorizes it. If new narrative, interaction, art or music direction is accepted, record the exact choice, its scope, affected asset/behavior and source in this maintained page or the relevant owning feature document. Do not manufacture retrospective approval from dated pull requests, an AI description or an illustrative brief. Keep gameplay-specific proposals separate from existing accepted visual and interaction identity.
+
+## Owner corrections — 2 November 2026 (issue #16)
+
+The owner requests Sound/Music enabled by default, automatic first-gesture Safari-compliant unlocking, correction of the two detached rear-view floor shadows and a temporary left-side touch joystick. The control should look like a **normal round game joystick with a reddish tint**, explicitly not an industrial instrument panel or robot controller, and should be invisible at rest. Desktop controls stay unchanged. In player-facing stylized lettering, replace the incorrect doubly dotted `Ї` lookalike for Latin `I`, without altering genuine Cyrillic. The owner subsequently authorized merging PR #17 upon successful technical review on 2 November 2026. That approval does not establish real iPhone Safari audio/joystick verification or final creative acceptance.

@@ -90,14 +90,19 @@ try{
  await page.keyboard.press('Escape');assert.equal(await button('certificate').evaluate(el=>el.open),false);
  await page.waitForFunction(()=>document.activeElement?.id==='receipt');
 
- // Independent sound and music toggles, and the master volume.
- await auxiliary('sound');await page.waitForFunction(()=>window.MinistryAudio.state().decoded.length===10,{},{timeout:30000});
+ // Default-on sound/music unlock on the first real player gesture.
  assert.equal(await button('sound').getAttribute('aria-pressed'),'true');
- await auxiliary('music');assert.equal(await button('music').getAttribute('aria-pressed'),'true');
- await button('volume').press('Home');assert.equal(await page.evaluate(()=>window.MinistryAudio.state().volume),0);
+ assert.equal(await button('music').getAttribute('aria-pressed'),'true');
+ await page.waitForFunction(()=>window.MinistryAudio.state().decoded.length===10,{},{timeout:30000});
+ assert.equal(await page.evaluate(()=>window.MinistryAudio.state().context),'running');
+ // Independent muting must not reset the other bus.
  await auxiliary('sound');assert.equal(await button('sound').getAttribute('aria-pressed'),'false');
  assert.equal(await button('music').getAttribute('aria-pressed'),'true');
  await auxiliary('music');assert.equal(await button('music').getAttribute('aria-pressed'),'false');
+ await auxiliary('sound');assert.equal(await button('sound').getAttribute('aria-pressed'),'true');
+ assert.equal(await button('music').getAttribute('aria-pressed'),'false');
+ await auxiliary('music');assert.equal(await button('music').getAttribute('aria-pressed'),'true');
+ await button('volume').press('Home');assert.equal(await page.evaluate(()=>window.MinistryAudio.state().volume),0);
  await page.keyboard.press('Escape');
 
  // Reduced-motion cinematic controls must restore focus after hiding and exiting.

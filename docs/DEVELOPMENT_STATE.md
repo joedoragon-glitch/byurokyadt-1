@@ -2,6 +2,10 @@
 
 **Maintained status snapshot, prepared 1 November 2026.** Status is sourced from the repository at the stated checkpoints. Future changes must update this document when they affect current behavior or release claims.
 
+## Version 10.2.2 — owner-authorized integration (2 November 2026)
+
+[Issue #16](https://github.com/joedoragon-glitch/byurokyadt-1/issues/16) / [PR #17](https://github.com/joedoragon-glitch/byurokyadt-1/pull/17) implement Sound and Music enabled by default with Safari-compatible first-gesture activation, fix two detached +Z-front-wall floor shadows, provide a hidden-until-touch reddish mobile movement joystick, and replace accidental double-dotted `Ї` stand-ins in the decorative English interface text. The 13-check Node/Chromium review [passed on the full implementation](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41444873097); a later exact-head 13-check review also passed before documentation-only release-note cleanup. Owner authorized merge after technical review on 2 November 2026. Consult PR state and the [Pages workflow](https://github.com/joedoragon-glitch/byurokyadt-1/actions/workflows/pages.yml) for actual merge and publication outcomes: authorization is not itself proof of publication. Physical iPhone Safari playback, installed PWA audio interruption/resumption and human joystick feel are **not device-verified**.
+
 
 ## Integrated polishing release source — 10.2.1 (2 November 2026)
 

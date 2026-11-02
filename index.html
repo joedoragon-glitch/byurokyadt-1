@@ -7,19 +7,19 @@
 <title>БЮРОКЯДТ-1 — Операторская № 3</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./styles.css?v=10.2.1">
+<link rel="stylesheet" href="./styles.css?v=10.2.2">
 </head>
 <body>
 <div id="loading">
   <div class="loadCard">
     <div class="loadEmblem">★</div>
     <div class="loadTitle">БЮРОКЯДТ-1</div>
-    <div class="loadSub">STARTЇИG APP • OПЄЯATOЯ ROOM № 3 • 1982</div>
-    <div id="loadTask" class="loadTask">ЇИSPЄCTЇИG STATЄ EQUЇPMЄИT...</div>
+    <div class="loadSub">STARTIИG APP • OПЄЯATOЯ ROOM № 3 • 1982</div>
+    <div id="loadTask" class="loadTask">IИSPЄCTIИG STATЄ EQUIPMЄИT...</div>
     <div class="loadBarShell"><div id="loadBar" class="loadBar"></div></div>
-    <div class="loadMeta"><span id="loadPct">0%</span><span id="loadBytes">AWAЇTЇИG ALLOCATЇOИ</span></div>
+    <div class="loadMeta"><span id="loadPct">0%</span><span id="loadBytes">AWAITIИG ALLOCATIOИ</span></div>
     <div id="loadTip" class="loadTip">BREZHNEV IS WATCHING. COMЯADE, LOOK PRODUCTIVE.</div>
-    <div class="loadFooter">MЇИЇSTЯY OF UИИЄCЄSSAЯY PЯOCЄDUЯЄS • SKB № 41 • 1982</div>
+    <div class="loadFooter">MIИISTЯY OF UИИЄCЄSSAЯY PЯOCЄDUЯЄS • SKB № 41 • 1982</div>
   </div>
 </div>
 <div id="fatal">ЄЯЯOЯ. STATE APP COULD NOT START.</div>
@@ -28,6 +28,8 @@
   <strong>БЮРОКЯДТ-1</strong><span>OFFICE № 3 · 1982</span>
 </header>
 <div id="cross" aria-hidden="true"></div>
+<!-- Revealed only while actively touching the movement zone. -->
+<div id="moveStick" aria-hidden="true" hidden><div id="moveThumb"></div></div>
 <button id="menuToggle" aria-controls="utilityPanel" aria-expanded="false" aria-label="Open view, audio and help menu">☰ · MENU</button>
 <aside id="utilityPanel" aria-label="View, audio and help" hidden>
   <div class="utilityTitle">MINISTRY CONTROL DESK</div>
@@ -38,8 +40,8 @@
     <button id="sideView" aria-label="Inspect machine from the side">3 · Side</button>
     <button id="cinemaEnter" aria-label="Enter cinematic inspection">C · Photography mode</button>
     <div class="utilityGroupTitle">AUDIO</div>
-    <button id="sound" aria-label="Toggle mechanical sound" aria-pressed="false">Sound: Off</button>
-    <button id="music" aria-label="Toggle background music" aria-pressed="false">Music: Off</button>
+    <button id="sound" aria-label="Toggle mechanical sound" aria-pressed="true">Sound: On</button>
+    <button id="music" aria-label="Toggle background music" aria-pressed="true">Music: On</button>
     <label class="volumeLabel" for="volume">Master volume <input id="volume" type="range" min="0" max="100" value="65" aria-label="Audio volume"></label>
   </nav>
   <div class="utilityGroupTitle">ASSISTANCE</div>
@@ -70,9 +72,9 @@
     <li><strong>Collect certificate.</strong> Open the finished certificate and save its PNG. Reset to begin a new procedure.</li>
   </ol>
   <h3>Getting around</h3>
-  <p>Drag to look around; use WASD to walk. Choose Room, Machine or Side in Menu, or press 1, 2 or 3. F selects, Enter confirms, R resets. Tap the machine's tray, red button and output paper to interact directly.</p>
+  <p>Drag to look around and use WASD on desktop. On touch-first devices, hold the left side to reveal a floating movement joystick and drag on the right to look. Choose Room, Machine or Side in Menu, or press 1, 2 or 3. F selects, Enter confirms, R resets. Tap the machine's tray, red button and output paper to interact directly.</p>
   <h3>Photography and sound</h3>
-  <p>Menu → Photography (or C) opens eight inspection views. Use the on-screen camera tools or P to save a scene-only photo; Escape returns to the office. Sound and Music are separate, optional toggles in Menu and begin off. Reduced-motion preferences are respected.</p>
+  <p>Menu → Photography (or C) opens eight inspection views. Use the on-screen camera tools or P to save a scene-only photo; Escape returns to the office. Sound and Music are on by default, with separate toggles in Menu. Safari requires your first game tap to unlock sound. Reduced-motion preferences are respected.</p>
 </dialog>
 <script>
 (()=>{
@@ -99,20 +101,20 @@
 </script>
 <section id="cinema" aria-label="Cinematic inspection" hidden>
  <div id="cinemaBar">
-  <div class="cinemaHeading"><span>★ MЇИЇSTЯY CЇИЄMA BUЯЄAU <small>PHOTOGЯAPHY PЄЯMЇT № 10</small></span><button id="cinemaExit" aria-label="Exit cinematic mode">ESC · ЯЄTUЯИ TO DUTY</button></div>
+  <div class="cinemaHeading"><span>★ MIИISTЯY CIИЄMA BUЯЄAU <small>PHOTOGЯAPHY PЄЯMIT № 10</small></span><button id="cinemaExit" aria-label="Exit cinematic mode">ESC · ЯЄTUЯИ TO DUTY</button></div>
   <div class="cinemaTools">
    <button id="cinemaPrev" aria-label="Previous inspection view">‹</button><select id="cinemaShot" aria-label="Inspection view"></select><button id="cinemaNext" aria-label="Next inspection view">›</button>
    <button id="cinemaTour" aria-label="Toggle guided camera tour" aria-pressed="false">T · STAЯT TOUЯ</button>
    <label>LЄИS <input id="cinemaLens" aria-label="Camera field of view" type="range" min="20" max="75" value="57"><output id="cinemaLensValue">57°</output></label>
-   <select id="cinemaFrame" aria-label="Photograph aspect ratio"><option value="1.7777777778">16:9 · CЇИЄMA</option><option value="2.39">2.39:1 · WЇDЄ</option><option value="0">SCЯЄЄИ SHAPЄ</option></select>
-   <button id="cinemaHide" aria-label="Hide cinematic controls" aria-expanded="true">H · HЇDЄ PAИЄL</button><button id="cinemaPhoto" class="redButton" aria-label="Save clean cinematic PNG">P · SAVЄ PHOTO</button>
+   <select id="cinemaFrame" aria-label="Photograph aspect ratio"><option value="1.7777777778">16:9 · CIИЄMA</option><option value="2.39">2.39:1 · WIDЄ</option><option value="0">SCЯЄЄИ SHAPЄ</option></select>
+   <button id="cinemaHide" aria-label="Hide cinematic controls" aria-expanded="true">H · HIDЄ PAИЄL</button><button id="cinemaPhoto" class="redButton" aria-label="Save clean cinematic PNG">P · SAVЄ PHOTO</button>
   </div>
-  <div class="cinemaHelp">WASD · GLЇDЄ &nbsp; DRAG · LOOK &nbsp; Q / E · LOWЄЯ / ЯAЇSЄ &nbsp; SCROLL · LЄИS &nbsp; [ / ] · VЇЄWS<br><span id="cinemaStatus" role="status" aria-live="polite">COMЯADE, compose photograph. Beauty needs no extra form.</span></div>
+  <div class="cinemaHelp">WASD · GLIDЄ &nbsp; DRAG · LOOK &nbsp; Q / E · LOWЄЯ / ЯAISЄ &nbsp; SCROLL · LЄИS &nbsp; [ / ] · VIЄWS<br><span id="cinemaStatus" role="status" aria-live="polite">COMЯADE, compose photograph. Beauty needs no extra form.</span></div>
  </div>
- <button id="cinemaReveal" aria-label="Show cinematic controls" hidden>H · SHOW COИTЯOLS &nbsp; / &nbsp; ESC · ЄXЇT</button>
+ <button id="cinemaReveal" aria-label="Show cinematic controls" hidden>H · SHOW COИTЯOLS &nbsp; / &nbsp; ESC · ЄXIT</button>
  <div id="cinemaToast" role="status" hidden></div>
 </section>
-<dialog id="certificate" aria-label="Official certificate"><div class="receiptHeader"><strong>OFFЇCЇAL CERTЇFЇCATЄ</strong><button id="closeReceipt" aria-label="Close certificate">CLOSЄ ×</button></div><canvas id="certificateCanvas" width="1280" height="1760" role="img" aria-label="Official certificate preview."></canvas><button aria-label="Save certificate as PNG" id="downloadReceipt" class="redButton">SAVЄ CERTЇFЇCATЄ · PNG</button></dialog>
+<dialog id="certificate" aria-label="Official certificate"><div class="receiptHeader"><strong>OFFICIAL CERTIFICATЄ</strong><button id="closeReceipt" aria-label="Close certificate">CLOSЄ ×</button></div><canvas id="certificateCanvas" width="1280" height="1760" role="img" aria-label="Official certificate preview."></canvas><button aria-label="Save certificate as PNG" id="downloadReceipt" class="redButton">SAVЄ CERTIFICATЄ · PNG</button></dialog>
 <script>
 (()=>{
 const L={
@@ -123,31 +125,31 @@ const L={
   'COMЯADE, select a document. Machine shall examine its existence.',
   'WASD to walk. Drag mouse to look. Furniture remains solid by decree.',
   'Press 1 for room view, 2 for machine, 3 for side inspection.',
-  'Turn SOUИD on for machinery. Turn MUSЇC on for ministry orchestra.',
-  'Click input tray or SЄLЄCT DOC. Then press COИFЇЯM.',
+  'Sound and Music start on; your first tap unlocks browser audio.',
+  'Click input tray or SЄLЄCT DOC. Then press COИFIЯM.',
   'Your document stays on your device. No file is sent to ministry.',
   'After inspection, collect and save your official certificate.',
   'Winter window is closed. Opening request awaits spring committee.',
   'Previous form approved next form. Administration is progressing.'
  ],tipIndex:0,
  set(p,msg,meta){this.value=Math.max(this.value,Math.min(100,p));this.bar.style.width=this.value+'%';this.pct.textContent=Math.round(this.value)+'%';if(msg)this.task.textContent=msg;if(meta!==undefined)this.bytes.textContent=meta},
- stage(name){const map={engine_ready:[68,'3D ENGЇИЄ ACCEPTED BY STATE.'],renderer_ready:[76,'STARTЇИG ЯEИDEЯЇИG WORKSHOP...'],materials_ready:[83,'ЇSSUЇИG COИCЯЄTЄ, STЄЄL AND BAKЄLЇTЄ...'],room_ready:[91,'HANGЇИG APPЯOVЄD POSTЄЯS...'],machine_ready:[96,'ASSEMBLЇИG БЮРОКЯДТ-1 ON WORKBENCH...'],first_frame:[100,'OFFЇCЄ ЇИSPЄCTЇOИ. PASSЄD.']};if(map[name])this.set(map[name][0],map[name][1],'ЇИSPЄCTЇOИ: '+map[name][0]+'%')},
- complete(){this.set(100,'ЯEADY. COMЯADE MAY ENTER OFFICE.','ЇИSPЄCTЇOИ: PASSЄD');setTimeout(()=>{this.root.classList.add('done');setTimeout(()=>this.root.style.display='none',380)},260)},
+ stage(name){const map={engine_ready:[68,'3D ENGIИЄ ACCEPTED BY STATE.'],renderer_ready:[76,'STARTIИG ЯEИDEЯIИG WORKSHOP...'],materials_ready:[83,'ISSUIИG COИCЯЄTЄ, STЄЄL AND BAKЄLITЄ...'],room_ready:[91,'HANGIИG APPЯOVЄD POSTЄЯS...'],machine_ready:[96,'ASSEMBLIИG БЮРОКЯДТ-1 ON WORKBENCH...'],first_frame:[100,'OFFICЄ IИSPЄCTIOИ. PASSЄD.']};if(map[name])this.set(map[name][0],map[name][1],'IИSPЄCTIOИ: '+map[name][0]+'%')},
+ complete(){this.set(100,'ЯEADY. COMЯADE MAY ENTER OFFICE.','IИSPЄCTIOИ: PASSЄD');setTimeout(()=>{this.root.classList.add('done');setTimeout(()=>this.root.style.display='none',380)},260)},
  fatal(msg){const f=document.getElementById('fatal');f.style.display='grid';f.textContent=msg;this.root.style.display='none'}
 };
 window.BYUR_LOAD=L;
 const tipTimer=setInterval(()=>{if(L.root.style.display==='none'){clearInterval(tipTimer);return}L.tipIndex=(L.tipIndex+1)%L.tips.length;L.tip.textContent=L.tips[L.tipIndex]},1700);
 
 const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
-if(standalone)document.getElementById('appMode').textContent='MODЄ: ЇИSTALLЄD APP';
+if(standalone)document.getElementById('appMode').textContent='MODЄ: IИSTALLЄD APP';
 let deferredPrompt=null;const installBtn=document.getElementById('installBtn');
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.classList.add('show')});
 installBtn.onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.classList.remove('show')};
-addEventListener('appinstalled',()=>document.getElementById('appMode').textContent='MODЄ: ЇИSTALLЄD APP');
+addEventListener('appinstalled',()=>document.getElementById('appMode').textContent='MODЄ: IИSTALLЄD APP');
 
 async function registerSW(){
  if(!('serviceWorker'in navigator))return;
- L.set(3,'ЯЄGЇSTЄЯЇИG OFFLЇИЄ STOЯЄ...','SERVICE WORKER');
+ L.set(3,'ЯЄGISTЄЯIИG OFFLIИЄ STOЯЄ...','SERVICE WORKER');
  await navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'});
  await navigator.serviceWorker.ready;
  L.set(8,'LOCAL APP WAREHOUSE ЯEADY.','OFFLINE SHELL');
@@ -188,27 +190,27 @@ async function preloadAsset(url,start,end,label,key){
   img.src=objectURL;await img.decode();
   if(img.naturalWidth<256||img.naturalHeight<256)throw new Error('POSTER SIZE UNKNOWN');
   window.BYUR_POSTERS[key]=img;
-  L.set(end,label,img.naturalWidth+' × '+img.naturalHeight+' • VЄЯЇFЇЄD');
+  L.set(end,label,img.naturalWidth+' × '+img.naturalHeight+' • VЄЯIFIЄD');
  }catch(e){throw new Error('ПЛАКАТ НЕ ЧИТАЕТСЯ: '+url+' — '+e.message)}
  finally{URL.revokeObjectURL(objectURL)}
 }
 function runCode(code,name){(0,eval)(code+'\n//# sourceURL='+name)}
 (async()=>{
  try{
-  L.set(1,'ЯEADЇИG APP MANЇFЄST...','V10');
+  L.set(1,'ЯEADIИG APP MANIFЄST...','V10');
   await Promise.race([registerSW().catch(()=>{}),new Promise(resolve=>setTimeout(resolve,4000))]);
-  await preloadAsset('./assets/brezhnev-party-v8.jpg',8,14,'DELЇVEЯЇИG BREZHNEV PORTRAIT...','brezhnev');
-  await preloadAsset('./assets/xi-plan-v8.jpg',14,20,'DELЇVEЯЇИG FIVE-YEAR PLAN POSTER...','plan');
-  await preloadAsset('./assets/enamel-v9.webp',20,25,'DELЇVEЯЇИG CABЇИЄT EИAMЄL...','enamel');
-  const engine=await fetchTextProgress('./vendor/three.min.js',25,62,'DELЇVEЯЇИG LOCAL 3D ENGINE...');
+  await preloadAsset('./assets/brezhnev-party-v8.jpg',8,14,'DELIVEЯIИG BREZHNEV PORTRAIT...','brezhnev');
+  await preloadAsset('./assets/xi-plan-v8.jpg',14,20,'DELIVEЯIИG FIVE-YEAR PLAN POSTER...','plan');
+  await preloadAsset('./assets/enamel-v9.webp',20,25,'DELIVEЯIИG CABIИЄT EИAMЄL...','enamel');
+  const engine=await fetchTextProgress('./vendor/three.min.js',25,62,'DELIVEЯIИG LOCAL 3D ENGINE...');
   runCode(engine,'three-r152.min.js');if(!window.THREE)throw new Error('THREE global not created');
-  const audioCode=await fetchTextProgress('./js/audio.js?v=10.2.1',62,64,'DELЇVEЯЇИG MЇИЇSTЯY OЯCHЄSTЯA...');
+  const audioCode=await fetchTextProgress('./js/audio.js?v=10.2.2',62,64,'DELIVEЯIИG MIИISTЯY OЯCHЄSTЯA...');
   runCode(audioCode,'byurokyadt-audio.js');
-  const cinemaCode=await fetchTextProgress('./js/cinematic.js?v=10.2.1',64,66,'DELЇVEЯЇИG CЇИЄMA BUЯЄAU...');
+  const cinemaCode=await fetchTextProgress('./js/cinematic.js?v=10.2.2',64,66,'DELIVEЯIИG CIИЄMA BUЯЄAU...');
   runCode(cinemaCode,'byurokyadt-cinematic.js');
-  const app=await fetchTextProgress('./js/app.js?v=10.2.1',62,68,'OPENЇИG OПЄЯATOЯ STATЇOИ...');
+  const app=await fetchTextProgress('./js/app.js?v=10.2.2',62,68,'OPENIИG OПЄЯATOЯ STATIOИ...');
   runCode(app,'byurokyadt-app.js');
- }catch(e){L.fatal('LOADЇИG ЄЯЯOЯ V10: '+(e.message||e))}
+ }catch(e){L.fatal('LOADIИG ЄЯЯOЯ V10: '+(e.message||e))}
 })();
 })();
 </script>

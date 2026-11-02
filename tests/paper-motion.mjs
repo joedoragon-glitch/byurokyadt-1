@@ -28,11 +28,13 @@ try{
  const expected=['printing-0.1','printing-0.4','printing-0.8','pressing-0.25','impact-0','delivery-0.25','delivery-0.6','delivery-0.95','ready-0'];
  assert.deepEqual(audit.frames.map(f=>f.key),expected);
  // Reach the real door using the normal camera and walk controls, then wait for the approach cue.
- await page.keyboard.press('Escape');await auxiliary('sound');await page.waitForFunction(()=>window.MinistryAudio.state().decoded.length===10);
- // Observe the approach event itself. The prior test sampled only lastPass after
- // waiting for any pass, so an unrelated background pass could overwrite it.
+ await page.keyboard.press('Escape');
+ // Sound is now enabled by default and begins on the FIRST game gesture.
+ // The long paper cycle may legitimately include an ambient corridor pass.
+ // An approach event must still be observed independently after reaching the door.
+ await page.waitForFunction(()=>window.MinistryAudio.state().decoded.length===10);
+ assert.equal(await page.evaluate(()=>window.MinistryAudio.state().effectsOn),true);
  const before=await page.evaluate(()=>window.MinistryAudio.state().corridor.passes);
- assert.equal(before,0,'Sound startup must not schedule premature corridor footsteps');
  await page.evaluate(()=>{
   window.BYUR_CORRIDOR_EVENTS=[];
   window.BYUR_CORRIDOR_WATCH=setInterval(()=>{
