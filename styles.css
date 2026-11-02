@@ -50,7 +50,7 @@ button:disabled{opacity:.57;cursor:default}
 #stepLabel{color:#ffe0a0;font-size:12px;line-height:1.35}
 #selectedFile{color:#c8d4c4;font-size:11px;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45%}
 .operatorActions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
-.operatorActions button{min-width:0;padding:9px 5px;font-size:11px;white-space:normal}
+.operatorActions button{min-width:0;padding:9px 5px;font-size:11px;white-space:normal;overflow-wrap:anywhere}
 #operator:not([data-stage="ready"]) #receipt{display:none}
 #operator[data-stage="empty"] #resetDoc{display:none}
 #operator[data-stage="empty"] #runDoc{opacity:.78}
@@ -58,7 +58,7 @@ button:disabled{opacity:.57;cursor:default}
 #operator[data-stage="empty"] .operatorActions{grid-template-columns:repeat(2,minmax(0,1fr))}
 #operator[data-stage="selected"] .operatorActions,#operator[data-stage="busy"] .operatorActions{grid-template-columns:repeat(3,minmax(0,1fr))}
 #operator[data-stage="ready"] .operatorActions{grid-template-columns:repeat(4,minmax(0,1fr))}
-#hint{position:static;left:auto;bottom:auto;transform:none;max-width:none;width:auto;box-sizing:border-box;text-align:left;white-space:normal;line-height:1.45;background:none;border:none;border-top:1px solid #526353;padding:9px 0 0;margin-top:9px;color:#e1e7d7;font-size:12px}
+#hint{position:static;left:auto;bottom:auto;transform:none;max-width:none;width:auto;box-sizing:border-box;text-align:left;white-space:normal;overflow-wrap:anywhere;line-height:1.45;background:none;border:none;border-top:1px solid #526353;padding:9px 0 0;margin-top:9px;color:#e1e7d7;font-size:12px}
 .privacy{font-size:10px;color:#becfbb;margin-top:7px}
 #certificate,#helpDialog{box-sizing:border-box;width:min(570px,calc(100vw - 26px));max-height:calc(100dvh - 34px);overflow:auto;background:#202b23;color:#eee4c9;border:1px solid #9fa78d;padding:17px;box-shadow:0 25px 90px #000b}
 #certificate::backdrop,#helpDialog::backdrop{background:#080d0ae8;backdrop-filter:blur(4px)}
@@ -80,6 +80,7 @@ button:disabled{opacity:.57;cursor:default}
  #stepLabel{font-size:12px}
  #selectedFile{max-width:100%;text-align:left;font-size:10px}
  .operatorActions button{min-height:44px;font-size:10px}
+ #operator[data-stage="ready"] .operatorActions{grid-template-columns:repeat(2,minmax(0,1fr))}
  #hint{font-size:11px;padding-top:7px;margin-top:7px}
  .privacy{font-size:10px}
 }
@@ -110,7 +111,7 @@ body.cinematic :is(#hud,#operator,#menuToggle,#utilityPanel,#viewControls,#hint,
 #cinemaLens{width:90px;accent-color:#bdaf83}#cinemaLensValue{min-width:26px}
 .cinemaHelp{font-size:9px;line-height:1.9;color:#adc1b3;margin-top:9px}
 #cinemaStatus{color:#d9c895}
-#cinemaReveal{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font-size:9px;opacity:.16;pointer-events:auto;transition:opacity .2s}
+#cinemaReveal{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font-size:9px;opacity:.4;pointer-events:auto;transition:opacity .2s}
 #cinemaReveal:hover,#cinemaReveal:focus-visible{opacity:1}
 #cinemaToast{position:absolute;top:24px;left:50%;transform:translateX(-50%);background:#162d23de;border:1px solid #8f9c7e;padding:12px;font-size:11px}
 @media(max-width:700px){#cinemaBar{left:9px;right:9px;bottom:9px;padding:11px}.cinemaHeading{font-size:9px;letter-spacing:0}.cinemaHeading button{font-size:8px}.cinemaTools{gap:5px}.cinemaTools button,.cinemaTools select{font-size:9px;padding:9px 6px}.cinemaHelp{font-size:8px}#cinemaLens{width:70px}#cinemaReveal{width:max-content}}

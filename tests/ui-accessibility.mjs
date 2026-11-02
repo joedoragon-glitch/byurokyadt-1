@@ -44,16 +44,19 @@ try{
  // Native modal help, focus order and return to the visible trigger.
  await button('menuToggle').click();await button('helpToggle').click();
  assert.equal(await button('helpDialog').evaluate(el=>el.open),true);
+ assert.equal(await page.getByRole('dialog',{name:/Operator.s instructions/}).isVisible(),true);
  assert.equal(await focused(),'helpTitle');
  await page.keyboard.press('Tab');assert.equal(await focused(),'helpClose');
  await page.keyboard.press('Escape');
  assert.equal(await button('helpDialog').evaluate(el=>el.open),false);
- assert.equal(await focused(),'menuToggle');
+ await page.waitForFunction(()=>document.activeElement?.id==='menuToggle');
 
  // An empty procedure reports a comprehensible error.
  await button('runDoc').click();
  assert.match(await button('hint').textContent(),/Select a document first/);
- await button('file').setInputFiles({name:'FORM-27B.txt',mimeType:'text/plain',buffer:Buffer.from('Local document')});
+ const chooser=page.waitForEvent('filechooser');
+ await button('loadDoc').tap();
+ await (await chooser).setFiles({name:'FORM-27B.txt',mimeType:'text/plain',buffer:Buffer.from('Local document')});
  assert.match(await button('stepLabel').textContent(),/STEP 2/);
  assert.match(await button('hint').textContent(),/RECEIVED/);
  assert.match(await button('selectedFile').textContent(),/FORM-27B\.txt/);
@@ -73,7 +76,7 @@ try{
  await page.screenshot({path:'test-results/ui-04-certificate-ready.png'});
  await button('receipt').click();assert.equal(await button('certificate').evaluate(el=>el.open),true);
  await page.keyboard.press('Escape');assert.equal(await button('certificate').evaluate(el=>el.open),false);
- assert.equal(await focused(),'receipt');
+ await page.waitForFunction(()=>document.activeElement?.id==='receipt');
 
  // Independent sound and music toggles, and the master volume.
  await auxiliary('sound');await page.waitForFunction(()=>window.MinistryAudio.state().decoded.length===10,{},{timeout:30000});

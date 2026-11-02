@@ -82,7 +82,7 @@
   menu.addEventListener('click',()=>panel.hidden?openMenu():closeMenu());
   document.addEventListener('pointerdown',event=>{if(!panel.hidden&&!panel.contains(event.target)&&event.target!==menu)closeMenu()});
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!panel.hidden&&!help.open){event.preventDefault();closeMenu(true)}});
-  for(const id of ['roomView','deskView','sideView','cinemaEnter','fs'])document.getElementById(id).addEventListener('click',()=>closeMenu());
+  for(const id of ['roomView','deskView','sideView','cinemaEnter','fs'])document.getElementById(id).addEventListener('click',()=>closeMenu(id!=='cinemaEnter'));
   document.getElementById('helpToggle').addEventListener('click',()=>{closeMenu();help.showModal();document.getElementById('helpTitle').focus()});
   document.getElementById('helpClose').addEventListener('click',()=>help.close());
   help.addEventListener('close',()=>menu.focus());
