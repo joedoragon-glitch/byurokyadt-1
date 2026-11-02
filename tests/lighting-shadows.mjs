@@ -29,7 +29,11 @@ const injection=[
  'window.__LIGHT_PROBE={',
  ' pose(p){',
  '  camera.position.set(p.x,p.y,p.z);camera.rotation.set(p.pitch||0,p.yaw||0,0);',
- '  camera.updateMatrixWorld(true);renderer.render(scene,camera);',
+ '  camera.updateMatrixWorld(true);',
+ '  const submitted=window.__BYUR_LIGHT_DRAW_COUNT;',
+ '  const stamp=performance.now();renderer.render(scene,camera);',
+ '  const renderWallMs=performance.now()-stamp;',
+ '  const webglDrawSubmissions=window.__BYUR_LIGHT_DRAW_COUNT-submitted;',
  '  const shadow=key.shadow.camera;shadow.updateMatrixWorld(true);',
  '  const points='+JSON.stringify(probes)+';',
  '  const missing=points.filter(s=>{const v=new T.Vector3(s[1],s[2],s[3]).project(shadow);return Math.abs(v.x)>1.00001||Math.abs(v.y)>1.00001||v.z < -1.00001||v.z>1.00001}).map(s=>s[0]);',
@@ -37,11 +41,14 @@ const injection=[
  '  scene.traverse(o=>{if(o.isMesh){casters+=Number(!!o.castShadow);receivers+=Number(!!o.receiveShadow)}if(o.isLight)shadowLights+=Number(!!o.castShadow)});',
  '  const gl=renderer.getContext(),ext=gl.getExtension("WEBGL_debug_renderer_info");',
  '  const gpu=ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER);',
+ '  const frontWall=scene.getObjectByName("room-front-wall");',
  '  return {pose:p,coverage:{total:points.length,covered:points.length-missing.length,missing},',
  '   shadow:{left:shadow.left,right:shadow.right,top:shadow.top,bottom:shadow.bottom,near:shadow.near,far:shadow.far,',
  '    width:key.shadow.mapSize.x,height:key.shadow.mapSize.y,lights:shadowLights,casters,receivers,',
- '    pressCaster:stamp.children.some(o=>o.castShadow),paperReceiver:outPaper.receiveShadow},',
- '   renderer:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,pixelRatio:renderer.getPixelRatio(),gpu}};',
+ '    pressCaster:stamp.children.some(o=>o.castShadow),paperReceiver:outPaper.receiveShadow,',
+ '    frontWall:frontWall?{casts:frontWall.castShadow,receives:frontWall.receiveShadow}:null},',
+ '   renderer:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,',
+ '    webglDrawSubmissions,renderWallMs,pixelRatio:renderer.getPixelRatio(),gpu}};',
  ' },',
  ' press(t){',
  '  const stroke=st.stampY-(outputPath.height+outputPath.clearance+.1625);',
@@ -64,6 +71,20 @@ async function capture(label,base,view){
  await page.addInitScript(()=>{
   // Procedurally drawn room textures must match across the two revisions.
   let seed=44321;Math.random=()=>{seed=seed*16807%2147483647;return seed/2147483647};
+  // Count actual WebGL calls including shadow and regular passes. Renderer.info
+  // alone cannot establish GPU workload or render latency.
+  window.__BYUR_LIGHT_DRAW_COUNT=0;
+  for(const type of [window.WebGLRenderingContext,window.WebGL2RenderingContext]){
+   if(!type)continue;
+   for(const method of ['drawArrays','drawElements','drawArraysInstanced','drawElementsInstanced']){
+    const descriptor=Object.getOwnPropertyDescriptor(type.prototype,method);
+    if(!descriptor||typeof descriptor.value!=='function')continue;
+    Object.defineProperty(type.prototype,method,{...descriptor,value:function(...args){
+     window.__BYUR_LIGHT_DRAW_COUNT++;
+     return descriptor.value.apply(this,args);
+    }});
+   }
+  }
  });
  let intercepted=false;
  await page.route('**/js/app.js*',async route=>{
@@ -115,12 +136,19 @@ try{
    assert.equal(s.coverage.covered,s.coverage.total,view.name+' '+s.pose.name+': clipped shadow targets '+s.coverage.missing.join(', '));
    assert.equal(s.shadow.lights,1,'Maintain precisely one shadow-casting light');
    assert(s.shadow.pressCaster&&s.shadow.paperReceiver,'Dynamic press/paper shadows must remain eligible');
+   if(s.shadow.frontWall){
+    assert.equal(s.shadow.frontWall.casts,false,'Issue #7 front wall must never block the simulated interior key');
+    assert.equal(s.shadow.frontWall.receives,true,'Issue #7 front wall must receive shadows');
+   }
+   assert(s.renderer.webglDrawSubmissions>0,'Actual WebGL submissions must be observed');
    assert.equal(s.shadow.width,view.mobile?1024:2048,'Explicit device shadow-map budget');
   }
   const b=before.samples[0],a=after.samples[0];
   console.log(view.name+': coverage '+b.coverage.covered+'/'+b.coverage.total+' -> '+a.coverage.covered+'/'+a.coverage.total);
   console.log(view.name+': draws '+b.renderer.calls+' -> '+a.renderer.calls+
    ', triangles '+b.renderer.triangles+' -> '+a.renderer.triangles+
+   ', WebGL submissions '+b.renderer.webglDrawSubmissions+' -> '+a.renderer.webglDrawSubmissions+
+   ', shadow+scene submit wall ms '+b.renderer.renderWallMs.toFixed(2)+' -> '+a.renderer.renderWallMs.toFixed(2)+
    ', casters '+b.shadow.casters+' -> '+a.shadow.casters+
    ', map '+b.shadow.width+'² -> '+a.shadow.width+'², GPU: '+a.renderer.gpu);
  }
