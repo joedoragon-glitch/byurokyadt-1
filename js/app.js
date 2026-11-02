@@ -420,7 +420,6 @@ for(let i=0;i<tiePoints.length;i++){
 ties.instanceMatrix.needsUpdate=true;ties.receiveShadow=true;scene.add(ties);
 for(const x of [-5.81,5.81])for(const z of [-6.62,6.82])
  finishBox(.070,5.53,.065,finishIron,x,3.19,z);
-flushRoomTrim();
 // Front-wall service infrastructure is period-specific and doesn't crowd the machine.
 softBox(2.26,1.32,.095,finishIron,-1.87,3.32,6.780,scene,.028);
 const serviceNotice=decal(2.04,1.10,['ПОРЯДОК УЧЁТА','ДЕЛО № 27-Б','ПЕРЕДАТЬ ПО ОПИСИ'],-1.87,3.32,6.716,scene,'#c0b69a','#37392e');
@@ -437,12 +436,12 @@ serviceLabel.rotation.y=Math.PI;
 serviceLabel.material.emissive.setHex(0xffffff);
 serviceLabel.material.emissiveMap=serviceLabel.material.map;
 serviceLabel.material.emissiveIntensity=.18;serviceLabel.material.needsUpdate=true;
-box(.17,.028,.04,finishIron,3.57,2.82,6.615);
+finishBox(.17,.028,.04,finishIron,3.57,2.82,6.615);
 cyl(.040,.030,brass,3.57,2.82,6.591,Math.PI/2);
-box(.048,1.04,.065,finishIron,4.19,1.62,6.805);
-box(1.16,.040,.065,finishIron,3.63,2.12,6.805);
-box(1.22,.69,.062,finishIron,3.20,4.87,6.81);
-for(let i=0;i<8;i++)box(1.04,.034,.042,steel2,3.20,4.60+i*.074,6.747);
+finishBox(.048,1.04,.065,finishIron,4.19,1.62,6.805);
+finishBox(1.16,.040,.065,finishIron,3.63,2.12,6.805);
+finishBox(1.22,.69,.062,finishIron,3.20,4.87,6.81);
+for(let i=0;i<8;i++)finishBox(1.04,.034,.042,steel2,3.20,4.60+i*.074,6.747);
 // Original closed corridor door keeps its leaf, sign, handle and obstacle.
 for(const x of [-.615,.615])softBox(.115,2.57,.095,finishIron,x,1.285,.204,doorGroup,.015);
 softBox(1.34,.13,.10,finishIron,0,2.55,.205,doorGroup,.016);
@@ -456,22 +455,22 @@ cyl(.013,.016,black,-.11,2.15,.242,Math.PI/2,0,0,doorGroup,12);
 box(.14,.022,1.44,steel2,5.68,.016,-.80);
 // Cast-metal archival drawer details preserve original cabinet labels and bounds.
 for(const x of [-4.65,-3.86]){
- box(.79,.11,.67,finishIron,x,.067,-5.55);
- box(.79,.038,.69,steel2,x,1.485,-5.55);
+ finishBox(.79,.11,.67,finishIron,x,.067,-5.55);
+ finishBox(.79,.038,.69,steel2,x,1.485,-5.55);
  for(const y of [.28,.74,1.20]){
-  box(.43,.066,.017,finishIron,x,y+.016,-5.135);
-  box(.32,.018,.035,steel2,x,y+.027,-5.106);
+  finishBox(.43,.066,.017,finishIron,x,y+.016,-5.135);
+  finishBox(.32,.018,.035,steel2,x,y+.027,-5.106);
   for(const dx of [-.27,.27])cyl(.013,.014,steel2,x+dx,y-.135,-5.176,Math.PI/2,0,0,scene,10);
  }
- for(const y of [.506,.965])box(.72,.016,.024,finishIron,x,y,-5.176);
+ for(const y of [.506,.965])finishBox(.72,.016,.024,finishIron,x,y,-5.176);
 }
 // Telephone desk has supporting apron and drawers, receiver caps and a trailing cord.
-box(1.57,.19,.053,wood,3.9,.71,-4.88);
+finishBox(1.57,.19,.053,wood,3.9,.71,-4.88);
 for(const x of [3.50,4.30]){
  softBox(.66,.14,.033,wood,x,.71,-4.845,scene,.014);
- box(.21,.022,.032,brass,x,.70,-4.808);
+ finishBox(.21,.022,.032,brass,x,.70,-4.808);
 }
-for(const x of [3.15,4.65])box(.09,.065,.72,finishIron,x,.82,-5.20);
+for(const x of [3.15,4.65])finishBox(.09,.065,.72,finishIron,x,.82,-5.20);
 for(const x of [3.94,4.42]){
  cyl(.078,.07,phoneRed,x,1.17,-5.29,0,0,Math.PI/2,scene,20);
  cyl(.050,.075,black,x,1.17,-5.29,0,0,Math.PI/2,scene,16);
@@ -479,22 +478,24 @@ for(const x of [3.94,4.42]){
 const cordPoints=[new T.Vector3(4.42,1.13,-5.29),new T.Vector3(4.54,1.07,-5.34),new T.Vector3(4.48,.94,-5.37),new T.Vector3(4.60,.91,-5.31),new T.Vector3(4.53,.93,-5.21),new T.Vector3(4.50,.99,-5.15)];
 const phoneCord=new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(cordPoints),32,.012,6,false),black);phoneCord.castShadow=true;scene.add(phoneCord);
 for(let i=0;i<10;i++){const a=i*Math.PI/5;cyl(.012,.005,meterIvory,4.18+Math.sin(a)*.074,1.061,-5.14+Math.cos(a)*.074,0,0,0,scene,10)}
-for(const z of [-4.12,-3.42])box(1.60,.12,.044,wood,-3.60,.721,z);
-for(const x of [-4.30,-2.90])box(.044,.12,.69,wood,x,.721,-3.77);
+for(const z of [-4.12,-3.42])finishBox(1.60,.12,.044,wood,-3.60,.721,z);
+for(const x of [-4.30,-2.90])finishBox(.044,.12,.69,wood,x,.721,-3.77);
 // Chair's structural edge, back rails and foot braces add a convincing silhouette.
 softBox(.51,.030,.49,finishIron,3.94,.435,-4.36,scene,.02);
-for(const y of [.765,.91,1.055])box(.45,.025,.065,steel2,3.94,y,-4.535);
-for(const x of [3.73,4.15])box(.035,.035,.39,finishIron,x,.30,-4.36);
+for(const y of [.765,.91,1.055])finishBox(.45,.025,.065,steel2,3.94,y,-4.535);
+for(const x of [3.73,4.15])finishBox(.035,.035,.39,finishIron,x,.30,-4.36);
 // Radiator manifolds, control valve and winter-window sill brackets.
 for(const y of [.275,.94])cyl(.023,1.58,rad,0,y,-6.442,0,0,Math.PI/2,scene,16);
 cyl(.041,.055,steel2,.87,.31,-6.439,0,0,Math.PI/2,scene,18);
 cyl(.052,.035,brass,.91,.36,-6.43,0,0,0,scene,16);
-for(const z of [-3.97,-1.23])box(.17,.18,.29,finishIron,-5.63,1.24,z);
+for(const z of [-3.97,-1.23])finishBox(.17,.18,.29,finishIron,-5.63,1.24,z);
 const clockRim=new T.Mesh(new T.TorusGeometry(.383,.011,8,48),steel2);
 clockRim.position.set(0,3.83,-6.499);clockRim.castShadow=true;scene.add(clockRim);
 cyl(.028,.022,steel2,0,3.83,-6.488,Math.PI/2,0,0,scene,16);
 const mugRim=new T.Mesh(new T.TorusGeometry(.063,.009,7,24),steel2);
 mugRim.rotation.x=Math.PI/2;mugRim.position.set(4.49,1.062,-5.08);scene.add(mugRim);
+// All decoration is submitted once so repeated fasteners and joinery share draw calls.
+flushRoomTrim();
 
 /* Radius-expanded floor footprints. Axis sliding keeps contact natural. */
 const obstacles=[
