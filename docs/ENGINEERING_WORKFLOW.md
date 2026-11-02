@@ -36,7 +36,7 @@ When tests fail, keep the failing original assertion, tested SHA and actual logs
 
 ## 5. Keep documents in sync
 
-A feature is not complete if its new behavior and current guidance contradict each other. Update affected README/player instructions, architecture, decision/creative guidance and audio guide **in the same change**; avoid creating another status ledger. Preserve historical evidence in `AUDIT.md` and `AESTHETICS.md`. Separate **proposed, implemented, tested, merged, published and device-verified**.
+A feature is not complete if its new behavior and current guidance contradict each other. Update affected README/player instructions, architecture, decision/creative guidance and audio guide **in the same change**; avoid creating another status ledger. Preserve historical evidence in `AUDIT.md` and `AESTHETICS.md`. Follow the [documentation conventions](DOCUMENTATION_INDEX.md): one current topic owner, dated commit/CI/release links, valid Markdown headings/anchors and clearly marked superseded snapshots. Run `npm run test:docs` for documentation-only work. Separate **proposed, implemented, tested, merged, published and device-verified**.
 
 ## 6. PR and release boundaries
 

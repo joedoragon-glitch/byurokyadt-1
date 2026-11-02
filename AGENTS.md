@@ -38,7 +38,7 @@ Keep changes coherent and minimally invasive. Never optimize away the visual, ta
 2. Identify one user-visible outcome, affected modules, non-goals and the minimum meaningful regression set. Reuse relevant open work rather than opening duplicate issues.
 3. Make a focused branch change. Preserve existing functionality, original artwork and recordings; record any owner-authored new design choice.
 4. Test what changed with source-backed assertions and actual game paths when necessary. Validate negative cases and lifecycle boundaries appropriate to the task.
-5. **Update the affected maintained documents in the same PR.** Reuse before creating another competing "current" file; keep historical evidence intact and mark superseded plans clearly.
+5. **Update the affected maintained documents in the same PR.** Follow the [Documentation index and conventions](docs/DOCUMENTATION_INDEX.md): reuse the canonical topic owner, maintain Markdown links and formatting, date mutable status claims, and clearly label superseded historical snapshots.
 6. Report exact branch/SHA, check names and outcomes, any unperformed listening/device checks, outstanding blockers, and the next action. No imaginary background work.
 
 Status terms must remain distinct: **proposed**, **implemented**, **tested**, **merged**, **published** and **real-device verified**. A green draft PR is not a shipped game. Read [Engineering workflow](docs/ENGINEERING_WORKFLOW.md) for practical tests and GitHub handoffs.
