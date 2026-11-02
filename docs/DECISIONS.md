@@ -20,6 +20,24 @@ At the owner's request, the **portable authorial and collaboration standards** o
 
 Key commitments: respect original authored assets; prioritize specific player-facing identity over generic spectacle; review visual and audio experiences in context; use appropriate measured engineering tests; make an authorized task independently actionable; preserve evidence; keep feature documents accurate; never confuse draft, test, release or device acceptance.
 
+## Cross-project rule mapping and intentional exclusions
+
+This migration is **a selective adaptation, not a claim of exact rule-for-rule equivalence**. The source files named here live in the separate `joedoragon-glitch/azeroth-chronicles-prototype` repository; only the principles listed were considered applicable to this game's existing code and setting.
+
+| Source in the other game | Portable principle | Adopted here |
+| --- | --- | --- |
+| `AGENTS.md`, `docs/MECHANIC_DEVELOPMENT.md` | Owner scope/consent, autonomous implementation, blocker triage, focused testing, clear handoffs, accurate release statuses | [Agent policy](../AGENTS.md), [Engineering workflow](ENGINEERING_WORKFLOW.md) |
+| `docs/BRAND_IDENTITY.md` | Separate player-facing title and identity from technical legacy identifiers | [Creative direction](CREATIVE_DIRECTION.md), [README](../README.md) |
+| `docs/DESIGN_TO_SPRITE_WORKFLOW.md` | Work from accepted visual references, preserve originals and provenance, distinguish candidate art from owner approval, review in the actual game | [Creative direction](CREATIVE_DIRECTION.md), [Quality standards](QUALITY_STANDARDS.md) |
+| `docs/AUDIO_SOUND_PASS.md`, `docs/AUDIO_AUTHORING.md`, `docs/AUDIO_PLAYBACK.md` | Purpose-specific sound, original source provenance, coherent audible identity, context/mix review, technology not being artistic acceptance | [Audio direction](AUDIO_DIRECTION.md), [Sound listening room](../assets/audio-preview.html) |
+| `docs/PERFORMANCE_MEASUREMENT_AUDIT_20261022.md` | Measure actual workload and user experience; do not confuse simulated metrics with device FPS or remove fidelity blindly | [Quality standards](QUALITY_STANDARDS.md) |
+| `docs/COMMUNICATION_STYLE.md` | Natural first-person developer voice, factual updates, no invented personal claims, private writing stays private | [Communication style](COMMUNICATION_STYLE.md) |
+| `docs/DOCUMENTATION_GOVERNANCE_DEEP_AUDIT_20261025.md` | One owner for current guidance, linkable index, historical evidence separate from current state, low-ceremony upkeep | [Documentation index](DOCUMENTATION_INDEX.md), [Development state](DEVELOPMENT_STATE.md) |
+
+**Not imported:** fantasy setting, characters, gameplay/combat/balance, companion/pet mechanics, PixiJS/Canvas renderer policies, the other game's v4 saves, sprite atlas and 150%-source pipeline, its 83-track or 147-recording catalog, bespoke audio instruments/tempo rules, its specific CI/test commands, previous releases or historic task permissions. This project uses Three.js, a 7-OGG recorded library, procedural ambience, and a local issued-document counter.
+
+The mapping is meant to keep future collaborators from copying the other project's current implementation as a false authority. Consult this repository's live source and the owner's new directions before proposing a change.
+
 ## Future design decisions
 
 A feature suggested in chat remains **proposed** until the owner authorizes it. If new narrative, interaction, art or music direction is accepted, record the exact choice, its scope, affected asset/behavior and source in this maintained page or the relevant owning feature document. Do not manufacture retrospective approval from dated pull requests, an AI description or an illustrative brief. Keep gameplay-specific proposals separate from existing accepted visual and interaction identity.

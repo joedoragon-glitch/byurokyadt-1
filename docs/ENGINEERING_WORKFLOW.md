@@ -26,7 +26,7 @@ Use narrow, reproducible checks matched to the affected subsystem:
 | Cinematic routes or collisions | `node tests/camera-math.mjs`, then relevant browser cinematic checks |
 | Core document/file/receipt/persistence | Relevant `tests/acceptance.mjs` behavior |
 | Sound or environmental events | Relevant game/browser audio check and honest listening status |
-| README, agent guides or audio-preview page | Relative-link and asset checks; `node tests/audio-preview.mjs` for preview/service-worker behavior |
+| README, agent guides or audio-preview page | Run `node tests/documentation-links.mjs` and `node tests/audio-preview.mjs`; use `node tests/audio-preview-browser.mjs` when player/browser behavior changes |
 | Release candidate | Broader `npm test` **only after explicit permission** |
 
 `npm ci --ignore-scripts` installs development dependencies. Browser tests require Playwright Chromium and a local server at `http://127.0.0.1:8000/`. Do not claim completion of an unrun command or infer real device performance from headless Chromium.

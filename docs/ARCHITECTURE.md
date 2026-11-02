@@ -24,8 +24,10 @@ Follow `js/app.js` when changing processing, counter/tray, collisions or geometr
 
 ## Tests and deployment
 
-`package.json` runs six suites with `npm test`:
-- `tests/audio-preview.mjs` — verifies the listening page's seven local sources and protects the offline game shell.
+`package.json` runs focused source checks and Chromium suites with `npm test`:
+- `tests/documentation-links.mjs` — verifies cross-document local links and the required contributor entry points.
+- `tests/audio-preview.mjs` — checks the seven OGG sources and isolates standalone/service-worker navigation.
+- `tests/audio-preview-browser.mjs` — tests actual Chromium OGG decoding, player controls, cache isolation and offline reopen.
 - `tests/camera-math.mjs` — real camera controller and obstacle map without a GPU.
 - `tests/paper-path.mjs` — paper path geometry and stamp/UV registration without a browser.
 - `tests/acceptance.mjs` — Playwright/Chromium game workflow, WebGL, offline, document, sound, export, persistence, collisions and viewports.

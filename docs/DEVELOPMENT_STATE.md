@@ -10,11 +10,11 @@
 - **Open work when inspected:** the issue listing contained no independent open issues; the repository's four historical PRs #1–#4 were closed. New work should verify GitHub again before acting.
 - **Runtime:** Three.js scene, V10.1 mechanical/paper path, eight cinematic inspection viewpoints, original sound, local issued counter, offline-capable PWA. See [README](../README.md), [Architecture](ARCHITECTURE.md), [AUDIT.md](../AUDIT.md).
 
-## Proposed documentation and listening-room update
+## Documentation and listening-room proposal (1 November 2026 checkpoint)
 
-This migration is **candidate branch work**, not a published feature or evidence of a game-version release. It adds maintained AI guidance, a linked README/documentation map and a standalone original-OGG listening page, with a narrowly targeted service-worker safeguard to prevent the listening-page navigation from replacing the cached game shell. Its correctness must be established by specific checks on the actual candidate SHA; it is **not merged, deployed or real-device verified** as part of writing this document.
+[PR #5](https://github.com/joedoragon-glitch/byurokyadt-1/pull/5) proposes maintained AI guidance, a linked README/documentation map and a standalone seven-recording listening page. A narrow service-worker fix keeps standalone navigation separate from the cached game index. At the time the PR was opened this work was **unmerged and unpublished**; this dated observation must not be interpreted as its continuing status. Follow the live PR, exact commit and Pages workflow to establish subsequent outcomes.
 
-The listening room contains no new music, engine, online service or game-state integration. It is available on the Pages URL only after authorized merge and a successful Pages publication.
+The listening room contains no new music, engine, online service or game-state integration. The new Pages route is live **only when** an authorized merge and a successful Pages publication confirm that version. Its standalone sound and game cache behavior require browser checks; actual speaker/iPhone/Chromebook listening is a distinct unverified experience.
 
 ## Ongoing accuracy rules
 

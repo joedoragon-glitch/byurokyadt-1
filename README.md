@@ -60,7 +60,7 @@ python3 -m http.server 8000
 npm test
 ```
 
-The full `npm test` command invokes six suites including the lightweight preview/service-worker regression and browser acceptance. Prefer the smallest relevant checks during ordinary edits; broader browser/device work needs the owner's authorization. A push to `main` triggers the GitHub Pages workflow and is **not** an innocuous staging action. Develop on a branch, present a reviewable PR, and do not merge or deploy without explicit authorization. See the [engineering workflow](docs/ENGINEERING_WORKFLOW.md).
+The full `npm test` command runs the documented Node and Chromium regression suites, including listening-room playback and game acceptance. Prefer the smallest relevant checks during ordinary edits; broader browser/device work needs the owner's authorization. A push to `main` triggers the GitHub Pages workflow and is **not** an innocuous staging action. Develop on a branch, present a reviewable PR, and do not merge or deploy without explicit authorization. See the [engineering workflow](docs/ENGINEERING_WORKFLOW.md).
 
 ## Project documentation
 
