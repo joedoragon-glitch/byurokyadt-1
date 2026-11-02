@@ -22,6 +22,19 @@ if (args.compare && args.candidate) {
   const candidate = JSON.parse(await readFile(args.candidate, 'utf8'));
   assert.deepEqual(base.stages.map(x => x.name), candidate.stages.map(x => x.name),
     'Comparison requires identical workloads');
+  // A matched trace must also use the same renderer/browser and profiling settings.
+  // The two local-server URLs, time stamps and source SHAs are intentionally different.
+  const comparable = report => ({
+    browser: report.meta?.browser, node: report.meta?.node, idleMs: report.meta?.idleMs,
+    runner: report.meta?.runner, userAgent: report.meta?.environment?.userAgent,
+    viewport: report.meta?.environment?.viewport, dpr: report.meta?.environment?.dpr,
+    reducedMotion: report.meta?.environment?.reducedMotion,
+    gl: report.meta?.environment?.gl
+  });
+  assert.deepEqual(comparable(base), comparable(candidate),
+    'Comparison requires identical browser, renderer, viewport, DPR and workload settings');
+  assert.deepEqual(Object.keys(base.network), Object.keys(candidate.network),
+    'Comparison requires the same cold/warm/offline navigation stages');
   const rows = base.stages.map((a, i) => {
     const b = candidate.stages[i];
     return { stage: a.name, baseMs: a.elapsedMs, candidateMs: b.elapsedMs,
@@ -31,7 +44,10 @@ if (args.compare && args.candidate) {
       baseCallbackP95Ms: a.callbackP95Ms, candidateCallbackP95Ms: b.callbackP95Ms,
       baseHeapMB: a.jsHeapMB, candidateHeapMB: b.jsHeapMB };
   });
-  const result = { note: 'Single paired software/browser run. No automatic performance claim, FPS target or GPU-time inference.', base: base.meta, candidate: candidate.meta, rows };
+  const network = Object.fromEntries(Object.keys(base.network).map(name => [name, {
+    base: base.network[name], candidate: candidate.network[name]
+  }]));
+  const result = { note: 'Single paired browser run. No automatic performance claim, FPS target or GPU-time inference.', base: base.meta, candidate: candidate.meta, rows, network };
   if (args.out) { await mkdir(dirname(args.out), { recursive: true }); await writeFile(args.out, JSON.stringify(result, null, 2)); }
   console.log('PAIRED PERFORMANCE COMPARISON\n' + JSON.stringify(result, null, 2));
   process.exit(0);
@@ -107,7 +123,8 @@ await page.addInitScript(() => {
 const report = { meta: { label, base, startedAt: new Date().toISOString(),
   runner: 'Playwright Chromium, context 960x680 at DPR 1, instrumented WebGL draw and RAF callbacks',
   caveat: 'Callback wall time includes JS and driver stalls; WebGL draws are submissions, not measured GPU time. Never infer physical-device FPS.',
-  idleMs, node: process.version, memorySource: 'CDP Runtime.getHeapUsage (JavaScript heap, not GPU VRAM)' }, boot: {}, stages: [], network: {}, failures: [] };
+  idleMs, node: process.version, sourceSha: args['source-sha'] || null,
+  memorySource: 'CDP Runtime.getHeapUsage (JavaScript heap, not GPU VRAM)' }, boot: {}, stages: [], network: {}, failures: [] };
 const inspect = new URL(base); inspect.searchParams.set('inspect', '1');
 
 async function read() {
