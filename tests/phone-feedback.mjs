@@ -46,6 +46,10 @@ window.__SHADOW_REVIEW=()=>{
  return {names,initialCasters:before,changed,formerDarker,formerBrighter,
   expected:{castersOff:before.every(v=>!v)},resolution:[w,h]};
 };
+window.__SHADOW_REVIEW_RESTORE=()=>{
+ camera.position.set(0,1.70,2.7);camera.rotation.set(.018,0,0);
+ syncLook();needsFrame=true;renderer.render(scene,camera);
+};
 `;
   await route.fulfill({response,body:source.replace(anchor,probe+'\n'+anchor)});
  });
@@ -65,6 +69,7 @@ window.__SHADOW_REVIEW=()=>{
  assert(probe.formerDarker>probe.formerBrighter*2,
   'The defect must be shadow darkening, not unrelated lighting changes');
  await page.locator('#app canvas').screenshot({path:'test-results/phone-feedback/front-wall-fixed.png'});
+ await page.evaluate(()=>window.__SHADOW_REVIEW_RESTORE());
  // Native touch events, including a movement gesture and cleanup.
  const session=await context.newCDPSession(page);
  const point=(id,x,y)=>({id,x,y});
