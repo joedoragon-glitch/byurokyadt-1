@@ -101,6 +101,8 @@ try{
    assert(within(obj.min[1],.89,1.30)&&within(obj.max[1],.89,1.30),
     kind+' clips through desk or rises implausibly');
   }
+  for(const [kind,part] of [['phone feet',data.phone],['file bases',data.binders],['folio cover',data.dossier]])
+   assert(Math.abs(part.min[1]-.90)<.012,kind+' must contact the actual .90m wooden desktop');
   assert(separated(data.phone,data.binders,[0,2]),'Phone intersects upright binders');
   assert(separated(data.phone,data.dossier,[0,2]),'Phone intersects loose folio');
   assert(separated(data.binders,data.dossier,[0,2]),'Folio is driven through binders');
