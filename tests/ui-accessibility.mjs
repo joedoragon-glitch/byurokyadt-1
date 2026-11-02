@@ -75,6 +75,8 @@ try{
  assert.match(await button('stepLabel').textContent(),/STEP 3/);
  await page.screenshot({path:'test-results/ui-04-certificate-ready.png'});
  await button('receipt').click();assert.equal(await button('certificate').evaluate(el=>el.open),true);
+ assert.equal(await page.getByRole('dialog',{name:'Official certificate'}).isVisible(),true);
+ assert.match(await button('certificateCanvas').getAttribute('aria-label'),/FORM-27B\.txt/);
  await page.keyboard.press('Escape');assert.equal(await button('certificate').evaluate(el=>el.open),false);
  await page.waitForFunction(()=>document.activeElement?.id==='receipt');
 

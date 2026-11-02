@@ -418,7 +418,7 @@ function setLamp(i,on){needsFrame=true;const m=lamps[i].material;m.emissive.setH
 function resetVisual(){phase(-1);setLamp(1,false);setLamp(2,false);cap.position.z=st.cap;scan.position.x=st.scanX;stamp.position.y=st.stampY;stampLink.position.y=st.linkY;inPaper.position.z=st.inZ;outputStage='idle';outputProgress=0;outputStamped=false;feedOutput(0);g1.rotation.z=g2.rotation.z=T.MathUtils.degToRad(50)}
 async function gauges(a,b){const s1=g1.rotation.z,s2=g2.rotation.z,e1=T.MathUtils.degToRad(50-100*a),e2=T.MathUtils.degToRad(50-100*b);await tween(900,t=>{const spring=t===1?1:1-Math.exp(-7*t)*Math.cos(11*t);g1.rotation.z=s1+(e1-s1)*spring;g2.rotation.z=s2+(e2-s2)*spring},t=>t)}
 function createCertificate(name,number){
- const c=ui.certificateCanvas,g=c.getContext('2d');g.fillStyle='#ede4c9';g.fillRect(0,0,c.width,c.height);
+ const c=ui.certificateCanvas,g=c.getContext('2d');c.setAttribute('aria-label','Official certificate for '+name+', number '+number+'. Save as PNG with the button below.');g.fillStyle='#ede4c9';g.fillRect(0,0,c.width,c.height);
  g.strokeStyle='#383c31';g.lineWidth=3;g.strokeRect(54,54,1172,1652);g.strokeRect(66,66,1148,1628);
  g.textAlign='center';g.fillStyle='#98382c';g.font='bold 76px serif';g.fillText('★',640,185);
  g.fillStyle='#30392f';g.font='bold 28px monospace';g.fillText('МИНИСТЕРСТВО НЕНУЖНЫХ ПРОЦЕДУР',640,255);
