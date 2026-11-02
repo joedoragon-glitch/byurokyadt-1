@@ -177,7 +177,10 @@ const phoneRed=M(0x96251e,.14,.46),phoneIvory=M(0xd9d1b9,.07,.66);
 const phoneTrim=M(0x51493c,.28,.62),phoneInk=M(0x27231e,.05,.88);
 const deskPhone=new T.Group();deskPhone.name='desk-phone-1982';
 // Keep the rubber feet in true contact with the .90m tabletop.
-deskPhone.position.set(4.17,.896,-5.19);scene.add(deskPhone);
+deskPhone.position.set(4.17,.897,-5.19);
+// Archive binders are full-height files, but a real desk telephone is much
+// smaller than one. Keep the detailed construction as one scaled object.
+deskPhone.scale.setScalar(.73);scene.add(deskPhone);
 box(.58,.02,.46,phoneTrim,0,.014,0,deskPhone).name='phone-rubber-base';
 // The actual 1970s style is a low wedge: taller at the rear under the cradle,
 // lower at the operator side around the rotary dial.
