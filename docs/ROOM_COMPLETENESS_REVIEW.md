@@ -23,9 +23,11 @@ The deficiencies above are **source-grounded construction findings**, not a clai
 
 ## Reference-driven design
 
-A [1981 Russian production-management office photograph](https://russiainphoto.ru/photos/332334/) shows utilitarian desks, a wall-mounted administrative board, shallow surface detailing and exposed institutional architecture. A [historical overview of Soviet offices](https://realty.rbc.ru/news/577d23579a7947a78ce917c3) describes restrained grey finishes and period desk implements. These references inform construction language, **not** copied textures or new propaganda artwork. The accepted V9 cabinet and poster design remain controlled by [AESTHETICS.md](../AESTHETICS.md).
+An [archived accounting-office photograph from the Byelorussian SSR, dated 1982–83](https://russiainphoto.ru/photos/140670/) documents period workstations, paperwork, a desk telephone, and ordinary institutional office fittings. A [historical overview of Soviet offices](https://realty.rbc.ru/news/577d23579a7947a78ce917c3) describes restrained grey finishes and period desk implements. These references inform construction language, **not** copied textures or new propaganda artwork. The accepted V9 cabinet and poster design remain controlled by [AESTHETICS.md](../AESTHETICS.md).
 
 All new surfaces are geometry and deterministic text within \`js/app.js\` using existing scene materials, Three.js primitives and the existing label renderer. No external assets, generated third-party textures, new lighting, sound, game systems or libraries are introduced.
+
+Repeated wall dado, trim, panel seams and corner arrises are submitted to material-grouped Three.js `InstancedMesh` batches, rather than separate draw calls; concrete front-wall form ties likewise share one instanced cylinder batch. The front-facing text on that wall is deliberately rotated inward. This was corrected after visual inspection found back-facing labels in the first rendered atlas. The corrected capture and actual draw-call cost are required for review.
 
 ## Architecture, scale, collision and cinematography
 
