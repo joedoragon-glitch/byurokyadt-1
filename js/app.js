@@ -497,8 +497,14 @@ const lampShade=new T.Mesh(new T.CylinderGeometry(.12,.12,.44,32,1,false,0,Math.
 for(const y of [.33,.51,.69]){box(.49,.16,.03,wood,-.92,y,-.99);box(.13,.018,.035,edgeMetal,-.92,y,-.96);}
 const deskLight=new T.PointLight(0xffc27f,1.2,2.2,2);deskLight.position.set(.99,1.36,-1.78);scene.add(deskLight);
 // Glazed window on the left with frames, dusty sill and diffuse daylight.
-const windowPane=M(0xaebfbb,.02,.52,0x9fbbb9,.35);box(.08,2.70,2.75,dark,-5.87,2.72,-2.60);box(.085,2.51,2.55,windowPane,-5.81,2.72,-2.60);
-for(const y of [1.39,2.71,4.05])box(.13,.065,2.86,steel2,-5.74,y,-2.60);for(const z of [-4,-2.61,-1.20])box(.13,2.70,.065,steel2,-5.73,2.72,z);box(.43,.08,3.03,wood,-5.69,1.36,-2.60);
+const windowPane=M(0xaebfbb,.02,.52,0x9fbbb9,.35);
+// Frosted glazing scatters daylight: never treat it as an opaque shadow caster.
+box(.08,2.70,2.75,dark,-5.87,2.72,-2.60).castShadow=false;
+const icedWindowGlazing=box(.085,2.51,2.55,windowPane,-5.81,2.72,-2.60);
+icedWindowGlazing.name='iced-window-glazing';icedWindowGlazing.castShadow=false;
+for(const y of [1.39,2.71,4.05])box(.13,.065,2.86,steel2,-5.74,y,-2.60).castShadow=false;
+for(const z of [-4,-2.61,-1.20])box(.13,2.70,.065,steel2,-5.73,2.72,z).castShadow=false;
+box(.43,.08,3.03,wood,-5.69,1.36,-2.60);
 const daylight=new T.PointLight(0xb9ced3,2.2,9,2);daylight.position.set(-4.9,3.35,-2.60);scene.add(daylight);
 // A midground archive desk and records break up the former empty hall.
 box(1.65,.075,.79,wood,-3.6,.82,-3.77);for(const x of [-4.30,-2.90])for(const z of [-4.06,-3.49])box(.07,.79,.07,dark,x,.4,z);
