@@ -10,6 +10,7 @@ This is the **maintained routing map**, not a duplicate implementation ledger. A
 | [Architecture](ARCHITECTURE.md) | Code ownership, actual files, game runtime, test owners and deployment boundaries |
 | [Creative direction](CREATIVE_DIRECTION.md) | World tone, cabinet/office identity, inherited authorial philosophy and art provenance |
 | [Quality standards](QUALITY_STANDARDS.md) | Visual, interaction, sound, performance, accessibility, privacy and acceptance gates |
+| [Performance profiling](PERFORMANCE_PROFILING.md) | CPU/WebGL workload harness, cache measurements, matched baseline protocol and hardware limits |
 | [Audio direction](AUDIO_DIRECTION.md) | Original cue inventory, creative sound standards, editing/verification and preview |
 | [Engineering workflow](ENGINEERING_WORKFLOW.md) | Scoped implementation, bug triage, focused tests, documentation and PR handoff |
 | [Decisions](DECISIONS.md) | Established design choices and how to record approved future corrections |
