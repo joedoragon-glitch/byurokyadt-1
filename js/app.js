@@ -391,6 +391,10 @@ function flushRoomTrim(){
  }
 }
 const frontWall=box(12,6,.20,wallConcrete,0,3,7);
+// The room-facing shell receives shadows but must not cast from the simulated
+// overhead key: issue #6 extends that shadow camera through the whole office.
+// A casting front wall would occlude the key and darken occupied floor space.
+frontWall.castShadow=false;
 frontWall.name='room-front-wall'; // +Z previously had collision but no geometry.
 // Dull painted dado, skirting, chair rail, and ceiling termination on all four walls.
 for(const z of [-6.677,6.877]){
