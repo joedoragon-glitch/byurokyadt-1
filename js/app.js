@@ -224,8 +224,10 @@ rotaryRim.castShadow=false;deskPhone.add(rotaryRim);
 box(.015,.013,.070,steel2,.139,.129,.145,deskPhone).rotation.y=-.22;
 // Two inconspicuous cradle rests support a single, gently arched handset.
 for(const x of [-.211,.211]){
- box(.092,.030,.115,phoneInk,x,.203,-.177,deskPhone).name=x<0?'phone-cradle-left':'phone-cradle-right';
- box(.064,.020,.071,phoneTrim,x,.221,-.177,deskPhone);
+ // Hook feet touch the rear housing roof (~.167 at z=-.177) while their
+ // padded tops touch the receiver cups at y=.196; no floating handset.
+ box(.092,.030,.115,phoneInk,x,.181,-.177,deskPhone).name=x<0?'phone-cradle-left':'phone-cradle-right';
+ box(.064,.020,.071,phoneTrim,x,.186,-.177,deskPhone);
 }
 const gripCurve=new T.CatmullRomCurve3([
  new T.Vector3(-.224,.266,-.176),new T.Vector3(-.11,.300,-.177),
