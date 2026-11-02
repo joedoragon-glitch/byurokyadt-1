@@ -45,3 +45,7 @@ The owner authorized implementation and visual review of a more complete 1982 ro
 ## Future design decisions
 
 A feature suggested in chat remains **proposed** until the owner authorizes it. If new narrative, interaction, art or music direction is accepted, record the exact choice, its scope, affected asset/behavior and source in this maintained page or the relevant owning feature document. Do not manufacture retrospective approval from dated pull requests, an AI description or an illustrative brief. Keep gameplay-specific proposals separate from existing accepted visual and interaction identity.
+
+## Owner decision — Russian-at-first-glance typography (2 November 2026)
+
+The player should first believe the entire bureau is Russian and only then recognize intelligible, deliberately mangled English under the Cyrillic-looking surface. Real Russian vocabulary is written in **authentic Cyrillic**, never transliterated; invented English can be shortened, stretched or set in mixed-script display typography. Keep operative labels, filenames and screen-reader announcements understandable and stable. Implementation on branch `feature/russian-first-glance-language` / issue #18 is a **candidate**, not yet a reviewed or deployed result. [Language standard](LANGUAGE_STYLE.md).

@@ -12,7 +12,7 @@ The listening room is included with the site's assets. Its Pages link works afte
 
 The office contains a 3D cabinet with switches, a CRT, analog meters, a printer feed, a physical stamping press, a paper chute and a receiving tray. You can walk around the machinery, inspect the winter office and use cinematic views to photograph it. An issued-document counter persists locally; the tray displays at most 32 sheets while the counter tracks up to 999,999.
 
-The intended tone is restrained, tactile and gently absurd: institutional bureaucracy treated with the seriousness of a monumental industrial process. The room contains original mechanical sound, a sparse instrumental score, winter ambience and spatially placed corridor footsteps.
+The intended tone is restrained, tactile and gently absurd: institutional bureaucracy treated with the seriousness of a monumental industrial process. An owner-directed candidate text pass makes the UI look Russian at a glance while retaining decipherable, deliberately mangled English; genuine Russian on the machinery and certificates remains authentic Cyrillic. [Language direction](docs/LANGUAGE_STYLE.md) describes the candidate, not a currently deployed release. The room contains original mechanical sound, a sparse instrumental score, winter ambience and spatially placed corridor footsteps.
 
 **The 10.1.2 lighting improvement** in [issue #6](https://github.com/joedoragon-glitch/byurokyadt-1/issues/6) fits a single shadow camera across the office without changing the original lamp palette or mechanical animation. The overall lighting appearance remains subject to the owner's evaluation of the integrated game.
 

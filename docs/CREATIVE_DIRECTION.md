@@ -10,7 +10,7 @@ The comedy is that a pointless procedure is performed with absolute institutiona
 
 Keep the original cabinet recognizable: square inset CRT, switch bank, ministry plate, paired meters, red control, projecting feed bed, press, outlet chute, cabinet hardware and physical counter/tray. Do not flatten it into a generic industrial prop or replace accepted reference art without an owner-directed redesign.
 
-The source's deliberately theatrical pseudo-Cyrillic/Hollywood-Soviet English is part of the satire, **not** a justification for illegible controls. Give accessible labels plain readable language. Real Cyrillic, filenames and text rendering must remain deterministic; do not depend on generative textures to print exact text.
+The owner-directed visual language is **Russian at first glance, understandable mangled English at second glance**. Genuine Russian words stay authentic Cyrillic; invented English can be clipped, elongated and mixed-script in deliberately inconsistent bureaucratic fashion. This is decorative copy, never a reason to hide controls or corrupt filenames. Give screen readers real plain-English labels, help and live announcements. Follow [Bureau language standard](LANGUAGE_STYLE.md); never rely on generated textures for exact text.
 
 ## Reusable authorial principles
 

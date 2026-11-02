@@ -7,72 +7,74 @@
 <title>БЮРОКЯДТ-1 — Операторская № 3</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./styles.css?v=10.2.1">
+<link rel="stylesheet" href="./styles.css?v=10.3.0">
 </head>
 <body>
 <div id="loading">
   <div class="loadCard">
     <div class="loadEmblem">★</div>
     <div class="loadTitle">БЮРОКЯДТ-1</div>
-    <div class="loadSub">STARTЇИG APP • OПЄЯATOЯ ROOM № 3 • 1982</div>
-    <div id="loadTask" class="loadTask">ЇИSPЄCTЇИG STATЄ EQUЇPMЄИT...</div>
+    <div class="loadSub">ЗАПУСК АППАРАТА • ОПЕРАТОРСКАЯ № 3 • 1982</div>
+    <div id="loadTask" class="loadTask">INSPЕКЦИЯ STATЕ АППАРАТ...</div>
     <div class="loadBarShell"><div id="loadBar" class="loadBar"></div></div>
-    <div class="loadMeta"><span id="loadPct">0%</span><span id="loadBytes">AWAЇTЇИG ALLOCATЇOИ</span></div>
-    <div id="loadTip" class="loadTip">BREZHNEV IS WATCHING. COMЯADE, LOOK PRODUCTIVE.</div>
-    <div class="loadFooter">MЇИЇSTЯY OF UИИЄCЄSSAЯY PЯOCЄDUЯЄS • SKB № 41 • 1982</div>
+    <div class="loadMeta"><span id="loadPct">0%</span><span id="loadBytes">ОЖИДАНИЕ · АLLOKАТ</span></div>
+    <div id="loadTip" class="loadTip">БРЕЖНЕВ IS WATCHING. ТОВАРИЩ, LOOK BУSY.</div>
+    <div class="loadFooter">МИНИСТЕРСТВО UNNЕСЕSSARУ РRОЦЕDURS • SKB № 41 • 1982</div>
   </div>
 </div>
-<div id="fatal">ЄЯЯOЯ. STATE APP COULD NOT START.</div>
+<div id="fatal">ОШИБКА · STATE АППАРАТ DID NOT START.</div>
 <div id="app"></div>
 <header id="hud" aria-label="Game title">
-  <strong>БЮРОКЯДТ-1</strong><span>OFFICE № 3 · 1982</span>
+  <strong>БЮРОКЯДТ-1</strong><span>ОПЕРАТОРСКАЯ № 3 · 1982</span>
 </header>
 <div id="cross" aria-hidden="true"></div>
-<button id="menuToggle" aria-controls="utilityPanel" aria-expanded="false" aria-label="Open view, audio and help menu">☰ · MENU</button>
+<button id="menuToggle" aria-controls="utilityPanel" aria-expanded="false" aria-label="Open view, audio and help menu">☰ · МЕNЮ</button>
 <aside id="utilityPanel" aria-label="View, audio and help" hidden>
-  <div class="utilityTitle">MINISTRY CONTROL DESK</div>
-  <div class="utilityGroupTitle">INSPECTION VIEWS</div>
+  <div class="utilityTitle">МИНИСТЕРСТВО · KONТROL ДЕСК</div>
+  <div class="utilityGroupTitle">ВИДЫ · INSPЕКЦИЯ</div>
   <nav id="viewControls" aria-label="Camera and audio controls">
-    <button id="roomView" aria-label="Room view">1 · Room</button>
-    <button id="deskView" aria-label="Approach machine">2 · Machine</button>
-    <button id="sideView" aria-label="Inspect machine from the side">3 · Side</button>
-    <button id="cinemaEnter" aria-label="Enter cinematic inspection">C · Photography mode</button>
-    <div class="utilityGroupTitle">AUDIO</div>
-    <button id="sound" aria-label="Toggle mechanical sound" aria-pressed="false">Sound: Off</button>
-    <button id="music" aria-label="Toggle background music" aria-pressed="false">Music: Off</button>
-    <label class="volumeLabel" for="volume">Master volume <input id="volume" type="range" min="0" max="100" value="65" aria-label="Audio volume"></label>
+    <button id="roomView" aria-label="Room view">1 · RООМ</button>
+    <button id="deskView" aria-label="Approach machine">2 · МАСНINЕ</button>
+    <button id="sideView" aria-label="Inspect machine from the side">3 · SIDЕ</button>
+    <button id="cinemaEnter" aria-label="Enter cinematic inspection">C · ФОТО RЕЖИМ</button>
+    <div class="utilityGroupTitle">АУДИО</div>
+    <button id="sound" aria-label="Toggle mechanical sound" aria-pressed="false">SОUND: ОFF</button>
+    <button id="music" aria-label="Toggle background music" aria-pressed="false">МUSIС: ОFF</button>
+    <label class="volumeLabel" for="volume">МАСТЕR VОLУМЕ <input id="volume" type="range" min="0" max="100" value="65" aria-label="Audio volume"></label>
   </nav>
-  <div class="utilityGroupTitle">ASSISTANCE</div>
-  <button id="helpToggle" aria-haspopup="dialog" aria-controls="helpDialog">? · How to operate</button>
-  <button id="fs" aria-label="Toggle full screen">Fullscreen</button>
-  <button id="installBtn" aria-label="Install application">Install app</button>
-  <div class="utilityMeta"><span id="badge">V10 · CINEMA BUREAU</span><span id="appMode">MODE: WEB</span></div>
+  <div class="utilityGroupTitle">ПОМОЩЬ · АSSIST</div>
+  <button id="helpToggle" aria-haspopup="dialog" aria-controls="helpDialog">? · НОW TO ОРЕRАТЕ</button>
+  <button id="fs" aria-label="Toggle full screen">FULLSСRЕЕN</button>
+  <button id="installBtn" aria-label="Install application">INSTAЛЛ АPP</button>
+  <div class="utilityMeta"><span id="badge">V10 · ФОТО БЮРО</span><span id="appMode">РЕЖИМ: WЕВ</span></div>
 </aside>
 <section id="operator" aria-label="Document processing controls" data-stage="empty">
-  <div class="operatorHead"><span>MINISTRY OF UNNECESSARY PROCEDURES</span><span id="cycleCount">ISSUED: 000</span></div>
-  <div class="workflowLine"><strong id="stepLabel">STEP 1 / 3 · SELECT A DOCUMENT</strong><span id="selectedFile">No document selected</span></div>
+  <div class="operatorHead"><span>МИН. НЕНУЖНЫХ ПРОЦЕДУР</span><span id="cycleCount">ВЫДАНО: 000</span></div>
+  <div class="workflowLine"><strong id="stepLabel">STЕР 1 / 3 · SЕLЕКТ ДОКУМЕНТ</strong><span id="selectedFile">НЕТ ДОКУМЕНТА</span></div>
   <div class="operatorActions">
-    <button aria-label="Select a document" id="loadDoc">F · Select document</button>
-    <button aria-label="Confirm and process document" id="runDoc" class="redButton">↵ · Confirm</button>
-    <button aria-label="Reset machine" id="resetDoc">R · Reset</button>
-    <button aria-label="Collect certificate" id="receipt" disabled>Collect certificate ↗</button>
+    <button aria-label="Select a document" id="loadDoc">F · SЕLЕКТ ДОКУМЕНТ</button>
+    <button aria-label="Confirm and process document" id="runDoc" class="redButton">↵ · КОNFIRM</button>
+    <button aria-label="Reset machine" id="resetDoc">R · RЕSЕТ</button>
+    <button aria-label="Collect certificate" id="receipt" disabled>СОLLЕКТ СПРАВКА ↗</button>
   </div>
-  <div id="hint" role="status" aria-live="polite" aria-atomic="true">Choose any local document to start. Only its name is used.</div>
-  <div class="privacy">Local procedure only. Your file is never uploaded.</div>
+  <div id="hint" aria-hidden="true">SЕLЕКТ ДОКУМЕНТ. ОNЛУ FILENAME IS USED.</div>
+  <div id="srStatus" class="srOnly" role="status" aria-live="polite" aria-atomic="true">Choose any local document to start. Only its name is used.</div>
+  <div class="privacy">ЛОКАЛЬНО · NО UPLOAD · FILENAME ОNЛУ</div>
 </section>
 <input id="file" type="file">
-<dialog id="helpDialog" aria-labelledby="helpTitle" aria-describedby="helpIntro">
-  <div class="helpHeading"><h2 id="helpTitle" tabindex="-1">Operator's instructions · № 03</h2><button id="helpClose" aria-label="Close help">Close ×</button></div>
-  <p id="helpIntro">Your task: prove that a document is, in fact, a document. The ministry has provided the necessary machinery.</p>
+<dialog id="helpDialog" aria-label="Operator's instructions" aria-describedby="srHelpIntro">
+  <div class="helpHeading"><h2 id="helpTitle" tabindex="-1">ИНСТРУКЦИЯ ОПЕРАТОРА · № 03</h2><button id="helpClose" aria-label="Close help">Close ×</button></div>
+  <p id="helpIntro">ЗАДАЧА: prove a ДОКУМЕНТ is, in fakt, ДОКУМЕНТ. МИНИСТЕРСТВО provides the nесеssary machine.</p>
+  <p id="srHelpIntro" class="srOnly">Your task: prove that a document is, in fact, a document. The ministry has provided the necessary machinery.</p>
   <ol>
-    <li><strong>Select document.</strong> Choose any file on your device. The machine uses the filename only; nothing is uploaded.</li>
-    <li><strong>Confirm.</strong> Watch the feed rollers, inspection and official stamp. Controls remain disabled while the procedure runs.</li>
-    <li><strong>Collect certificate.</strong> Open the finished certificate and save its PNG. Reset to begin a new procedure.</li>
+    <li><span aria-hidden="true"><strong>SЕLЕКТ ДОКУМЕНТ.</strong> Choose any file from device. Machine uses filename ОNЛУ; NО upload.</span><span class="srOnly"><strong>Select document.</strong> Choose any file on your device. The machine uses the filename only; nothing is uploaded.</span></li>
+    <li><span aria-hidden="true"><strong>КОNFIRM.</strong> Observe feed rollers, INSPЕКЦИЯ and ПЕЧАТЬ. Controls are disabled during РRОЦЕSS.</span><span class="srOnly"><strong>Confirm.</strong> Watch the feed rollers, inspection and official stamp. Controls remain disabled while the procedure runs.</span></li>
+    <li><span aria-hidden="true"><strong>СОLLЕКТ СПРАВКА.</strong> Open finished СПРАВКА; save PNG. RЕSЕТ for a new РRОЦЕDUR.</span><span class="srOnly"><strong>Collect certificate.</strong> Open the finished certificate and save its PNG. Reset to begin a new procedure.</span></li>
   </ol>
-  <h3>Getting around</h3>
-  <p>Drag to look around; use WASD to walk. Choose Room, Machine or Side in Menu, or press 1, 2 or 3. F selects, Enter confirms, R resets. Tap the machine's tray, red button and output paper to interact directly.</p>
-  <h3>Photography and sound</h3>
-  <p>Menu → Photography (or C) opens eight inspection views. Use the on-screen camera tools or P to save a scene-only photo; Escape returns to the office. Sound and Music are separate, optional toggles in Menu and begin off. Reduced-motion preferences are respected.</p>
+  <h3 aria-label="Getting around">ПЕРЕДВИЖЕНИЕ · NAVIГАТ</h3>
+  <p aria-hidden="true">DRAG to look; WASD to walk. МЕNЮ: RООМ / МАСНINЕ / SIDE, or keys 1, 2, 3. F selects, Enter confirms, R resets. TAP tray, RED button or output РАРЕR to operate.</p><p class="srOnly">Drag to look around; use WASD to walk. Choose Room, Machine or Side in Menu, or press 1, 2 or 3. F selects, Enter confirms, R resets. Tap the machine tray, red button and output paper to interact directly.</p>
+  <h3 aria-label="Photography and sound">ФОТО И ЗВУК</h3>
+  <p aria-hidden="true">МЕNЮ → ФОТО RЕЖИМ (or C) opens 8 INSPЕКЦИЯ views. Camera controls or P save clean ФОТО; ESC returns to ОПЕРАТОРСКАЯ. SОUND and МUSIС toggle separately; initially off. Reduced motion respected.</p><p class="srOnly">Menu, Photography, or C opens eight inspection views. Press P to save a scene-only photo, and Escape to return to the office. Sound and Music are independent toggles, initially off. Reduced motion preferences are respected.</p>
 </dialog>
 <script>
 (()=>{
@@ -99,20 +101,20 @@
 </script>
 <section id="cinema" aria-label="Cinematic inspection" hidden>
  <div id="cinemaBar">
-  <div class="cinemaHeading"><span>★ MЇИЇSTЯY CЇИЄMA BUЯЄAU <small>PHOTOGЯAPHY PЄЯMЇT № 10</small></span><button id="cinemaExit" aria-label="Exit cinematic mode">ESC · ЯЄTUЯИ TO DUTY</button></div>
+  <div class="cinemaHeading"><span>★ МИНИСТЕРСТВО · ФОТО БЮРО <small>ФОТО РЕRМIТ № 10</small></span><button id="cinemaExit" aria-label="Exit cinematic mode">ESC · ЯЕТURN TO РАБОТА</button></div>
   <div class="cinemaTools">
    <button id="cinemaPrev" aria-label="Previous inspection view">‹</button><select id="cinemaShot" aria-label="Inspection view"></select><button id="cinemaNext" aria-label="Next inspection view">›</button>
-   <button id="cinemaTour" aria-label="Toggle guided camera tour" aria-pressed="false">T · STAЯT TOUЯ</button>
-   <label>LЄИS <input id="cinemaLens" aria-label="Camera field of view" type="range" min="20" max="75" value="57"><output id="cinemaLensValue">57°</output></label>
-   <select id="cinemaFrame" aria-label="Photograph aspect ratio"><option value="1.7777777778">16:9 · CЇИЄMA</option><option value="2.39">2.39:1 · WЇDЄ</option><option value="0">SCЯЄЄИ SHAPЄ</option></select>
-   <button id="cinemaHide" aria-label="Hide cinematic controls" aria-expanded="true">H · HЇDЄ PAИЄL</button><button id="cinemaPhoto" class="redButton" aria-label="Save clean cinematic PNG">P · SAVЄ PHOTO</button>
+   <button id="cinemaTour" aria-label="Toggle guided camera tour" aria-pressed="false">T · STАЯТ ТОUR</button>
+   <label>ЛЕNS <input id="cinemaLens" aria-label="Camera field of view" type="range" min="20" max="75" value="57"><output id="cinemaLensValue">57°</output></label>
+   <select id="cinemaFrame" aria-label="Photograph aspect ratio"><option value="1.7777777778">16:9 · СINЕМА</option><option value="2.39">2.39:1 · WIDЕ</option><option value="0">SСRЕЕN SНАРЕ</option></select>
+   <button id="cinemaHide" aria-label="Hide cinematic controls" aria-expanded="true">H · НIDЕ РАNЕL</button><button id="cinemaPhoto" class="redButton" aria-label="Save clean cinematic PNG">P · SАVЕ ФОТО</button>
   </div>
-  <div class="cinemaHelp">WASD · GLЇDЄ &nbsp; DRAG · LOOK &nbsp; Q / E · LOWЄЯ / ЯAЇSЄ &nbsp; SCROLL · LЄИS &nbsp; [ / ] · VЇЄWS<br><span id="cinemaStatus" role="status" aria-live="polite">COMЯADE, compose photograph. Beauty needs no extra form.</span></div>
+  <div class="cinemaHelp">WASD · ГLIDЕ &nbsp; DRAG · LOOK &nbsp; Q / E · LОWЕR / ЯAISЕ &nbsp; SCROLL · LЄИS &nbsp; [ / ] · ВИДЫ<br><span id="cinemaStatus" aria-hidden="true">ТОВАРИЩ, COMPOSE ФОТО. BEAUTУ NEEDS NО FORM.</span><span id="srCinemaStatus" class="srOnly" role="status" aria-live="polite" aria-atomic="true">Comrade, compose photograph. Beauty needs no extra form.</span></div>
  </div>
- <button id="cinemaReveal" aria-label="Show cinematic controls" hidden>H · SHOW COИTЯOLS &nbsp; / &nbsp; ESC · ЄXЇT</button>
+ <button id="cinemaReveal" aria-label="Show cinematic controls" hidden>H · SHОW KОNТRОLS &nbsp; / &nbsp; ESC · ЕХIТ</button>
  <div id="cinemaToast" role="status" hidden></div>
 </section>
-<dialog id="certificate" aria-label="Official certificate"><div class="receiptHeader"><strong>OFFЇCЇAL CERTЇFЇCATЄ</strong><button id="closeReceipt" aria-label="Close certificate">CLOSЄ ×</button></div><canvas id="certificateCanvas" width="1280" height="1760" role="img" aria-label="Official certificate preview."></canvas><button aria-label="Save certificate as PNG" id="downloadReceipt" class="redButton">SAVЄ CERTЇFЇCATЄ · PNG</button></dialog>
+<dialog id="certificate" aria-label="Official certificate"><div class="receiptHeader"><strong>ОФИЦИАЛЬНАЯ СПРАВКА</strong><button id="closeReceipt" aria-label="Close certificate">СLОSЕ ×</button></div><canvas id="certificateCanvas" width="1280" height="1760" role="img" aria-label="Official certificate preview."></canvas><button aria-label="Save certificate as PNG" id="downloadReceipt" class="redButton">SАVЕ СПРАВКА · PNG</button></dialog>
 <script>
 (()=>{
 const L={
@@ -120,37 +122,37 @@ const L={
  task:document.getElementById('loadTask'),bytes:document.getElementById('loadBytes'),
  tip:document.getElementById('loadTip'),root:document.getElementById('loading'),value:0,
  tips:[
-  'COMЯADE, select a document. Machine shall examine its existence.',
-  'WASD to walk. Drag mouse to look. Furniture remains solid by decree.',
-  'Press 1 for room view, 2 for machine, 3 for side inspection.',
-  'Turn SOUИD on for machinery. Turn MUSЇC on for ministry orchestra.',
-  'Click input tray or SЄLЄCT DOC. Then press COИFЇЯM.',
-  'Your document stays on your device. No file is sent to ministry.',
-  'After inspection, collect and save your official certificate.',
-  'Winter window is closed. Opening request awaits spring committee.',
-  'Previous form approved next form. Administration is progressing.'
+  'ТОВАРИЩ, SЕLЕКТ ДОКУМЕНТ. MACHINE INSPЕКТ EXISTENCE.',
+  'WASD to walk. DRAG to look. FURNITURЕ SOLID BY УКАЗ.',
+  'РRЕSS 1 RООМ, 2 МАСНINЕ, 3 SIDE INSPЕКЦИЯ.',
+  'SОUND for MACHINE. МUSIС for МИНИСТЕРСТВО ORCHESTRA.',
+  'TAP INPUT TRAY OR SЕLЕКТ ДОКУМЕНТ. THEN КОNFIRM.',
+  'ДОКУМЕНТ STAYS LOCAL. NО UPLOAD TO МИНИСТЕРСТВО.',
+  'AFTER ПРОВЕРКА, СОLLЕКТ СПРАВКА. SAVE PNG.',
+  'WINTER WINDOW CLOSED. SPRING KOMISSИЯ STILL WAITING.',
+  'PREV FORM АРРRОVД NEXT FORM. БЮРОКРАТИЯ ADVANCES.'
  ],tipIndex:0,
  set(p,msg,meta){this.value=Math.max(this.value,Math.min(100,p));this.bar.style.width=this.value+'%';this.pct.textContent=Math.round(this.value)+'%';if(msg)this.task.textContent=msg;if(meta!==undefined)this.bytes.textContent=meta},
- stage(name){const map={engine_ready:[68,'3D ENGЇИЄ ACCEPTED BY STATE.'],renderer_ready:[76,'STARTЇИG ЯEИDEЯЇИG WORKSHOP...'],materials_ready:[83,'ЇSSUЇИG COИCЯЄTЄ, STЄЄL AND BAKЄLЇTЄ...'],room_ready:[91,'HANGЇИG APPЯOVЄD POSTЄЯS...'],machine_ready:[96,'ASSEMBLЇИG БЮРОКЯДТ-1 ON WORKBENCH...'],first_frame:[100,'OFFЇCЄ ЇИSPЄCTЇOИ. PASSЄD.']};if(map[name])this.set(map[name][0],map[name][1],'ЇИSPЄCTЇOИ: '+map[name][0]+'%')},
- complete(){this.set(100,'ЯEADY. COMЯADE MAY ENTER OFFICE.','ЇИSPЄCTЇOИ: PASSЄD');setTimeout(()=>{this.root.classList.add('done');setTimeout(()=>this.root.style.display='none',380)},260)},
+ stage(name){const map={engine_ready:[68,'3D ЕNGINЕ АРРRОVД BY STATE.'],renderer_ready:[76,'ЗАПУСК RЕNDЕR ЦЕХА...'],materials_ready:[83,'ВЫДАЧА СОNСRЕТЕ, STЕЕL & BAKЕLITЕ...'],room_ready:[91,'HАNГING АРРRОVД ПЛАКАТЫ...'],machine_ready:[96,'ASSEMВLING БЮРОКЯДТ-1...'],first_frame:[100,'ОПЕРАТОРСКАЯ INSPЕКЦИЯ: РАSSЕD.']};if(map[name])this.set(map[name][0],map[name][1],'INSPЕКЦИЯ: '+map[name][0]+'%')},
+ complete(){this.set(100,'ГОТОВО. ТОВАРИЩ MAY ENTER OFFICE.','INSPЕКЦИЯ: РАSSЕD');setTimeout(()=>{this.root.classList.add('done');setTimeout(()=>this.root.style.display='none',380)},260)},
  fatal(msg){const f=document.getElementById('fatal');f.style.display='grid';f.textContent=msg;this.root.style.display='none'}
 };
 window.BYUR_LOAD=L;
 const tipTimer=setInterval(()=>{if(L.root.style.display==='none'){clearInterval(tipTimer);return}L.tipIndex=(L.tipIndex+1)%L.tips.length;L.tip.textContent=L.tips[L.tipIndex]},1700);
 
 const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
-if(standalone)document.getElementById('appMode').textContent='MODЄ: ЇИSTALLЄD APP';
+if(standalone)document.getElementById('appMode').textContent='РЕЖИМ: INSTAЛЛ АPP';
 let deferredPrompt=null;const installBtn=document.getElementById('installBtn');
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.classList.add('show')});
 installBtn.onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.classList.remove('show')};
-addEventListener('appinstalled',()=>document.getElementById('appMode').textContent='MODЄ: ЇИSTALLЄD APP');
+addEventListener('appinstalled',()=>document.getElementById('appMode').textContent='РЕЖИМ: INSTAЛЛ АPP');
 
 async function registerSW(){
  if(!('serviceWorker'in navigator))return;
- L.set(3,'ЯЄGЇSTЄЯЇИG OFFLЇИЄ STOЯЄ...','SERVICE WORKER');
+ L.set(3,'RЕГISTR ОFFLINЕ АРХИВ...','SERVICE WORKER');
  await navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'});
  await navigator.serviceWorker.ready;
- L.set(8,'LOCAL APP WAREHOUSE ЯEADY.','OFFLINE SHELL');
+ L.set(8,'ЛОКАЛЬНЫЙ АРХИВ: ГОТОВО.','OFFLINE SHELL');
 }
 function xhrProgress(url,start,end,label,responseType='text'){
  return new Promise((resolve,reject)=>{
@@ -188,27 +190,27 @@ async function preloadAsset(url,start,end,label,key){
   img.src=objectURL;await img.decode();
   if(img.naturalWidth<256||img.naturalHeight<256)throw new Error('POSTER SIZE UNKNOWN');
   window.BYUR_POSTERS[key]=img;
-  L.set(end,label,img.naturalWidth+' × '+img.naturalHeight+' • VЄЯЇFЇЄD');
+  L.set(end,label,img.naturalWidth+' × '+img.naturalHeight+' • VЄЯIFIЄD');
  }catch(e){throw new Error('ПЛАКАТ НЕ ЧИТАЕТСЯ: '+url+' — '+e.message)}
  finally{URL.revokeObjectURL(objectURL)}
 }
 function runCode(code,name){(0,eval)(code+'\n//# sourceURL='+name)}
 (async()=>{
  try{
-  L.set(1,'ЯEADЇИG APP MANЇFЄST...','V10');
+  L.set(1,'RЕАDING APP РЕЕСТР...','V10');
   await Promise.race([registerSW().catch(()=>{}),new Promise(resolve=>setTimeout(resolve,4000))]);
-  await preloadAsset('./assets/brezhnev-party-v8.jpg',8,14,'DELЇVEЯЇИG BREZHNEV PORTRAIT...','brezhnev');
-  await preloadAsset('./assets/xi-plan-v8.jpg',14,20,'DELЇVEЯЇИG FIVE-YEAR PLAN POSTER...','plan');
-  await preloadAsset('./assets/enamel-v9.webp',20,25,'DELЇVEЯЇИG CABЇИЄT EИAMЄL...','enamel');
-  const engine=await fetchTextProgress('./vendor/three.min.js',25,62,'DELЇVEЯЇИG LOCAL 3D ENGINE...');
+  await preloadAsset('./assets/brezhnev-party-v8.jpg',8,14,'ДОСТАВКА ПОРТРЕТ БРЕЖНЕВА...','brezhnev');
+  await preloadAsset('./assets/xi-plan-v8.jpg',14,20,'ДОСТАВКА ПЛАКАТ ПЯТИЛЕТКА...','plan');
+  await preloadAsset('./assets/enamel-v9.webp',20,25,'ДОСТАВКА ENАМЕL КАБИНЕТ...','enamel');
+  const engine=await fetchTextProgress('./vendor/three.min.js',25,62,'ДОСТАВКА 3D ЕNGINЕ...');
   runCode(engine,'three-r152.min.js');if(!window.THREE)throw new Error('THREE global not created');
-  const audioCode=await fetchTextProgress('./js/audio.js?v=10.2.1',62,64,'DELЇVEЯЇИG MЇИЇSTЯY OЯCHЄSTЯA...');
+  const audioCode=await fetchTextProgress('./js/audio.js?v=10.3.0',62,64,'ДОСТАВКА ОРКЕСТРА МИНИСТЕРСТВА...');
   runCode(audioCode,'byurokyadt-audio.js');
-  const cinemaCode=await fetchTextProgress('./js/cinematic.js?v=10.2.1',64,66,'DELЇVEЯЇИG CЇИЄMA BUЯЄAU...');
+  const cinemaCode=await fetchTextProgress('./js/cinematic.js?v=10.3.0',64,66,'ДОСТАВКА ФОТО БЮРО...');
   runCode(cinemaCode,'byurokyadt-cinematic.js');
-  const app=await fetchTextProgress('./js/app.js?v=10.2.1',62,68,'OPENЇИG OПЄЯATOЯ STATЇOИ...');
+  const app=await fetchTextProgress('./js/app.js?v=10.3.0',62,68,'ОТКРЫТИЕ ОПЕРАТОРСКОЙ...');
   runCode(app,'byurokyadt-app.js');
- }catch(e){L.fatal('LOADЇИG ЄЯЯOЯ V10: '+(e.message||e))}
+ }catch(e){L.fatal('ОШИБКА LOAD V10: '+(e.message||e))}
 })();
 })();
 </script>

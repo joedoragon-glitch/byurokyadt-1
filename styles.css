@@ -116,3 +116,6 @@ body.cinematic :is(#hud,#operator,#menuToggle,#utilityPanel,#viewControls,#hint,
 #cinemaToast{position:absolute;top:24px;left:50%;transform:translateX(-50%);background:#162d23de;border:1px solid #8f9c7e;padding:12px;font-size:11px}
 @media(max-width:700px){#cinemaBar{left:9px;right:9px;bottom:9px;padding:11px}.cinemaHeading{font-size:9px;letter-spacing:0}.cinemaHeading button{font-size:8px}.cinemaTools{gap:5px}.cinemaTools button,.cinemaTools select{font-size:9px;padding:9px 6px}.cinemaHelp{font-size:8px}#cinemaLens{width:70px}#cinemaReveal{width:max-content}}
 @media(max-height:500px){#cinemaBar{bottom:6px;padding:8px}.cinemaHeading{margin-bottom:6px}.cinemaHeading small,.cinemaHelp{display:none}.cinemaTools button,.cinemaTools select{padding:7px}}
+
+/* Spoken English is preserved separately from decorative mixed-script lettering. */
+.srOnly{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}

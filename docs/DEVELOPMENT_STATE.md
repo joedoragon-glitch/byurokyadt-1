@@ -3,6 +3,10 @@
 **Maintained status snapshot, prepared 1 November 2026.** Status is sourced from the repository at the stated checkpoints. Future changes must update this document when they affect current behavior or release claims.
 
 
+## Proposed language pass — 10.3.0 candidate (2 November 2026)
+
+[Issue #18](https://github.com/joedoragon-glitch/byurokyadt-1/issues/18) tracks the owner's Russian-at-first-glance typography direction. The `feature/russian-first-glance-language` branch proposes changed authored strings in loading, HUD, help, workflow and photo controls with genuine machine/certificate Russian preserved, plus separate readable live speech and a focused test. **This is an unmerged and unpublished candidate; no physical-device or manual screen-reader pass is claimed.** Its proposed 10.3.0 offline cache / assets must be reconciled against the independently open [#16](https://github.com/joedoragon-glitch/byurokyadt-1/issues/16) before merge/deploy. The official integrated baseline described below remains 10.2.1 until further authorization.
+
 ## Integrated polishing release source — 10.2.1 (2 November 2026)
 
 The integrated source combines [#6 lighting](https://github.com/joedoragon-glitch/byurokyadt-1/pull/13), [#7 room completion](https://github.com/joedoragon-glitch/byurokyadt-1/pull/14), [#9 contextual accessible UI](https://github.com/joedoragon-glitch/byurokyadt-1/pull/15), [#8 measured performance tooling](https://github.com/joedoragon-glitch/byurokyadt-1/pull/12), and [#10 legacy/maintenance](https://github.com/joedoragon-glitch/byurokyadt-1/pull/11). All five issues retain their original PR and their exact-head evidence. This is a **source-content description**, not a substitute for checking the current `main` SHA and successful [Pages workflow](https://github.com/joedoragon-glitch/byurokyadt-1/actions/workflows/pages.yml) before calling the version published.
