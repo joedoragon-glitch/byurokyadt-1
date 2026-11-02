@@ -1,6 +1,6 @@
 # Performance profiling and acceptance — issue #8
 
-**Status:** candidate instrumentation on branch perf/issue-8-workload-profiling (not merged, released or device-verified). Scope: CPU/WebGL workload, memory and asset/cache efficiency. Related review: [issue #8](https://github.com/joedoragon-glitch/byurokyadt-1/issues/8). Last reconciled production base: main at 9b95387f4e2ee1966cfce7f1bc3ec9a66e4b0e9d (2 November 2026).
+**Status (2 November 2026):** Instrumentation from [PR #12](https://github.com/joedoragon-glitch/byurokyadt-1/pull/12) is **merged into `main`** as part of 10.2.1 and remains in 10.2.4. Scope: CPU/WebGL workload, memory and cache efficiency. [Issue #8](https://github.com/joedoragon-glitch/byurokyadt-1/issues/8) and the old baseline `9b95387f4e2e` explain the original comparison; those traces do **not** measure the integrated 10.2.4 room or native hardware. No physical-device performance certification is claimed.
 
 ## Source-backed hypotheses, not automatic optimization orders
 
@@ -42,7 +42,9 @@ Optimize only measured, reproducible costs with a concrete root cause, then comp
 
 If no material bottleneck is demonstrated, retain production code and ship the reproducible profiler and evidence rather than speculative speedups. Record actual results in the PR and [maintained status](DEVELOPMENT_STATE.md). This guide defines repeatable method; it does not certify an unexecuted run.
 
-## Concurrent polishing PR integration checkpoint (2 November 2026)
+## Historical: concurrent polishing PR integration checkpoint (2 November 2026)
+
+**Archived pre-merge plan.** PRs #11–#15 subsequently merged; the branch/integration instructions here are not current work orders. Compare future profiling against the actual new baseline.
 
 The [issue #8 coordination comment](https://github.com/joedoragon-glitch/byurokyadt-1/issues/8#issuecomment-6570536925) defines a serial, owner-authorized integration plan. At the review checkpoint main is `9b95387f4e2ee1966cfce7f1bc3ec9a66e4b0e9d`; PR #12 is independently validated against that base only. There is no reason to rebase while main is unchanged.
 

@@ -1,7 +1,7 @@
-# Room completeness — issue #7 candidate review
+# Room completeness — issue #7 historical environment review
 
 **Scope:** physical environment only. **Base:** main at 9b95387f4e2ee1966cfce7f1bc3ec9a66e4b0e9d (2 November 2026).
-**Status:** implemented candidate in \`issue-7-room-completeness\`, not artistically accepted, merged, deployed, or physically device-tested.
+**Status at original capture:** candidate on `issue-7-room-completeness`. **Current source:** [PR #14](https://github.com/joedoragon-glitch/byurokyadt-1/pull/14) merged the room pass into 10.2.1; later [PR #21](https://github.com/joedoragon-glitch/byurokyadt-1/pull/21) replaced desk props and [PR #24](https://github.com/joedoragon-glitch/byurokyadt-1/pull/24) cut the right-wall doorway and changed winter shadows. This is a **historical comparison**, not a current 10.2.4 geometry/status ledger. Publication and native-device artistic approval require independent evidence.
 
 ## Deficiency inventory and design response
 
@@ -25,7 +25,7 @@ The deficiencies above are **source-grounded construction findings**, not a clai
 
 An [archived accounting-office photograph from the Byelorussian SSR, dated 1982–83](https://russiainphoto.ru/photos/140670/) documents period workstations, paperwork, a desk telephone, and ordinary institutional office fittings. A [historical overview of Soviet offices](https://realty.rbc.ru/news/577d23579a7947a78ce917c3) describes restrained grey finishes and period desk implements. These references inform construction language, **not** copied textures or new propaganda artwork. The accepted V9 cabinet and poster design remain controlled by [AESTHETICS.md](../AESTHETICS.md).
 
-All new surfaces are geometry and deterministic text within \`js/app.js\` using existing scene materials, Three.js primitives and the existing label renderer. No external assets, generated third-party textures, new lighting, sound, game systems or libraries are introduced.
+All new surfaces are geometry and deterministic text within `js/app.js` using existing scene materials, Three.js primitives and the existing label renderer. No external assets, generated third-party textures, new lighting, sound, game systems or libraries are introduced.
 
 Repeated wall dado, trim, panel seams and corner arrises are submitted to material-grouped Three.js `InstancedMesh` batches, rather than separate draw calls; concrete front-wall form ties likewise share one instanced cylinder batch. The front-facing text on that wall is deliberately rotated inward. This was corrected after visual inspection found back-facing labels in the first rendered atlas. The corrected capture and actual draw-call cost are required for review.
 
@@ -37,14 +37,14 @@ The original room camera composition, all eight cinematic camera targets and tra
 
 ## Repeatable visual and engineering acceptance
 
-The branch's non-deploying review workflow runs the original \`npm test\` (including paper/document/audio/offline and cinematic behavior), plus \`tests/room-shell.mjs\`. It additionally checks out **the exact baseline commit** into a separate directory and serves it on port 8001 alongside the candidate on port 8000. \`tests/room-visual.mjs\` captures the same default operator shot, a 180° front-wall turn, all eight cinematic shots, and a narrow operator shot, saving individually named **before**, **after**, and labeled side-by-side **PNG comparisons**. It records camera positions, draw calls, rendered triangle counts, errors and screenshot hashes in \`test-results/room-visual.json\`. These are **Chromium automation** measurements, not native GPU FPS or owner artistic approval. See the review workflow artifact for exact files and evidence.
+The branch's non-deploying review workflow runs the original `npm test` (including paper/document/audio/offline and cinematic behavior), plus `tests/room-shell.mjs`. It additionally checks out **the exact baseline commit** into a separate directory and serves it on port 8001 alongside the candidate on port 8000. `tests/room-visual.mjs` captures the same default operator shot, a 180° front-wall turn, all eight cinematic shots, and a narrow operator shot, saving individually named **before**, **after**, and labeled side-by-side **PNG comparisons**. It records camera positions, draw calls, rendered triangle counts, errors and screenshot hashes in `test-results/room-visual.json`. These are **Chromium automation** measurements, not native GPU FPS or owner artistic approval. See the review workflow artifact for exact files and evidence.
 
 ## Focused owner aesthetic decisions
 
-1. **Service-board language:** is the single front-wall \`ПОРЯДОК УЧЁТА\` procedural notice the right level of visible bureaucratic identity? It can be removed or reworded without redesign.
+1. **Service-board language:** is the single front-wall `ПОРЯДОК УЧЁТА` procedural notice the right level of visible bureaucratic identity? It can be removed or reworded without redesign.
 2. **Lower-wall finish:** should the existing muted grey-green painted dado remain subtle or lean slightly more toward desaturated concrete? No new palette was imposed on the main cabinet.
 3. **Period wear:** keep new service boxes and joins as clean but aged institutional equipment, or add restrained localized wear in a subsequent owner-approved visual pass?
 
 ## Boundaries and remaining verification
 
-Lighting/shadow authorship belongs to issue #6, performance characterization to the performance issue; any eventual simultaneous edits to \`js/app.js\` require a rebase and rerun. The browser screenshot atlas is for real visual comparison; screenshot generation does not equal a human visual acceptance. Physical iPhone, Chromebook, discrete GPU and installed-PWA checks remain separate from Linux Chromium automation. Do not merge/publish before the owner approves the visual result and technical CI is green.
+At this review checkpoint, lighting/shadow authorship belonged to issue #6 and performance to issue #8. Those changes have since merged; use [Architecture](ARCHITECTURE.md) and [Quality standards](QUALITY_STANDARDS.md) for current geometry, lights and regression ownership. The browser screenshot atlas is for real visual comparison; screenshot generation does not equal a human visual acceptance. Physical iPhone, Chromebook, discrete GPU and installed-PWA checks remain separate from Linux Chromium automation. The former candidate-era merge condition is historical; this document cannot establish new publication or physical-device acceptance.
