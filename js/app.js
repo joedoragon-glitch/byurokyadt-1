@@ -61,6 +61,14 @@ const floorTex=canvasTex(512,512,(g,w,h)=>{
 floorTex.wrapS=floorTex.wrapT=T.RepeatWrapping;floorTex.repeat.set(5,6);
 const institutionalFloor=new T.MeshStandardMaterial({map:floorTex,metalness:.04,roughness:.88});
 
+// The right-hand corridor door occupies a genuine opening in the concrete.
+// A solid wall behind its leaf made the frame look bolted onto the surface.
+const rightDoorWallParts=[
+ box(.2,6,5.48,wallConcrete,6,3,-4.26),    // z -7 to -1.52
+ box(.2,6,7.08,wallConcrete,6,3,3.46),     // z -.08 to 7
+ box(.2,3.32,1.44,wallConcrete,6,4.34,-.8) // lintel y 2.68 to 6
+];
+rightDoorWallParts.forEach((part,i)=>part.name=['room-door-left-masonry','room-door-right-masonry','room-door-lintel'][i]);
 // The solid room shell receives prop shadows, but must not block the interior's
 // simulated overhead key. Casting the ceiling from an exterior light position
 // would black out the office; floors and solid walls add no useful interior casts.
@@ -68,7 +76,7 @@ for(const shell of [
  box(12,.18,14,institutionalFloor,0,-.09,0),
  box(12,6,.2,wallConcrete,0,3,-6.8),
  box(.2,6,14,wallConcrete,-6,3,0),
- box(.2,6,14,wallConcrete,6,3,0),
+ ...rightDoorWallParts,
  box(12,.2,14,M(0x6d6c66,.03,.94),0,6,0)
 ])shell.castShadow=false;
 
@@ -98,8 +106,9 @@ const brezh=posterTexture('brezhnev'),plan=posterTexture('plan');
 const glassMat=new T.MeshStandardMaterial({color:0xf6f2df,transparent:true,opacity:.07,roughness:.10,metalness:0});
 
 function framed(tex,x,y,w=2.55,h=3.42){
- box(w+.18,h+.18,.075,dark,x,y,-6.61);
- box(w+.09,h+.09,.052,steel2,x,y,-6.565);
+ // Nearly flush hanging frames should not issue long oblique wall shadows.
+ box(w+.18,h+.18,.075,dark,x,y,-6.61).castShadow=false;
+ box(w+.09,h+.09,.052,steel2,x,y,-6.565).castShadow=false;
  plane(w,h,new T.MeshStandardMaterial({map:tex,roughness:.88,metalness:0,emissive:0xffffff,emissiveMap:tex,emissiveIntensity:.16}),x,y,-6.525);
  // Matte poster paper avoids reflections obscuring the printed artwork.
 }
@@ -119,12 +128,12 @@ for(const z of [-4.8,-1.7,1.4,4.5])box(11.7,.28,.34,ceilingBeam,0,5.72,z).castSh
 for(const x of [-4.3,0,4.3])box(.30,.24,13.1,ceilingBeam,x,5.75,0).castShadow=false;
 
 /* cold fluorescent luminaires nested between coffers */
-scene.add(new T.HemisphereLight(0xc4cfcc,0x3e3428,.74));
-// One shadowed, cool interior key; warm practicals stay unshadowed. Moving the
-// key along its ORIGINAL direction changes shadow-camera depth, not the look.
-// It keeps the entire occupied room in front of the shadow camera.
-const key=new T.DirectionalLight(0xf1efe8,1.10);
-key.position.set(-24,40,24);
+scene.add(new T.HemisphereLight(0xc4cfcc,0x3e3428,.90));
+// The iced-over window supplies diffuse winter fill, not sharp sunbeams.
+// Represent the three ceiling fluorescent fittings with ONE mostly vertical
+// shadow key. The warm unshadowed practicals keep their local light pools.
+const key=new T.DirectionalLight(0xf1efe8,.82);
+key.position.set(-3.9,16,1.4);
 key.castShadow=true;key.shadow.bias=-.0002;key.shadow.normalBias=.015;
 key.shadow.mapSize.set(mobile?1024:2048,mobile?1024:2048);
 // Fit the fixed map ONCE to all reachable floor, walls, ceiling, door and
@@ -297,10 +306,13 @@ const clockMap=canvasTex(512,512,(g,w,h)=>{
  g.fillStyle='#28342d';g.font='bold 41px Arial';g.textAlign='center';g.textBaseline='middle';
  for(let i=1;i<=12;i++){const a=i*Math.PI/6;g.fillText(i,Math.sin(a)*175,-Math.cos(a)*175)}
 });
-cyl(.4,.07,dark,0,3.83,-6.60,Math.PI/2,0,0,scene,48);
-const clockFace=new T.Mesh(new T.CircleGeometry(.375,64),new T.MeshStandardMaterial({map:clockMap,roughness:.9}));clockFace.position.set(0,3.83,-6.549);scene.add(clockFace);
+// Seat the clock flush to the rear wall at z=-6.70. A shallow wall clock
+// should not project a large diagonal 'sun' shadow across concrete.
+const clockCase=cyl(.4,.07,dark,0,3.83,-6.665,Math.PI/2,0,0,scene,48);
+clockCase.name='room-clock-case';clockCase.castShadow=false;
+const clockFace=new T.Mesh(new T.CircleGeometry(.375,64),new T.MeshStandardMaterial({map:clockMap,roughness:.9}));clockFace.position.set(0,3.83,-6.624);scene.add(clockFace);
 const clockHands=[];
-for(const len of [.17,.27]){const pivot=new T.Group();pivot.position.set(0,3.83,-6.51);scene.add(pivot);box(.014,len,.014,dark,0,len/2,0,pivot);clockHands.push(pivot)}
+for(const len of [.17,.27]){const pivot=new T.Group();pivot.position.set(0,3.83,-6.605);scene.add(pivot);box(.014,len,.014,dark,0,len/2,0,pivot).castShadow=false;clockHands.push(pivot)}
 function updateClock(){needsFrame=true;const d=new Date();clockHands[0].rotation.z=-(d.getHours()%12+d.getMinutes()/60)*Math.PI/6;clockHands[1].rotation.z=-(d.getMinutes()+d.getSeconds()/60)*Math.PI/30}
 updateClock();setInterval(updateClock,10000);
 
@@ -487,7 +499,7 @@ const deskLight=new T.PointLight(0xffc27f,1.2,2.2,2);deskLight.position.set(.99,
 // Glazed window on the left with frames, dusty sill and diffuse daylight.
 const windowPane=M(0xaebfbb,.02,.52,0x9fbbb9,.35);box(.08,2.70,2.75,dark,-5.87,2.72,-2.60);box(.085,2.51,2.55,windowPane,-5.81,2.72,-2.60);
 for(const y of [1.39,2.71,4.05])box(.13,.065,2.86,steel2,-5.74,y,-2.60);for(const z of [-4,-2.61,-1.20])box(.13,2.70,.065,steel2,-5.73,2.72,z);box(.43,.08,3.03,wood,-5.69,1.36,-2.60);
-const daylight=new T.PointLight(0xb9ced3,3.2,9,2);daylight.position.set(-4.9,3.35,-2.60);scene.add(daylight);
+const daylight=new T.PointLight(0xb9ced3,2.2,9,2);daylight.position.set(-4.9,3.35,-2.60);scene.add(daylight);
 // A midground archive desk and records break up the former empty hall.
 box(1.65,.075,.79,wood,-3.6,.82,-3.77);for(const x of [-4.30,-2.90])for(const z of [-4.06,-3.49])box(.07,.79,.07,dark,x,.4,z);
 paperStack(-4.12,.861,-3.77,.35,.44,22);paperStack(-3.62,.861,-3.76,.36,.45,31);paperStack(-3.08,.861,-3.79,.31,.43,13);
@@ -549,8 +561,8 @@ const frost=canvasTex(768,768,(g,w,h)=>{
 });windowPane.map=frost;windowPane.color.setHex(0xffffff);windowPane.emissiveMap=frost;windowPane.emissive.setHex(0xc3d4cf);windowPane.emissiveIntensity=.23;windowPane.needsUpdate=true;
 const passingGlow=new T.PointLight(0xdbdbbd,0,4.5,2);passingGlow.position.set(-5.35,1.8,-2.6);scene.add(passingGlow);
 let winterTime=0,lastWinter=-1;
-function updateWinter(now){if(document.hidden||reducedMotion.matches)return;const seconds=now/1000,phase=seconds%83,passing=phase>43&&phase<48,interval=passing?.12:1;if(seconds-lastWinter<interval)return;lastWinter=seconds;winterTime=seconds;daylight.intensity=3.15+.24*Math.sin(seconds/29);windowPane.emissiveIntensity=.23+.014*Math.sin(seconds/29);passingGlow.intensity=passing?Math.sin((phase-43)/5*Math.PI)*.85:0;passingGlow.position.z=-3.9+(phase-43)*.51;needsFrame=true;}
-const doorGroup=new T.Group();doorGroup.position.set(5.84,0,-.8);doorGroup.rotation.y=-Math.PI/2;scene.add(doorGroup);
+function updateWinter(now){if(document.hidden||reducedMotion.matches)return;const seconds=now/1000,phase=seconds%83,passing=phase>43&&phase<48,interval=passing?.12:1;if(seconds-lastWinter<interval)return;lastWinter=seconds;winterTime=seconds;daylight.intensity=2.15+.16*Math.sin(seconds/29);windowPane.emissiveIntensity=.23+.014*Math.sin(seconds/29);passingGlow.intensity=passing?Math.sin((phase-43)/5*Math.PI)*.85:0;passingGlow.position.z=-3.9+(phase-43)*.51;needsFrame=true;}
+const doorGroup=new T.Group();doorGroup.position.set(6.02,0,-.8);doorGroup.rotation.y=-Math.PI/2;scene.add(doorGroup);
 softBox(1.17,2.52,.14,dark,0,1.26,0,doorGroup,.015);softBox(1.02,2.37,.09,wood,0,1.205,.10,doorGroup,.018);softBox(.78,1.34,.035,M(0x4a4232,.04,.92),0,1.57,.16,doorGroup,.01);softBox(.78,.51,.035,wood,0,.53,.16,doorGroup,.01);decal(.43,.18,['ОПЕРАТОРСКАЯ','№ 3'],0,1.81,.189,doorGroup,'#b9a777');cyl(.038,.055,brass,.37,1.07,.205,Math.PI/2,0,0,doorGroup);box(.16,.027,.027,brass,.32,1.07,.247,doorGroup);
 /* ROOM COMPLETENESS: intentionally physical institutional fittings; no cabinet redesign. */
 const finishPaint=M(0x697165,.02,.93),finishIron=M(0x464d46,.31,.72);
@@ -588,13 +600,23 @@ for(const z of [-6.677,6.877]){
  finishBox(11.82,.13,.095,finishIron,0,5.86,z>0?6.816:-6.616);
 }
 for(const side of [-1,1]){
- finishBox(.026,.96,13.56,finishPaint,side*5.875,.49,0);
- finishBox(.065,.13,13.58,finishIron,side*5.846,.085,0);
- finishBox(.044,.043,13.56,steel2,side*5.845,1,0);
+ // Lower paint and chair rails terminate at the door; don't pass behind it.
+ const spans=side===1?[[-4.15,5.26],[3.35,6.86]]:[[0,13.56]];
+ for(const [z,length] of spans){
+  finishBox(.026,.96,length,finishPaint,side*5.875,.49,z);
+  finishBox(.065,.13,length,finishIron,side*5.846,.085,z);
+  finishBox(.044,.043,length,steel2,side*5.845,1,z);
+ }
  finishBox(.095,.13,13.62,finishIron,side*5.815,5.86,0);
- for(const z of [-5.15,-2.57,0,2.57,5.15])finishBox(.026,4.66,.025,seam,side*5.844,3.36,z);
+ for(const z of [-5.15,-2.57,0,2.57,5.15]){
+  if(side===1&&z===0)continue; // no joint suspended in the doorway
+  finishBox(.026,4.66,.025,seam,side*5.844,3.36,z);
+ }
  for(const y of [3.02,4.69])finishBox(.027,.027,13.49,seam,side*5.843,y,0);
 }
+// The wall thickness returns into a period steel jamb and real lintel.
+for(const z of [-1.52,-.08])finishBox(.19,2.68,.08,finishIron,5.99,1.34,z);
+finishBox(.19,.09,1.44,finishIron,5.99,2.635,-.8);
 for(const x of [-5.3,-2.65,0,2.65,5.3])finishBox(.033,4.65,.026,seam,x,3.34,6.858);
 for(const y of [3.02,4.69])finishBox(11.55,.030,.028,seam,0,y,6.858);
 const tiePoints=[];
@@ -645,7 +667,7 @@ for(const y of [.45,1.32,2.18]){
 }
 cyl(.034,.014,brass,-.11,2.15,.227,Math.PI/2,0,0,doorGroup,20);
 cyl(.013,.016,black,-.11,2.15,.242,Math.PI/2,0,0,doorGroup,12);
-box(.14,.022,1.44,steel2,5.68,.016,-.80);
+box(.14,.022,1.44,steel2,5.83,.016,-.80);
 // Cast-metal archival drawer details preserve original cabinet labels and bounds.
 for(const x of [-4.65,-3.86]){
  finishBox(.79,.11,.67,finishIron,x,.067,-5.55);
@@ -678,8 +700,8 @@ cyl(.041,.055,steel2,.87,.31,-6.439,0,0,Math.PI/2,scene,18);
 cyl(.052,.035,brass,.91,.36,-6.43,0,0,0,scene,16);
 for(const z of [-3.97,-1.23])finishBox(.17,.18,.29,finishIron,-5.63,1.24,z);
 const clockRim=new T.Mesh(new T.TorusGeometry(.383,.011,8,48),steel2);
-clockRim.position.set(0,3.83,-6.499);clockRim.castShadow=true;scene.add(clockRim);
-cyl(.028,.022,steel2,0,3.83,-6.488,Math.PI/2,0,0,scene,16);
+clockRim.position.set(0,3.83,-6.612);clockRim.castShadow=false;scene.add(clockRim);
+cyl(.028,.022,steel2,0,3.83,-6.592,Math.PI/2,0,0,scene,16).castShadow=false;
 const mugRim=new T.Mesh(new T.TorusGeometry(.063,.009,7,24),steel2);
 mugRim.rotation.x=Math.PI/2;mugRim.position.set(4.63,1.062,-5.08);scene.add(mugRim);
 // All decoration is submitted once so repeated fasteners and joinery share draw calls.
