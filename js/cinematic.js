@@ -42,7 +42,7 @@ window.createMinistryCinema=({T,camera,renderer,scene,canStand,invalidate,syncLo
   renderer.setSize(w,h);Object.assign(renderer.domElement.style,{position:'absolute',left:Math.round((innerWidth-w)/2)+'px',top:Math.round((innerHeight-h)/2)+'px'});
   camera.aspect=w/h;camera.updateProjectionMatrix();invalidate();
  }
- function showControls(show){hidden=!show;bar.hidden=hidden;tab.hidden=!hidden;$('cinemaHide').setAttribute('aria-expanded',String(show));if(!show&&bar.contains(document.activeElement))document.activeElement.blur();if(show)$('cinemaHide').focus()}
+ function showControls(show){hidden=!show;bar.hidden=hidden;tab.hidden=!hidden;$('cinemaHide').setAttribute('aria-expanded',String(show));if(!show)tab.focus();else $('cinemaHide').focus()}
  function stopTour(){touring=false;$('cinemaTour').textContent='T · STAЯT TOUЯ';$('cinemaTour').setAttribute('aria-pressed','false')}
  function cancelTravel(){route=null;stopTour();syncLook();clearKeys()}
  function go(n,{tour=false,instant=false}={}){
@@ -56,14 +56,14 @@ window.createMinistryCinema=({T,camera,renderer,scene,canStand,invalidate,syncLo
   $('cinemaLens').value=s.fov;$('cinemaLensValue').textContent=s.fov+'°';hold=0;
  }
  function enter(){
-  if(active||isModal())return;home={p:camera.position.clone(),q:camera.quaternion.clone(),fov:camera.fov};active=true;clearKeys();
-  document.body.classList.add('cinematic');for(const id of ['hud','viewControls','operator','hint','fs','installBtn','badge','appMode'])$(id).inert=true;
+  if(active||isModal())return;home={p:camera.position.clone(),q:camera.quaternion.clone(),fov:camera.fov};active=true;clearKeys();window.BYUR_UI?.closeMenu();
+  document.body.classList.add('cinematic');for(const id of ['hud','menuToggle','utilityPanel','viewControls','operator','hint','fs','installBtn','badge','appMode'])$(id).inert=true;
   $('cinema').hidden=false;bar.hidden=false;tab.hidden=true;hidden=false;resize();go(0);$('cinemaExit').focus();
  }
  function exit(){
   if(!active||capturing)return;cancelTravel();active=false;camera.position.copy(home.p);camera.quaternion.copy(home.q);camera.fov=home.fov;syncLook();
-  document.body.classList.remove('cinematic');for(const id of ['hud','viewControls','operator','hint','fs','installBtn','badge','appMode'])$(id).inert=false;
-  $('cinema').hidden=true;resize();$('cinemaEnter').focus();
+  document.body.classList.remove('cinematic');for(const id of ['hud','menuToggle','utilityPanel','viewControls','operator','hint','fs','installBtn','badge','appMode'])$(id).inert=false;
+  $('cinema').hidden=true;resize();$('menuToggle').focus();
  }
  async function capture(){
   if(!active||capturing)return;capturing=true;stopTour();$('cinemaPhoto').disabled=true;

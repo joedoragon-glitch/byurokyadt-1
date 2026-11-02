@@ -387,16 +387,24 @@ window.BYUR_LOAD?.stage('machine_ready');
 
 /* Mechanics and operator controls. Files remain entirely local. */
 let current=null,busy=false,certificateReady=false,serial='';
-const ui=Object.fromEntries(['loadDoc','runDoc','resetDoc','receipt','certificate','certificateCanvas','cycleCount','sound','roomView','deskView'].map(id=>[id,document.getElementById(id)]));
+const ui=Object.fromEntries(['loadDoc','runDoc','resetDoc','receipt','certificate','certificateCanvas','cycleCount','sound','roomView','deskView','operator','stepLabel','selectedFile'].map(id=>[id,document.getElementById(id)]));
 let issued=0;try{issued=Math.max(0,Math.min(999999,Math.floor(Number(localStorage.getItem('byur-issued')||0)||0)))}catch{}
-function updateCount(animate=false){ui.cycleCount.textContent='ЇSSUЄD: '+String(issued).padStart(3,'0');updateArchive(issued,animate)}updateCount();
-function controls(){ui.loadDoc.disabled=ui.runDoc.disabled=ui.resetDoc.disabled=busy;ui.receipt.disabled=!certificateReady||busy}
+function updateCount(animate=false){ui.cycleCount.textContent='ISSUED: '+String(issued).padStart(3,'0');updateArchive(issued,animate)}updateCount();
+function controls(){
+ const stage=busy?'busy':certificateReady?'ready':current?'selected':'empty';
+ ui.operator.dataset.stage=stage;
+ ui.stepLabel.textContent={empty:'STEP 1 / 3 · SELECT A DOCUMENT',selected:'STEP 2 / 3 · CONFIRM THE PROCEDURE',busy:'STEP 2 / 3 · PROCESSING',ready:'STEP 3 / 3 · COLLECT CERTIFICATE'}[stage];
+ ui.selectedFile.textContent=current?'FILE: '+current.name:'No document selected';
+ ui.loadDoc.disabled=ui.runDoc.disabled=ui.resetDoc.disabled=busy;
+ ui.receipt.disabled=!certificateReady||busy;
+ ui.runDoc.textContent=busy?'Processing…':certificateReady?'↵ · Confirm again':'↵ · Confirm';
+}
 function status(text){hint.textContent=text}
 const audio=window.MinistryAudio;let soundOn=false,musicOn=false;
 const soundPosition=new T.Vector3();
 function sound(name,source=null){const object=source||{relay:resetKnob,feed:rollers[1],scan:lens,stamp,bell:screen}[name];if(object){object.updateWorldMatrix(true,false);audio.play(name,object.getWorldPosition(soundPosition).toArray())}else audio.play(name)}
-ui.sound.onclick=async()=>{soundOn=!soundOn;ui.sound.textContent='SOUИD: '+(soundOn?'OИ':'OFF');ui.sound.setAttribute('aria-pressed',String(soundOn));try{await audio.setEffects(soundOn);sound('relay')}catch{soundOn=false;ui.sound.textContent='SOUИD: RETRY';ui.sound.setAttribute('aria-pressed','false');status('Audio delivery delayed. Click SOUИD to retry, comЯade.')}};
-const musicButton=document.getElementById('music');musicButton.onclick=async()=>{musicOn=!musicOn;musicButton.textContent='MUSЇC: '+(musicOn?'OИ':'OFF');musicButton.setAttribute('aria-pressed',String(musicOn));try{await audio.setMusic(musicOn)}catch{musicOn=false;musicButton.textContent='MUSЇC: RETRY';musicButton.setAttribute('aria-pressed','false');status('Orchestra delayed. Click MUSЇC to retry.')}};
+ui.sound.onclick=async()=>{soundOn=!soundOn;ui.sound.textContent='Sound: '+(soundOn?'On':'Off');ui.sound.setAttribute('aria-pressed',String(soundOn));try{await audio.setEffects(soundOn);sound('relay')}catch{soundOn=false;ui.sound.textContent='Sound: Retry';ui.sound.setAttribute('aria-pressed','false');status('Audio delivery delayed. Click SOUИD to retry, comЯade.')}};
+const musicButton=document.getElementById('music');musicButton.onclick=async()=>{musicOn=!musicOn;musicButton.textContent='Music: '+(musicOn?'On':'Off');musicButton.setAttribute('aria-pressed',String(musicOn));try{await audio.setMusic(musicOn)}catch{musicOn=false;musicButton.textContent='Music: Retry';musicButton.setAttribute('aria-pressed','false');status('Orchestra delayed. Click MUSЇC to retry.')}};
 document.getElementById('volume').oninput=e=>audio.setVolume(Number(e.target.value)/100);
 const st={cap:cap.position.z,inZ:inPaper.position.z,stampY:stamp.position.y,linkY:stampLink.position.y,scanX:scan.position.x};
 const wait=ms=>new Promise(r=>setTimeout(r,ms)),smooth=t=>t*t*(3-2*t);
@@ -427,6 +435,7 @@ function createCertificate(name,number){
 function showCertificate(){if(certificateReady&&!busy){ui.certificate.showModal();sound('relay')}}
 ui.receipt.onclick=showCertificate;outPaper.userData.action='receipt';interactives.push(outPaper);
 document.getElementById('closeReceipt').onclick=()=>ui.certificate.close();
+ ui.certificate.addEventListener('close',()=>ui.receipt.focus());
 document.getElementById('downloadReceipt').onclick=()=>{ui.certificateCanvas.toBlob(blob=>{if(!blob)return;const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='SPRAVKA-27B-'+serial+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)},'image/png')};
 async function run(){
  if(busy)return;
@@ -449,19 +458,19 @@ async function run(){
  outputStage='ready';await gauges(1,1);setLamp(1,false);phase(3);
  crt(['ПРОВЕРКА ЗАВЕРШЕНА.','','СТАТУС: ХОРОШО.','','ДОКУМЕНТ ЯВЛЯЕТСЯ ДОКУМЕНТОМ.']);
  createCertificate(current.name,serial);certificateReady=true;issued=Math.min(999999,issued+1);try{localStorage.setItem('byur-issued',String(issued))}catch{}updateCount(true);
- status('APPЯOVЄD · Your certificate is ready. Click CERTЇFЇCATЄ.');sound('bell');
+ status('APPЯOVЄD · Certificate ready. Select Collect certificate to save your PNG.');sound('bell');
  }catch(e){setLamp(2,true);status('ЄЯЯOЯ · Temporary deviation. Click ЯЄSЄT and retry.');console.error(e)}
  finally{audio.setCycle(false);await tween(95,t=>speedKnob.rotation.z=-.13-.42*t);busy=false;controls()}
 }
-function reset(){if(busy)return;knobTime=.24;current=null;certificateReady=false;fileInput.value='';inPaper.visible=false;resetVisual();controls();crt(['БЮРОКЯДТ-1','ВНИМАНИЕ.','СИСТЕМА ГОТОВА.']);status('COMЯADE, select a document or click the input tray.');sound('relay')}
+function reset(){if(busy)return;knobTime=.24;current=null;certificateReady=false;fileInput.value='';inPaper.visible=false;resetVisual();controls();crt(['БЮРОКЯДТ-1','ВНИМАНИЕ.','СИСТЕМА ГОТОВА.']);status('Choose a local document or use the machine input tray.');sound('relay')}
 function loadDocument(){if(!busy)fileInput.click()}
 ui.loadDoc.onclick=loadDocument;ui.runDoc.onclick=run;ui.resetDoc.onclick=reset;
-fileInput.onchange=()=>{if(busy||!fileInput.files[0])return;resetVisual();certificateReady=false;current=fileInput.files[0];drawInput(current.name);inPaper.visible=true;inPaper.position.z=st.inZ;bendPaper(inPaper);crt(['ДОКУМЕНТ ПРИНЯТ.','','PЯЄSS ПОДТВЕРДИТЬ.']);setLamp(2,false);status('ЯЄCЄЇVЄD · '+current.name+' · Press COИFЇЯM.');controls();sound('relay')};
+fileInput.onchange=()=>{if(busy||!fileInput.files[0])return;resetVisual();certificateReady=false;current=fileInput.files[0];drawInput(current.name);inPaper.visible=true;inPaper.position.z=st.inZ;bendPaper(inPaper);crt(['ДОКУМЕНТ ПРИНЯТ.','','PЯЄSS ПОДТВЕРДИТЬ.']);setLamp(2,false);status('RECEIVED · '+current.name+' · Select Confirm to begin the procedure.');controls();sound('relay')};
 let viewMoving=false;
 async function setView(view){
  if(viewMoving||cinema?.active)return;viewMoving=true;renderer.domElement.style.opacity='0';await wait(180);
  const side=view==='side',desk=view===true,narrow=Math.max(0,.9/camera.aspect-1)*.85;camera.position.set(side?1.25:0,desk?1.70:side?1.72:1.70,(desk?.42:side?.55:2.7)+(desk||side?narrow:0));
- if(!current&&!busy)status(desk||side?'COMЯADE, select a document or click the input tray.':'COMЯADE, press 2 to approach the machine.');
+ if(!current&&!busy)status(desk||side?'Choose a document or use the machine input tray.':'Choose a local document, or use Menu to approach the machine.');
  yaw=side?.46:0;pitch=desk?-.18:side?-.15:.018;camera.rotation.set(pitch,yaw,0);needsFrame=true;renderer.domElement.style.opacity='1';await wait(180);viewMoving=false;
 }
 ui.roomView.onclick=()=>setView(false);ui.deskView.onclick=()=>setView(true);document.getElementById('sideView').onclick=()=>setView('side');
@@ -474,15 +483,15 @@ const ray=new T.Raycaster(),mouse=new T.Vector2();renderer.domElement.onclick=e=
 const keys={},velocity=new T.Vector3();
 function clearKeys(){for(const k in keys)keys[k]=false;velocity.set(0,0,0)}
 function syncLook(){yaw=camera.rotation.y;pitch=camera.rotation.x}
-cinema=window.createMinistryCinema({T,camera,renderer,scene,canStand,invalidate:()=>needsFrame=true,syncLook,clearKeys,isModal:()=>ui.certificate.open||viewMoving});
+cinema=window.createMinistryCinema({T,camera,renderer,scene,canStand,invalidate:()=>needsFrame=true,syncLook,clearKeys,isModal:()=>ui.certificate.open||document.getElementById('helpDialog').open||viewMoving});
 let dragging=false,lastX=0,lastY=0,dragMoved=false;
-renderer.domElement.tabIndex=0;renderer.domElement.setAttribute('aria-label','Office view; drag to look around');
+renderer.domElement.tabIndex=0;renderer.domElement.setAttribute('aria-label','3D office. Drag to look; use W A S D to walk. Document controls are available in the operator panel.');
 renderer.domElement.onpointerdown=e=>{if(viewMoving||cinema.capturing||e.button>0)return;renderer.domElement.focus({preventScroll:true});dragging=true;lastX=e.clientX;lastY=e.clientY;dragMoved=false;if(cinema.active)cinema.cancelTravel();renderer.domElement.setPointerCapture(e.pointerId)};
 renderer.domElement.onpointerup=renderer.domElement.onpointercancel=()=>dragging=false;
 renderer.domElement.onpointermove=e=>{if(!dragging||viewMoving)return;const dx=e.clientX-lastX,dy=e.clientY-lastY;if(Math.abs(dx)+Math.abs(dy)>2)dragMoved=true;yaw-=dx*(cinema.active?.0024:.004);pitch=T.MathUtils.clamp(pitch-dy*(cinema.active?.0024:.003),-1.15,1.15);camera.rotation.set(pitch,yaw,0);needsFrame=true;lastX=e.clientX;lastY=e.clientY};
 addEventListener('keydown',e=>{
- if(ui.certificate.open||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
- if(e.target.tagName==='BUTTON'&&(e.key==='Enter'||e.key===' '))return;
+ if(ui.certificate.open||document.getElementById('helpDialog').open||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+ if(e.target.closest('button,a,[role="button"]'))return;
  const k=e.key.toLowerCase();if(cinema.active){if('wasdqe'.includes(k)&&k.length===1){e.preventDefault();if(cinema.travelling||cinema.touring)cinema.cancelTravel();keys[k]=true}return}
  keys[k]=true;if(e.repeat)return;
  if(k==='f'){e.preventDefault();loadDocument()}if(k==='r')reset();
