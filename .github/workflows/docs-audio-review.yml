@@ -7,8 +7,11 @@ on:
       - "README.md"
       - "docs/**"
       - "assets/audio-preview.html"
+      - "assets/audio/**"
       - "service-worker.js"
       - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/docs-audio-review.yml"
       - "tests/audio-preview*.mjs"
       - "tests/documentation-links.mjs"
   workflow_dispatch:
@@ -34,6 +37,7 @@ jobs:
             if curl -fsS http://127.0.0.1:8000/assets/audio-preview.html >/dev/null; then break; fi
             sleep 0.5
           done
+          curl -fsS http://127.0.0.1:8000/assets/audio-preview.html >/dev/null
           npm run test:docs
           npm run test:preview
           npm run test:preview:browser

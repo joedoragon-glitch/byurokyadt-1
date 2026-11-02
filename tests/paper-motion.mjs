@@ -26,6 +26,7 @@ try{
  // Observe the approach event itself. The prior test sampled only lastPass after
  // waiting for any pass, so an unrelated background pass could overwrite it.
  const before=await page.evaluate(()=>window.MinistryAudio.state().corridor.passes);
+ assert.equal(before,0,'Sound startup must not schedule premature corridor footsteps');
  await page.evaluate(()=>{
   window.BYUR_CORRIDOR_EVENTS=[];
   window.BYUR_CORRIDOR_WATCH=setInterval(()=>{

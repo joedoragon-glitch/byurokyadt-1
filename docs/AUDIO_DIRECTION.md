@@ -16,7 +16,7 @@ The registered recordings reside in `assets/audio/` and are loaded by `js/audio.
 | `stamp.ogg` | Physical stamp impact |
 | `bell.ogg` | Machine's completion bell |
 
-Three additional textures are **synthesized at runtime rather than stored as OGG files**: winter wind, radiator ticks and muffled footsteps beyond the corridor door. `js/audio.js` positions sounds in 3D, follows the listener, limits active voices, fades buses and pauses on tab hiding.
+Three additional textures are **synthesized at runtime rather than stored as OGG files**: winter wind, radiator ticks and muffled footsteps beyond the corridor door. The sound engine initializes background schedules only after the recordings are ready, and a random corridor pass must not preempt an unhandled operator-approach cue. `js/audio.js` positions sounds in 3D, follows the listener, limits active voices, fades buses and pauses on tab hiding.
 
 **[Listen to the seven recordings](https://joedoragon-glitch.github.io/byurokyadt-1/assets/audio-preview.html)** on the separate standalone page once this proposal is published. The page plays individual recordings, not the spatialized room mix or full timed machine cycle; it deliberately neither reads nor changes game saves/settings. For exact emitted audio in context, use the game.
 
