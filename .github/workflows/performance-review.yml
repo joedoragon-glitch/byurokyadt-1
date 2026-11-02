@@ -3,10 +3,9 @@ on:
   pull_request:
     branches: ["main"]
     paths:
+      # Do not impose the expensive browser matrix on unrelated runtime/documentation PRs.
+      # Engineers can explicitly use workflow_dispatch when a normal JS change merits profiling.
       - "tests/performance.mjs"
-      - "docs/PERFORMANCE_PROFILING.md"
-      - "js/**"
-      - "service-worker.js"
       - ".github/workflows/performance-review.yml"
   workflow_dispatch:
 permissions:
