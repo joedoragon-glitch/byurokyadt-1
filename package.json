@@ -1,7 +1,7 @@
 {
   "name": "byurokyadt-1",
   "private": true,
-  "version": "10.2.1",
+  "version": "10.2.2",
   "type": "module",
   "scripts": {
     "test": "node tests/documentation-links.mjs && node tests/maintenance.mjs && node tests/audio-preview.mjs && node tests/audio-corridor.mjs && node tests/camera-math.mjs && node tests/paper-path.mjs && node tests/room-shell.mjs && node tests/acceptance.mjs && node tests/cinematic.mjs && node tests/paper-motion.mjs && node tests/audio-preview-browser.mjs && node tests/ui-accessibility.mjs",
