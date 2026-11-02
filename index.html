@@ -76,9 +76,17 @@
 </dialog>
 <script>
 (()=>{
-  const menu=document.getElementById('menuToggle'),panel=document.getElementById('utilityPanel'),help=document.getElementById('helpDialog');
+  const menu=document.getElementById('menuToggle'),panel=document.getElementById('utilityPanel'),help=document.getElementById('helpDialog'),operator=document.getElementById('operator');
+  // Keep optional controls above the live document actions on short and narrow screens.
+  // The utility menu scrolls internally instead of covering Select/Confirm/Collect.
+  function fitMenu(){
+    const room=operator.getBoundingClientRect().top-panel.getBoundingClientRect().top-8;
+    panel.style.maxHeight=Math.max(72,Math.floor(room))+'px';
+  }
   function closeMenu(restore=false){if(panel.hidden)return;panel.hidden=true;menu.setAttribute('aria-expanded','false');menu.setAttribute('aria-label','Open view, audio and help menu');if(restore)menu.focus();}
-  function openMenu(){panel.hidden=false;menu.setAttribute('aria-expanded','true');menu.setAttribute('aria-label','Close view, audio and help menu');}
+  function openMenu(){panel.hidden=false;fitMenu();menu.setAttribute('aria-expanded','true');menu.setAttribute('aria-label','Close view, audio and help menu');}
+  addEventListener('resize',()=>{if(!panel.hidden)fitMenu()});
+  new ResizeObserver(()=>{if(!panel.hidden)fitMenu()}).observe(operator);
   menu.addEventListener('click',()=>panel.hidden?openMenu():closeMenu());
   document.addEventListener('pointerdown',event=>{if(!panel.hidden&&!panel.contains(event.target)&&event.target!==menu)closeMenu()});
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!panel.hidden&&!help.open){event.preventDefault();closeMenu(true)}});
