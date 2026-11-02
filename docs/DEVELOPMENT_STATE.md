@@ -1,5 +1,9 @@
 # Development state — БЮРОКЯДТ-1
 
+## Issue #20 right desk correction — 10.2.3 candidate, 2 November 2026
+
+Owner authorized replacement of the interpenetrating file/paper prop arrangement and toy-like red telephone, plus technical review and merge if clean. [Issue #20](https://github.com/joedoragon-glitch/byurokyadt-1/issues/20) records the real 1982–83 VEF TA-72–inspired form and strict no-overlap criteria. The new `deskPhone`, `deskFiles` and `looseDossier` groups live in `js/app.js`, with a deterministic `tests/desk-props.mjs` browser geometry/photo gate. **Current status:** implementation candidate on `fix/issue-20-period-desk-props`; don't claim tested/merged/published without the exact GitHub PR, CI and Pages outcomes. No native iPhone or owner aesthetic verification has been performed.
+
 **Maintained status snapshot, prepared 1 November 2026.** Status is sourced from the repository at the stated checkpoints. Future changes must update this document when they affect current behavior or release claims.
 
 ## Version 10.2.2 — owner-authorized integration (2 November 2026)
