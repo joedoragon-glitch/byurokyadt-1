@@ -53,7 +53,7 @@ try{
 
  // An empty procedure reports a comprehensible error.
  await button('runDoc').click();
- assert.match(await button('hint').textContent(),/Select a document first/);
+ assert.match(await button('hint').textContent(),/^ERROR · Select a document first/);
  const chooser=page.waitForEvent('filechooser');
  await button('loadDoc').tap();
  await (await chooser).setFiles({name:'FORM-27B.txt',mimeType:'text/plain',buffer:Buffer.from('Local document')});
@@ -63,6 +63,12 @@ try{
  await page.screenshot({path:'test-results/ui-02-document-selected.png'});
 
  // Actual busy and issued states, not mocked machine status.
+ // Capture the live region as a screen-reader-facing processing transcript.
+ await page.evaluate(()=>{
+  window.BYUR_UI_STATUS_LOG=[];
+  new MutationObserver(()=>window.BYUR_UI_STATUS_LOG.push(document.getElementById('hint').textContent))
+   .observe(document.getElementById('hint'),{childList:true,characterData:true,subtree:true});
+ });
  await button('runDoc').click();
  await page.waitForFunction(()=>window.BYUR_INSPECT.snapshot().busy);
  assert.equal(await button('loadDoc').isDisabled(),true);
@@ -73,6 +79,10 @@ try{
  assert.equal(await button('receipt').isVisible(),true);
  assert.equal(await button('receipt').isEnabled(),true);
  assert.match(await button('stepLabel').textContent(),/STEP 3/);
+ const liveMessages=await page.evaluate(()=>window.BYUR_UI_STATUS_LOG);
+ for(const phase of ['ANALYSIS','VERIFICATION','PRINTING','STAMPING','APPROVED']){
+  assert(liveMessages.some(message=>message.startsWith(phase+' ·')),`Missing readable live announcement: ${phase}`);
+ }
  await page.screenshot({path:'test-results/ui-04-certificate-ready.png'});
  await button('receipt').click();assert.equal(await button('certificate').evaluate(el=>el.open),true);
  assert.equal(await page.getByRole('dialog',{name:'Official certificate'}).isVisible(),true);
