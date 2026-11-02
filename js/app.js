@@ -1,5 +1,5 @@
 (()=>{
-if(!window.THREE){window.BYUR_LOAD?.fatal('ЄЯЯOЯ: 3D engine unavailable.');return}
+if(!window.THREE){window.BYUR_LOAD?.fatal('ОШИБКА: 3D engine unavailable.');return}
 const T=THREE;window.BYUR_LOAD?.stage('engine_ready');
 const mobile=matchMedia('(max-width:800px)').matches||/Android|iPhone|iPad/i.test(navigator.userAgent);
 let needsFrame=true,renderedFrames=0;
@@ -14,7 +14,7 @@ let yaw=0,pitch=.018;camera.rotation.set(pitch,yaw,0);
 let renderer;
 try{
  renderer=new T.WebGLRenderer({antialias:!mobile,powerPreference:mobile?'default':'high-performance',failIfMajorPerformanceCaveat:false});
-}catch(e){window.BYUR_LOAD?.fatal('ЯEИDEЯЄЯ ЄЯЯOЯ: '+e.message);return}
+}catch(e){window.BYUR_LOAD?.fatal('РЕНДЕР ОШИБКА: '+e.message);return}
 renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,mobile?1.1:1.6));
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=mobile?T.PCFShadowMap:T.PCFSoftShadowMap;
 renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=.96;root.appendChild(renderer.domElement);

@@ -12,7 +12,7 @@
 
 **Actual Russian must always be written in real Cyrillic, uncorrupted and correctly spelled.** Examples: `МЕНЮ`, `РЕЖИМ`, `КОМИССИЯ`, `МИНИСТЕРСТВО`, `ТОВАРИЩ`, `ДОКУМЕНТ`, `НЕТ ДОКУМЕНТА`, `ПРОВЕРКА`, `ГОТОВО`, `СПРАВКА`, `ПЕЧАТЬ`. Never write NYET, SPRAVKA, TOVARISHCH or a half-Latin spelling when the intended word is authentic Russian.
 
-**Invented English may be misspelled and mixed-script**, e.g. `SЕLЕКТ` (select/selekt), `КОNFIRM` (confirm/konfirm), `РRОЦЕSSING` (processing), `АPРRОVД` (approved), `РЕRМIТ` (permit), `МЕNЮ` (menu). Those are invented bureaucratic English tokens, *not* Russian words. Unusual characters are a discretionary visual ingredient, not a global replace-all transformation. Ordinary capital `I` is retained; never use Ukrainian `Ї` as a decorative English I.
+**Invented English may be misspelled and mixed-script**, e.g. `SЕLЕКТ` (select/selekt), `КОNFIRM` (confirm/konfirm), `РRОЦЕSSING` (processing), `АPРRОVД` (approved), `РЕRМIТ` (permit), `МЕNЮ` (menu). Those are invented bureaucratic English tokens, *not* Russian words. Unusual characters are a discretionary visual ingredient, not a global replace-all transformation. Ordinary capital `I` is retained. For Russian-at-first-glance typography, do not use Ukrainian `Ї` or `Є` as decorative English I or E; prefer real Russian Cyrillic where a match is needed.
 
 Aim for a mix of official authentic Russian on the machine, more aggressive hybrid typography on compact display labels, and lighter corruption in long functional explanations. Preserve recognizable English word shapes, control hotkeys and short verbs even when most of the glyphs look Cyrillic. Avoid nonsensical character replacements that destroy a word's outline.
 

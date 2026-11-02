@@ -109,7 +109,7 @@
    <select id="cinemaFrame" aria-label="Photograph aspect ratio"><option value="1.7777777778">16:9 · СINЕМА</option><option value="2.39">2.39:1 · WIDЕ</option><option value="0">SСRЕЕN SНАРЕ</option></select>
    <button id="cinemaHide" aria-label="Hide cinematic controls" aria-expanded="true">H · НIDЕ РАNЕL</button><button id="cinemaPhoto" class="redButton" aria-label="Save clean cinematic PNG">P · SАVЕ ФОТО</button>
   </div>
-  <div class="cinemaHelp">WASD · ГLIDЕ &nbsp; DRAG · LOOK &nbsp; Q / E · LОWЕR / ЯAISЕ &nbsp; SCROLL · LЄИS &nbsp; [ / ] · ВИДЫ<br><span id="cinemaStatus" aria-hidden="true">ТОВАРИЩ, COMPOSE ФОТО. BEAUTУ NEEDS NО FORM.</span><span id="srCinemaStatus" class="srOnly" role="status" aria-live="polite" aria-atomic="true">Comrade, compose photograph. Beauty needs no extra form.</span></div>
+  <div class="cinemaHelp">WASD · ГLIDЕ &nbsp; DRAG · LOOK &nbsp; Q / E · LОWЕR / ЯAISЕ &nbsp; SCROLL · ЛЕNS &nbsp; [ / ] · ВИДЫ<br><span id="cinemaStatus" aria-hidden="true">ТОВАРИЩ, COMPOSE ФОТО. BEAUTУ NEEDS NО FORM.</span><span id="srCinemaStatus" class="srOnly" role="status" aria-live="polite" aria-atomic="true">Comrade, compose photograph. Beauty needs no extra form.</span></div>
  </div>
  <button id="cinemaReveal" aria-label="Show cinematic controls" hidden>H · SHОW KОNТRОLS &nbsp; / &nbsp; ESC · ЕХIТ</button>
  <div id="cinemaToast" role="status" hidden></div>
@@ -190,7 +190,7 @@ async function preloadAsset(url,start,end,label,key){
   img.src=objectURL;await img.decode();
   if(img.naturalWidth<256||img.naturalHeight<256)throw new Error('POSTER SIZE UNKNOWN');
   window.BYUR_POSTERS[key]=img;
-  L.set(end,label,img.naturalWidth+' × '+img.naturalHeight+' • VЄЯIFIЄD');
+  L.set(end,label,img.naturalWidth+' × '+img.naturalHeight+' • ПРОВЕРЕНО');
  }catch(e){throw new Error('ПЛАКАТ НЕ ЧИТАЕТСЯ: '+url+' — '+e.message)}
  finally{URL.revokeObjectURL(objectURL)}
 }

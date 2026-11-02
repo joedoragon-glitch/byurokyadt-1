@@ -7,7 +7,7 @@ const read=path=>readFile(path,'utf8');
 const [html,app,cinema,css]=await Promise.all(
  ['index.html','js/app.js','js/cinematic.js','styles.css'].map(read));
 for(const [path,source] of [['index.html',html],['js/app.js',app],['js/cinematic.js',cinema]]){
- assert(!source.includes('Ї'),path+': deprecated dotted-I lookalike must not return');
+ for(const letter of ['Ї','Є']) assert(!source.includes(letter),path+': non-Russian Cyrillic confusable must not return: '+letter);
 }
 for(const phrase of ['БЮРОКЯДТ-1','МИНИСТЕРСТВО','ПРОВЕРКА','ПЕЧАТЬ','СПРАВКА']){
  assert(app.includes(phrase),'Preserve authentic Cyrillic: '+phrase);
