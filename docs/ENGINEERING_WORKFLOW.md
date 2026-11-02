@@ -27,6 +27,7 @@ Use narrow, reproducible checks matched to the affected subsystem:
 | Core document/file/receipt/persistence | Relevant `tests/acceptance.mjs` behavior |
 | Sound or environmental events | `node tests/audio-corridor.mjs`, relevant game/browser audio checks and honest listening status |
 | README, agent guides or audio-preview page | Run `node tests/documentation-links.mjs` and `node tests/audio-preview.mjs`; use `node tests/audio-preview-browser.mjs` when player/browser behavior changes |
+| Release metadata, cache or test roster | `node tests/maintenance.mjs` plus relevant offline Chromium checks |
 | Release candidate | Broader `npm test` **only after explicit permission** |
 
 `npm ci --ignore-scripts` installs development dependencies. Browser tests require Playwright Chromium and a local server at `http://127.0.0.1:8000/`. Do not claim completion of an unrun command or infer real device performance from headless Chromium.
@@ -39,6 +40,6 @@ A feature is not complete if its new behavior and current guidance contradict ea
 
 ## 6. PR and release boundaries
 
-Package a coherent branch change and reviewable PR with the exact commit, affected source paths, tests/results, known limitations and next action. `review.yml` runs non-deploying Chromium tests for pull requests targeting `main` and retains named historical branch push triggers. An arbitrary branch without a PR does not automatically run this workflow; verify checks against the exact candidate head. A push to `main` invokes the full Pages/test workflow and may deploy the game; never merge, publish or trigger broad verification without current explicit owner approval.
+Package a coherent branch change and reviewable PR with the exact commit, affected source paths, tests/results, known limitations and next action. The `review.yml` workflow now tests pull requests targeting `main` without deployment and still recognizes historical named review branches; a newly pushed branch without a PR does not itself trigger review CI. A push to `main` invokes the full Pages/test workflow and may deploy the game; never merge, publish or trigger broad verification without current explicit owner approval.
 
 If interrupted, leave a brief state/next-action record in the existing PR or issue and resume from exact GitHub state in the next conversation. A conversation ending does not make progress happen autonomously.

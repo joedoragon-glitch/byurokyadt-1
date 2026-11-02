@@ -11,6 +11,12 @@
 - Visual changes should not alter document-processing rules, timing, counters or collisions merely to make a screenshot look better.
 - Respect reduced-motion preferences, narrow/mobile layout and readable external controls. Stylized lettering does not replace accessible names or contrast.
 
+## Lighting and shadow verification
+
+A shadowed interior key must reach representative walkable positions, both ends of the room, the door/window, archive furniture, and the moving press without a camera-dependent cutoff. Keep warm practicals and cold daylight visually distinct. Check for acne, detached contact, unrealistically darkened walls, and lost poster/document legibility in matched scene-only captures. The same shadow-camera fit must be correct at desktop and mobile map sizes. Do not turn on shadows for every ceiling/desk point light.
+
+For source-based verification use the paired `tests/lighting-shadows.mjs` gate (and the non-deploying lighting review workflow), the existing cinematic and paper-motion browser suites, and matched renderer draw-call/triangle/map-size evidence. Shadow-camera coverage is a deterministic requirement, **not** a substitute for image review. Keep subjective atmosphere and real-device GPU behavior pending owner/device confirmation.
+
 ## Audio and experience
 
 Use [Audio direction](AUDIO_DIRECTION.md) for the creative sound contract. Keep effects tied to real causes and locations. Music and effects must remain independently controlled. Silence or audio failure must not prevent the machine's visual procedure. No automatic unmuted playback before a user gesture. Assess actual listening when possible; digital peaks, decode success and a green test do **not** certify enjoyable sound, speaker balance or long-session fatigue.
@@ -30,6 +36,6 @@ Do not impose an arbitrary FPS threshold or equate a headless software renderer 
 
 ## Evidence appropriate to the change
 
-A geometry adjustment warrants `node tests/paper-path.mjs`, camera changes `node tests/camera-math.mjs`, and related actual browser paths when needed. Audio lifecycle, offline, or player interaction changes may need focused Playwright coverage. A docs/listening-page edit needs link, asset, HTML and offline-shell safety checks; use the real Chromium preview test when playback, browser compatibility or caching is affected. The `npm test` command runs the ordered Node and Chromium checks in `package.json` (nine on the original 10.1.1 release; ten with the issue #10 maintenance guard, plus any later explicitly added checks). The lightweight `tests/maintenance.mjs` check validates version/cache alignment and the test command itself. A full run is **not the default** for a small documentation pass.
+A geometry adjustment warrants `node tests/paper-path.mjs`, camera changes `node tests/camera-math.mjs`, and related actual browser paths when needed. Audio lifecycle, offline, or player interaction changes may need focused Playwright coverage. A docs/listening-page edit needs link, asset, HTML and offline-shell safety checks; use the real Chromium preview test when playback, browser compatibility or caching is affected. The `npm test` command runs all **12** declared ordered Node and Chromium checks in `package.json`, including maintenance, the room-shell structural checks and contextual UI. `tests/maintenance.mjs` validates version/cache alignment and the test command itself. A full run is **not the default** for a small documentation pass.
 
 For each milestone, state exactly what passed, what was reviewed visually or audibly, what hardware was actually checked, and what remains unverified. Historical evidence belongs in [AUDIT.md](../AUDIT.md); present claims belong in [Development state](DEVELOPMENT_STATE.md). Do not invent screenshots, music acceptance or a live deployment.

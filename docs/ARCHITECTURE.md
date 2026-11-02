@@ -4,8 +4,8 @@
 
 ## Runtime and entry points
 
-- `index.html` — game shell, controls, boot/loading UI, certificate dialog and the script loading order.
-- `styles.css` — desktop/mobile HUD, overlay, player controls and visual presentation.
+- `index.html` — game shell, contextual operator controls, secondary Menu and native help/certificate dialogs, boot/loading UI and script loading order.
+- `styles.css` — quiet desktop/mobile HUD, secondary settings, state-specific operator strip, focus/contrast/touch targets and visual presentation.
 - `js/app.js` — authoritative Three.js scene, cabinet and office geometry, paper path, animation, interaction, collision, document-processing state, certificate capture and persistence hooks.
 - `js/cinematic.js` — eight inspection shots, routes, camera transitions, movement and photo controls. Uses real room obstacle geometry.
 - `js/audio.js` — Web Audio context, audio unlock, original recorded samples, generated winter effects, source positioning, audio buses and lifecycle. It exposes `window.MinistryAudio`.
@@ -22,27 +22,46 @@ The user picks a local file; the program displays and records its **filename**, 
 
 Follow `js/app.js` when changing processing, counter/tray, collisions or geometry; `js/cinematic.js` for inspection motion; `js/audio.js` for game sound. Review all touched interfaces when a change crosses these boundaries. A separate audio preview must not reference game saves or `window.MinistryAudio` to function.
 
+## Office lighting and shadow ownership
+
+`js/app.js` owns the fixed shadow rig: one cool, shadow-casting directional interior key, a fitted orthographic shadow camera spanning the occupied 12 × 14 office, and unshadowed warm practical lights. The key's shadow-space origin is moved along its existing direction to keep the whole scene inside its near/far range; its orientation, color and energy are preserved. The five solid enclosing shell surfaces receive interior prop shadows but do not cast artificial roof/wall darkness against the simulated key. Desktop maps are 2048²; narrow/mobile maps are 1024². Tiny screw heads, shallow concrete seams and flush form-tie marks do not contribute shadow casts; this preserves their surfaces while avoiding work for implausible micro-shadows. The mechanical press and output paper remain eligible for dynamic shadowing. The shadow volume is static rather than following the operator, to avoid view-dependent flicker.
+
+`tests/lighting-shadows.mjs` is a focused **paired baseline/candidate** Chromium diagnostic. It requires two separately served repositories (main at port 8000 and candidate at 8001), applies a test-only scene probe via Playwright request interception, checks world-space coverage at representative room points, drives real WASD movement, and saves desktop/mobile views plus intermediate press states and renderer metadata. This probe is not included in production. `.github/workflows/lighting-review.yml` provisions both checkouts, runs the paired diagnostic, then runs `npm test` without deploying. Headless SwiftShader/Chromium is not native-phone or physical-GPU evidence.
+
 ## Tests and deployment
 
 `package.json` runs focused source checks and Chromium suites with `npm test`:
 - `tests/documentation-links.mjs` — verifies cross-document local links and the required contributor entry points.
-- `tests/maintenance.mjs` — catches version/cache/asset-reference drift and missing or duplicated entries in the declared test command.
 - `tests/audio-preview.mjs` — checks the seven OGG sources and isolates standalone/service-worker navigation.
 - `tests/audio-corridor.mjs` — deterministic Web Audio unlock, background/approach priority, cooldown and mute.
 - `tests/audio-preview-browser.mjs` — tests actual Chromium OGG decoding, player controls, cache isolation and offline reopen.
+- `tests/room-shell.mjs` — evaluates actual room-finishing source with simple shape fakes, proving front-wall presence, four-wall junction treatment and camera clearance.
+- `tests/room-visual.mjs` — candidate/baseline paired 360° desktop/mobile Chromium screenshots, camera matching and representative render draw-call/triangle samples; needs two local servers.
 - `tests/camera-math.mjs` — real camera controller and obstacle map without a GPU.
 - `tests/paper-path.mjs` — paper path geometry and stamp/UV registration without a browser.
 - `tests/acceptance.mjs` — Playwright/Chromium game workflow, WebGL, offline, document, sound, export, persistence, collisions and viewports.
 - `tests/cinematic.mjs` — browser cinematic behavior, photos and related checks.
 - `tests/paper-motion.mjs` — rendered intermediate paper motion, stamping and corridor cues.
+- `tests/performance.mjs` — non-deploying paired Playwright profiler for rAF callbacks versus WebGL draws, workload stages, heap and cold/warm/offline loading (development only; not runtime instrumentation).
+- `tests/performance-compare.mjs` — deterministic negative-case regression for the trace comparison contract (rejects mismatched DPR, GPU, stage names and profiling settings).
 
-`.github/workflows/pages.yml` tests local production files, assembles `_site/`, deploys GitHub Pages on pushes to **`main`**, and checks the deployed URL. Its assembly copies `assets/` wholesale, so the independent listening page can be served without changing the deployment workflow. `.github/workflows/review.yml` runs the full non-deploying checks on pull requests targeting `main`, while retaining the three historical review-branch push triggers. A branch without a PR does not automatically trigger this review. Report checks by exact head SHA; never imply a PR check deployed the game.
+`.github/workflows/pages.yml` tests local production files, assembles `_site/`, deploys GitHub Pages on pushes to **`main`**, and checks the deployed URL. Its assembly copies `assets/` wholesale, so the independent listening page can be served without changing the deployment workflow. `.github/workflows/review.yml` runs on pushes to three **historical, explicitly named** review branches; a new arbitrary feature branch does not currently acquire CI automatically. Report the absence of an automated run rather than claiming it passed.
 
 See [Engineering workflow](ENGINEERING_WORKFLOW.md) for focused checks and release controls, and [Development state](DEVELOPMENT_STATE.md) for time-qualified evidence.
 
-## Legacy behavior and contradiction register (issue #10, inspected 2 November 2026)
+## Contextual UI verification (issue #9)
 
-This register distinguishes historical *appearance* from real defects; the audited baseline is `main` at `9b95387f4e2e`. Recheck source after any other polishing PR is merged.
+- `tests/ui-accessibility.mjs` exercises contextual state, keyboard/touch, Help/Certificate/Cinema focus, reduced motion and responsive menu positions.
+- `.github/workflows/review.yml` runs non-deploying Chromium tests for PRs targeting `main`; historical review branch triggers and room visual probes remain. Verify the actual current workflow and job conclusion, not its mere presence.
+
+## 10.2.1 integration maintenance
+
+- `tests/maintenance.mjs` guards package/lock version, HTML module URLs, service-worker cache/precache membership and the complete declared test roster.
+- The combined source includes issue #6 lighting, issue #7 room shell, issue #9 contextual UI, issue #8 profiling and issue #10 state/maintenance checks. Review whole-scene behavior and CI on the final commit, not just independent PR artifacts.
+
+## Historical legacy behavior and contradiction register (issue #10, pre-integration, 2 November 2026)
+
+This register distinguishes historical *appearance* from real defects; the audited baseline is `main` at `9b95387f4e2e`. This is a baseline record; issue #9 has since changed the HUD, and the 10.2.1 combined source supersedes the old working-state descriptions. Recheck actual source for current behavior.
 
 | Item / source | Classification and evidence | Decision / ownership |
 | --- | --- | --- |
