@@ -25,16 +25,23 @@ self.addEventListener('fetch',event=>{
  const url=new URL(event.request.url);
  if(url.origin!==self.location.origin)return;
 
- // Navigation is NETWORK-FIRST so a fixed loader is never trapped behind stale cached HTML.
+ // Only game-shell navigations may update or fall back to cached game HTML.
+ // A standalone page must never replace the offline game.
  if(event.request.mode==='navigate'){
+  const shellRoot=new URL('./',self.registration.scope).pathname;
+  const shellIndex=new URL('./index.html',self.registration.scope).pathname;
+  const isGameShell=url.pathname===shellRoot||url.pathname===shellIndex;
   event.respondWith(
    fetch(event.request,{cache:'no-cache'}).then(resp=>{
     if(resp&&resp.ok){
-     const copy=resp.clone(),indexCopy=resp.clone();
-     event.waitUntil(caches.open(CACHE).then(c=>Promise.all([c.put(event.request,copy),c.put('./index.html',indexCopy)])));
+     const copy=resp.clone();
+     event.waitUntil(caches.open(CACHE).then(async cache=>{
+      await cache.put(event.request,copy);
+      if(isGameShell)await cache.put('./index.html',resp.clone());
+     }));
     }
     return resp;
-   }).catch(()=>caches.match(event.request).then(hit=>hit||caches.match('./index.html')))
+   }).catch(()=>caches.match(event.request).then(hit=>hit||(isGameShell?caches.match('./index.html'):Response.error())))
   );
   return;
  }

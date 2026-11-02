@@ -1,50 +1,80 @@
 # БЮРОКЯДТ-1
 
-Fictional 1982 Soviet document-confirmation apparatus. A local-first, installable browser experience, built for a Chromebook.
+*A fictional Soviet document-confirmation apparatus, 1982.* A compact, atmospheric 3D browser game about operating an extraordinarily serious machine for an extraordinarily unnecessary procedure. Explore a winter office, submit a local document, watch the mechanism do its work, and collect the official certificate.
 
-## V10.1 paper path repair
+**[Play the game](https://joedoragon-glitch.github.io/byurokyadt-1/)** · **[Sound listening room](https://joedoragon-glitch.github.io/byurokyadt-1/assets/audio-preview.html)** · **[Development state](docs/DEVELOPMENT_STATE.md)**
 
-Certificates feed progressively from the printer mouth, stop for the red imprint at physical stamp contact, then follow a flat platen and curved metal chute. A shared arc-length surface keeps the sheet above the tray without stretching its artwork. Muffled footsteps pass outside the closed door shortly after an operator approaches with sound enabled, with a cooldown between visits; occasional background passes remain.
+The listening room is part of this proposed documentation update; its public Pages link becomes available **after this change is merged and successfully published**. It can also be opened from a local server at `/assets/audio-preview.html`.
 
-## V10 cinema bureau
+**Jump to:** [Experience](#the-experience) · [Controls](#controls) · [Sound and photography](#sound-and-photography) · [Privacy and offline use](#privacy-and-offline-use) · [Development](#development) · [Project documentation](#project-documentation)
 
-Cinematic inspection provides eight composed views: office, cabinet, CRT/meters, feed rollers, stamp press, winter window, corridor door, and receiving tray. The camera plans routes around the existing furniture footprints. It interpolates its position, orientation and lens smoothly; manual gliding retains collision protection. Reduced-motion mode changes views immediately and suppresses cabinet recoil and weather-light animation.
+## The experience
 
-- **C** opens cinematic inspection; **Escape** restores the operator camera.
-- **WASD** glides, **drag** looks, **Q/E** lowers/raises the camera, and **scroll** changes the lens.
-- **[ / ]** select views, **T** toggles the guided tour, and **H** hides/reveals controls.
-- **P** saves a scene-only PNG, up to 2560 × 1440, using the selected 16:9, 2.39:1 or screen-shaped frame. Export works offline and restores the normal rendering size afterward.
-- Start a machine cycle before entering cinema to photograph the working mechanisms.
+The office contains a 3D cabinet with switches, a CRT, analog meters, a printer feed, a physical stamping press, a paper chute and a receiving tray. You can walk around the machinery, inspect the winter office and use cinematic views to photograph it. An issued-document counter persists locally; the tray displays at most 32 sheets while the counter tracks up to 999,999.
 
-The mechanism has snapping knobs, damped meter overshoot, segmented paper that bends at rollers, a visible sheet under the press, and small cabinet recoil on impact. HRTF positional audio follows the camera and places the machinery at its actual 3D location. Original quiet wind, radiator ticks and muffled corridor footsteps imply an outside world. The closed window shows a defocused neighbouring block, slow daylight variation and an occasional passing glow. Music remains independent of sound effects.
+The intended tone is restrained, tactile and gently absurd: institutional bureaucracy treated with the seriousness of a monumental industrial process. The room contains original mechanical sound, a sparse instrumental score, winter ambience and spatially placed corridor footsteps.
 
-A physical six-digit rolling counter and receiving tray restore the issued total from this browser's local storage. The tray displays up to 32 sheets to bound rendering cost; the counter tracks up to 999,999. Clearing site data resets this local history. Neither document names nor contents are persisted in the tray, and no file contents are uploaded.
-
-## V9 factory refit
-
-The cabinet follows the original cinematic and propaganda-poster designs: square recessed CRT, left switch bank, ministry plate, two analog meters, confirmation button, deep feed bay, projecting tray, and open piston press. Soft cabinet edges, worn AI-generated enamel, side vents, handles, bearing hardware, and correctly oriented paper make the design readable from multiple angles.
-
-The concrete office includes restored party posters, a winter window, a heavy door, paper archives, a chair, telephone, and green desk lamp. Furniture and wall collisions use a player radius and sliding contact. View presets reposition the camera behind a short fade so it never visibly travels through objects.
-
-Outside instructions use readable Hollywood Soviet English. Cyrillic lettering remains on the machine and its display. Your selected file stays on your device: no file contents are read or uploaded, and only its filename is printed on the certificate.
+**Version 10.1** corrected the continuous paper path and stamp-contact timing, and made the corridor footsteps respond to an operator approaching the door. See the [historical production audit](AUDIT.md) for the recorded work and its verification; the [maintained development state](docs/DEVELOPMENT_STATE.md) distinguishes historical evidence from current verification.
 
 ## Controls
 
-- **1**: room view. **2**: machine. **3**: side inspection.
-- **WASD**: walk. **Drag**: look around. Touch drag also works.
-- **F / Select Doc**: select any local file. **Enter / Confirm**: run the procedure.
-- **R / Reset**: clear the current document. **Certificate**: collect and save the PNG.
-- The input tray, red button, reset knob, and completed output sheet are clickable.
-- **Sound** and **Music** are separate, initially off, with a volume control. Sound starts only after your click. Music softens during a machine cycle, and audio pauses when the tab is hidden.
+| Action | Keyboard / mouse / touch |
+| --- | --- |
+| Room / machine / side inspection | **1 / 2 / 3** |
+| Walk, look around | **WASD**, drag to look; touch drag is supported |
+| Select a document | **F** or **Select Doc** |
+| Confirm the procedure | **Enter** or **Confirm** |
+| Reset current document | **R** or **Reset** |
+| Collect a completed certificate | **Certificate** button, then save PNG |
+| Enter cinematic inspection | **C** |
+| Exit cinematic inspection | **Escape** |
+| Cinematic camera move, height, lens | **WASD**, **Q / E**, scroll |
+| Select cinematic views / tour | **[ / ]**, **T** |
+| Hide/show cinematic controls | **H** |
+| Save scene-only photograph | **P** |
 
-## Audio and materials
+The input tray, confirmation button, reset knob and completed output sheet are also clickable. Cinematic inspection offers eight composed views; photography supports 16:9, 2.39:1 and screen-shaped framing. Reduced-motion preferences are respected. Keyboard, touch and small-screen behavior are not assumed to be identical; see [Quality standards](docs/QUALITY_STANDARDS.md).
 
-Original mechanical sounds and a sparse 64-second instrumental were synthesized for this project, with no third-party music or archival samples. Rebuild them using `python3 scripts/build_audio.py` with NumPy, SciPy and ffmpeg installed. The score and effects are included in offline storage. The AI texture prompt and reference construction decisions are recorded in `AESTHETICS.md`.
+## Sound and photography
 
-## Verification
+**[Open the sound listening room](https://joedoragon-glitch.github.io/byurokyadt-1/assets/audio-preview.html)** to play each of the seven existing recordings individually, without starting a machine cycle or changing game state. The room has native playback controls and a one-track-at-a-time behavior. It does not preview procedural wind, radiator ticks or corridor footsteps; those are generated inside the game.
 
-GitHub Actions runs `npm test` in Chromium before deployment and again at the live URL. The suite covers decoded visual assets, WebGL initialization, document selection, mechanical cycle, certificate export, reset, audio decoding and independent controls, furniture and walking collisions, cached and offline reload, offline audio, and smaller viewport layouts. Screenshots and results are retained as workflow artifacts.
+Inside the game, **Sound** (mechanics and room) and **Music** are independent and begin off. Your action unlocks browser audio; the master volume is adjustable and music quietens during a procedure. Audio suspends when the tab is hidden. The original 64-second score and mechanical sounds can be regenerated with `python3 scripts/build_audio.py` when NumPy, SciPy and ffmpeg are available.
 
-Real ChromeOS installation, device-specific graphics speed, and the perceived balance on the user's speakers are not established by headless Chromium. The app has a standalone manifest and service worker, but those are not a substitute for an OS installation check.
+**[Sound identity and production guidance](docs/AUDIO_DIRECTION.md)** explains the creative and technical standards. **[Creative direction](docs/CREATIVE_DIRECTION.md)** records the visual and narrative identity; accepted reference decisions and original texture notes remain in [AESTHETICS.md](AESTHETICS.md).
 
-The original user-supplied party poster art remains unchanged from V8. Its earlier corrupted files are historical, unused assets. No external runtime assets, CDN, analytics, remote music, or document-upload service is required.
+## Privacy and offline use
+
+The selected file stays on your device: the game uses its **filename**, not its contents, for the fictional certificate. No document upload, analytics or cloud-save service is present. The issued total is stored in this browser's local storage; clearing site data resets it. The game has an installable manifest and a service worker for offline operation after required assets have been cached. Browser installation and real-device performance remain separate from automated checks.
+
+The sound listening room is a separate optional page. Its first visit and its offline behavior are not part of the original game-shell precache guarantee.
+
+## Development
+
+This is a static, local-first **Three.js / JavaScript / HTML / CSS / Web Audio** application, not the fantasy RPG or a backend service. The vendored Three.js library is under `vendor/`; game modules are in `js/`. The Playwright tests cover rendering and real user paths; two geometry checks run without a browser.
+
+```sh
+npm ci --ignore-scripts
+python3 -m http.server 8000
+# In another terminal, with Playwright Chromium installed:
+npm test
+```
+
+The full `npm test` command invokes six suites including the lightweight preview/service-worker regression and browser acceptance. Prefer the smallest relevant checks during ordinary edits; broader browser/device work needs the owner's authorization. A push to `main` triggers the GitHub Pages workflow and is **not** an innocuous staging action. Develop on a branch, present a reviewable PR, and do not merge or deploy without explicit authorization. See the [engineering workflow](docs/ENGINEERING_WORKFLOW.md).
+
+## Project documentation
+
+| What you need | Start here |
+| --- | --- |
+| Rules for an AI collaborator, authority and consent | [AGENTS.md](AGENTS.md) |
+| Current repository status and last verified evidence | [Development state](docs/DEVELOPMENT_STATE.md) |
+| Game modules, runtime and build ownership | [Architecture](docs/ARCHITECTURE.md) |
+| Authorial identity, tone and design constraints | [Creative direction](docs/CREATIVE_DIRECTION.md) |
+| Visual, interaction, accessibility and performance bar | [Quality standards](docs/QUALITY_STANDARDS.md) |
+| Music, effects, sound production and listening room | [Audio direction](docs/AUDIO_DIRECTION.md) |
+| Scoping, implementation, testing and handoffs | [Engineering workflow](docs/ENGINEERING_WORKFLOW.md) |
+| Confirmed choices versus proposed changes | [Decisions](docs/DECISIONS.md) |
+| Public-facing writing in the owner's voice | [Communication style](docs/COMMUNICATION_STYLE.md) |
+| All maintained guides and historical reference paths | [Documentation index](docs/DOCUMENTATION_INDEX.md) |
+
+**Historical records remain intact:** [AESTHETICS.md](AESTHETICS.md) contains approved visual references and texture provenance; [AUDIT.md](AUDIT.md) contains V9–V10.1 testing and release history. These are evidence, not fresh work orders. The authorial and engineering principles above were adapted from the separately maintained *So I Became the Dark Lord's Problem* repository; its fantasy setting, game mechanics, code paths and platform-specific policies do **not** apply here.
