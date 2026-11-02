@@ -23,8 +23,9 @@ try {
 window.__SHADOW_REVIEW=()=>{
  const names=['front-wall-service-board','front-wall-electrical-box','front-wall-electrical-face'];
  const clock=scene.getObjectByName('room-clock-case');
+ const icedGlazing=scene.getObjectByName('iced-window-glazing');
  const masonry=['room-door-left-masonry','room-door-right-masonry','room-door-lintel'].map(n=>scene.getObjectByName(n));
- if(!clock||masonry.some(m=>!m))throw Error('Clock or doorway masonry missing');
+ if(!clock||!icedGlazing||masonry.some(m=>!m))throw Error('Clock, frosted glazing or doorway masonry missing');
  const panels=names.map(n=>scene.getObjectByName(n));
  if(panels.some(p=>!p))throw Error('Missing named front-wall panels');
  const before=panels.map(p=>p.castShadow);
@@ -48,6 +49,7 @@ window.__SHADOW_REVIEW=()=>{
  renderer.shadowMap.needsUpdate=true;renderer.render(scene,camera);
  return {names,initialCasters:before,changed,formerDarker,formerBrighter,
   clock:{casts:clock.castShadow,z:clock.position.z},
+  glazing:{casts:icedGlazing.castShadow},
   masonry:masonry.map(m=>({name:m.name,casts:m.castShadow})),
   rig:{x:key.position.x,y:key.position.y,z:key.position.z,
    hemisphere:scene.children.filter(o=>o.isHemisphereLight).map(o=>o.intensity),
@@ -74,6 +76,7 @@ window.__SHADOW_REVIEW_RESTORE=()=>{
  results.shadow=probe;
  assert(probe.expected.castersOff,'Decorative front-wall backplates must not cast by default');
  assert.equal(probe.clock.casts,false,'Wall clock should not project elongated decorative shadows');
+ assert.equal(probe.glazing.casts,false,'Frosted glass must not act as an opaque window shadow caster');
  assert(Math.abs(probe.clock.z+6.665)<.001,'Clock case must rest against rear masonry');
  assert(probe.masonry.every(m=>!m.casts),'Doorway masonry remains an unshadowed shell');
  assert(Math.hypot(probe.rig.x,probe.rig.z)/probe.rig.y<.30,
