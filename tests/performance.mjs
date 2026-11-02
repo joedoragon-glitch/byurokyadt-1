@@ -48,9 +48,9 @@ const page = await context.newPage();
 page.setDefaultTimeout(90000);
 const errors = [], network = [];
 page.on('pageerror', error => errors.push(String(error)));
-page.on('response', response => network.push({ status: response.status(), source: response.fromServiceWorker() ? 'service-worker' : 'network', url: new URL(response.url()).pathname }));
+context.on('response', response => network.push({ status: response.status(), source: response.fromServiceWorker() ? 'service-worker' : 'network', url: new URL(response.url()).pathname }));
 await page.addInitScript(() => {
-  const probe = window.__BYUR_PERF_PROBE = { scheduled: 0, executed: 0, callbackMs: [], callbackTimes: [], drawCalls: 0 };
+  const probe = window.__BYUR_PERF_PROBE = { scheduled: 0, executed: 0, callbackMs: [], callbackTimes: [], drawCalls: 0, resources: {} };
   const raf = window.requestAnimationFrame.bind(window);
   window.requestAnimationFrame = fn => {
     probe.scheduled++;
@@ -78,6 +78,18 @@ await page.addInitScript(() => {
         return desc.value.apply(this, a);
       } });
     }
+    // Count API-level GPU resource operations, not estimated VRAM bytes.
+    for (const method of ['createBuffer', 'deleteBuffer', 'createTexture', 'deleteTexture',
+      'createProgram', 'deleteProgram', 'createFramebuffer', 'deleteFramebuffer',
+      'createRenderbuffer', 'deleteRenderbuffer', 'texImage2D', 'texSubImage2D',
+      'bufferData', 'bufferSubData']) {
+      const desc = Object.getOwnPropertyDescriptor(type.prototype, method);
+      if (!desc || typeof desc.value !== 'function') continue;
+      Object.defineProperty(type.prototype, method, { ...desc, value: function (...a) {
+        probe.resources[method] = (probe.resources[method] || 0) + 1;
+        return desc.value.apply(this, a);
+      } });
+    }
   }
 });
 
@@ -95,7 +107,7 @@ async function read() {
     const debug = gl?.getExtension('WEBGL_debug_renderer_info');
     return {
       time: performance.now(), scheduled: p.scheduled, executed: p.executed,
-      drawCalls: p.drawCalls, cpuCount: p.callbackMs.length, callbackMs: p.callbackMs.slice(),
+      drawCalls: p.drawCalls, resources: { ...p.resources }, cpuCount: p.callbackMs.length, callbackMs: p.callbackMs.slice(),
       callbackTimes: p.callbackTimes.slice(), renders: s.frames, callsPerLastRender: s.calls,
       trianglesPerLastRender: s.triangles, output: s.output.stage, busy: s.busy,
       heapMB: performance.memory?.usedJSHeapSize ? performance.memory.usedJSHeapSize / 1048576 : null,
@@ -118,6 +130,9 @@ async function stage(name, operation) {
   const entry = { name, elapsedMs: round(performance.now() - wallStart),
     rafScheduled: after.scheduled - before.scheduled, rafCallbacks: after.executed - before.executed,
     renders: after.renders - before.renders, draws: after.drawCalls - before.drawCalls,
+    resourceCalls: Object.fromEntries([...new Set([...Object.keys(before.resources), ...Object.keys(after.resources)])]
+      .map(key => [key, (after.resources[key] || 0) - (before.resources[key] || 0)])
+      .filter(([, count]) => count !== 0)),
     lastRenderCalls: after.callsPerLastRender, lastRenderTriangles: after.trianglesPerLastRender,
     callbackP50Ms: median(callbackMs), callbackP95Ms: percentile(callbackMs, .95),
     callbackIntervalP95Ms: percentile(intervals, .95),
@@ -150,7 +165,8 @@ try {
   report.meta.browser = browser.version();
   report.meta.environment = { userAgent: environment.userAgent, dpr: environment.dpr,
     viewport: environment.viewport, gl: environment.gl, reducedMotion: environment.reducedMotion };
-  report.boot = { renders: environment.renders, drawCalls: environment.drawCalls, heapMB: environment.heapMB };
+  report.boot = { renders: environment.renders, drawCalls: environment.drawCalls, heapMB: environment.heapMB,
+    resources: environment.resources };
   await page.screenshot({ path: (await outputPath('room.png')) });
   await stage('idle', () => page.waitForTimeout(idleMs));
   await stage('walking', async () => {
@@ -162,7 +178,7 @@ try {
     await page.locator('#cinemaEnter').click();
     for (let i = 0; i < 8; i++) {
       await page.locator('#cinemaShot').selectOption(String(i));
-      await page.waitForFunction(() => !window.BYUR_INSPECT.snapshot().cinema.travelling, null, { timeout: 90000 });
+      await page.waitForFunction(() => !window.BYUR_INSPECT.snapshot().cinema.travelling, null, { timeout: 90000, polling: 250 });
     }
     await page.locator('#cinemaExit').click();
   });
@@ -179,7 +195,7 @@ try {
   await page.locator('#file').setInputFiles({ name: 'PROFILE-27B.txt', mimeType: 'text/plain', buffer: Buffer.from('performance audit: no file uploaded') });
   await stage('full-document-cycle', async () => {
     await page.locator('#runDoc').click();
-    await page.waitForFunction(() => !window.BYUR_INSPECT.snapshot().busy && document.querySelector('#hint').textContent.startsWith('APPЯOVЄD'), null, { timeout: 180000 });
+    await page.waitForFunction(() => !document.querySelector('#runDoc').disabled && document.querySelector('#hint').textContent.startsWith('APPЯOVЄD'), null, { timeout: 180000, polling: 250 });
   });
   assert.equal((await page.evaluate(() => window.BYUR_INSPECT.snapshot())).issued, 1);
   await page.screenshot({ path: await outputPath('complete.png') });
