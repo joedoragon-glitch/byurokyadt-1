@@ -1,0 +1,64 @@
+name: Issue 8 performance review (non-deploying)
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "tests/performance.mjs"
+      - "docs/PERFORMANCE_PROFILING.md"
+      - "js/**"
+      - "service-worker.js"
+      - ".github/workflows/performance-review.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          path: candidate
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.base.sha || 'main' }}
+          path: baseline
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Install test runner
+        working-directory: candidate
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install Chromium
+        working-directory: candidate
+        run: npx playwright install --with-deps chromium
+      - name: Start isolated candidate and baseline static servers
+        run: |
+          python3 -m http.server 8000 --directory candidate > /tmp/byur-candidate-http.log 2>&1 &
+          python3 -m http.server 8001 --directory baseline > /tmp/byur-baseline-http.log 2>&1 &
+          for port in 8000 8001; do
+            for i in $(seq 1 30); do
+              if curl -fsS "http://127.0.0.1:$port/" >/dev/null; then break; fi
+              sleep 0.5
+            done
+            curl -fsS "http://127.0.0.1:$port/" >/dev/null
+          done
+      - name: Baseline profiling (unchanged main files)
+        working-directory: candidate
+        run: node tests/performance.mjs --base=http://127.0.0.1:8001/ --label=base --out=test-results/performance/base.json --idle-ms=30000
+      - name: Candidate profiling (matched settings)
+        working-directory: candidate
+        run: node tests/performance.mjs --base=http://127.0.0.1:8000/ --label=candidate --out=test-results/performance/candidate.json --idle-ms=30000
+      - name: Paired report (no automatic speedup verdict)
+        working-directory: candidate
+        run: node tests/performance.mjs --compare=test-results/performance/base.json --candidate=test-results/performance/candidate.json --out=test-results/performance/compare.json
+      - name: Comprehensive existing non-deploying regressions
+        working-directory: candidate
+        run: npm test
+      - name: Upload benchmark data and visual evidence
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: issue-8-performance-and-regressions
+          path: candidate/test-results/
+          retention-days: 14
