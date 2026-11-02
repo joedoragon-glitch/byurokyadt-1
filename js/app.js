@@ -420,6 +420,7 @@ for(let i=0;i<tiePoints.length;i++){
 ties.instanceMatrix.needsUpdate=true;ties.receiveShadow=true;scene.add(ties);
 for(const x of [-5.81,5.81])for(const z of [-6.62,6.82])
  finishBox(.070,5.53,.065,finishIron,x,3.19,z);
+flushRoomTrim();
 // Front-wall service infrastructure is period-specific and doesn't crowd the machine.
 softBox(2.26,1.32,.095,finishIron,-1.87,3.32,6.780,scene,.028);
 const serviceNotice=decal(2.04,1.10,['ПОРЯДОК УЧЁТА','ДЕЛО № 27-Б','ПЕРЕДАТЬ ПО ОПИСИ'],-1.87,3.32,6.716,scene,'#c0b69a','#37392e');
