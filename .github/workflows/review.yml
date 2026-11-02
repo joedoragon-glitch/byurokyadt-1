@@ -1,7 +1,7 @@
 name: Inspect review build
 on:
   push:
-    branches: ["v9-aesthetic-review", "v10-cinema-review", "v10-paper-review"]
+    branches: ["v9-aesthetic-review", "v10-cinema-review", "v10-paper-review", "issue-7-room-completeness"]
 permissions:
   contents: read
 jobs:
@@ -10,6 +10,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v6
         with:
           node-version: 22
@@ -21,6 +23,15 @@ jobs:
         run: |
           python3 -m http.server 8000 &
           npm test
+      - name: Issue 7 physical room and camera-footprint checks
+        if: github.ref_name == 'issue-7-room-completeness'
+        run: node tests/room-shell.mjs
+      - name: Issue 7 matched 360-degree baseline and candidate photographs
+        if: github.ref_name == 'issue-7-room-completeness'
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/byurokyadt-room-baseline" 9b95387f4e2ee1966cfce7f1bc3ec9a66e4b0e9d
+          python3 -m http.server 8001 --directory "$RUNNER_TEMP/byurokyadt-room-baseline" &
+          node tests/room-visual.mjs
       - name: Save inspection evidence
         if: always()
         uses: actions/upload-artifact@v5
