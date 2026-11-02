@@ -40,7 +40,7 @@ window.__DESK_PROBE={
    dial:this.bounds('phone-ten-position-dial'),grip:this.bounds('phone-shaped-handset-grip'),
    cord:this.bounds('phone-coiled-cord'),dialImage:[canvas.width,canvas.height],
    dialPixels:{cream,dark},dialAngle:rotaryFace.rotation.x,
-   shellType:phoneShell.geometry.type,drawCalls:renderer.info.render.calls,
+   shellType:phoneShell.geometry.type,handsetType:grip.geometry.type,drawCalls:renderer.info.render.calls,
    triangles:renderer.info.render.triangles};
  },
  view(pos,target){
@@ -89,6 +89,7 @@ try{
   assert(data.phone.meshCount>=12,'Phone must be modeled, not a single abstract block');
   assert(data.binders.meshCount>=24,'Closed files need real covers and document cores');
   assert.equal(data.shellType,'ExtrudeGeometry','Period sloped casing must be modeled');
+  assert.equal(data.handsetType,'ExtrudeGeometry','Handset must remain a one-piece contoured molding, not a tube joining spheres');
   assert.deepEqual(data.dialImage,[512,512]);
   assert(data.dialPixels.cream>1000&&data.dialPixels.dark>30,
     'Light rotary finger ring and dark holes must be perceptible');
