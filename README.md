@@ -4,7 +4,7 @@
 
 **[Play the game](https://joedoragon-glitch.github.io/byurokyadt-1/)** · **[Sound listening room](https://joedoragon-glitch.github.io/byurokyadt-1/assets/audio-preview.html)** · **[Development state](docs/DEVELOPMENT_STATE.md)**
 
-The listening room is part of this proposed documentation update; its public Pages link becomes available **after this change is merged and successfully published**. It can also be opened from a local server at `/assets/audio-preview.html`.
+The listening room is included with the site's assets. Its Pages link works after a successful deployment of the commit containing it; an unmerged PR is not a live site. It can also be opened from a local server at `/assets/audio-preview.html`.
 
 **Jump to:** [Experience](#the-experience) · [Controls](#controls) · [Sound and photography](#sound-and-photography) · [Privacy and offline use](#privacy-and-offline-use) · [Development](#development) · [Project documentation](#project-documentation)
 
@@ -14,7 +14,7 @@ The office contains a 3D cabinet with switches, a CRT, analog meters, a printer 
 
 The intended tone is restrained, tactile and gently absurd: institutional bureaucracy treated with the seriousness of a monumental industrial process. The room contains original mechanical sound, a sparse instrumental score, winter ambience and spatially placed corridor footsteps.
 
-**Version 10.1** corrected the continuous paper path and stamp-contact timing, and made the corridor footsteps respond to an operator approaching the door. **Source patch 10.1.1 (PR #5, not yet published)** safeguards the approach cue against early background footsteps and adds a separate sound listening room. See the [historical production audit](AUDIT.md) for the recorded work and its verification; the [maintained development state](docs/DEVELOPMENT_STATE.md) distinguishes historical evidence from current verification.
+**Version 10.1** corrected the continuous paper path and stamp-contact timing, and made the corridor footsteps respond to an operator approaching the door. The **10.1.1 maintenance patch** protects that approach cue against early background footsteps and adds a separate sound listening room. See [Development state](docs/DEVELOPMENT_STATE.md) for the distinction between source availability and a verified public deployment. See the [historical production audit](AUDIT.md) for the recorded work and its verification; the [maintained development state](docs/DEVELOPMENT_STATE.md) distinguishes historical evidence from current verification.
 
 ## Controls
 
