@@ -370,37 +370,72 @@ const doorGroup=new T.Group();doorGroup.position.set(5.84,0,-.8);doorGroup.rotat
 softBox(1.17,2.52,.14,dark,0,1.26,0,doorGroup,.015);softBox(1.02,2.37,.09,wood,0,1.205,.10,doorGroup,.018);softBox(.78,1.34,.035,M(0x4a4232,.04,.92),0,1.57,.16,doorGroup,.01);softBox(.78,.51,.035,wood,0,.53,.16,doorGroup,.01);decal(.43,.18,['ОПЕРАТОРСКАЯ','№ 3'],0,1.81,.189,doorGroup,'#b9a777');cyl(.038,.055,brass,.37,1.07,.205,Math.PI/2,0,0,doorGroup);box(.16,.027,.027,brass,.32,1.07,.247,doorGroup);
 /* ROOM COMPLETENESS: intentionally physical institutional fittings; no cabinet redesign. */
 const finishPaint=M(0x697165,.02,.93),finishIron=M(0x464d46,.31,.72);
+// Repeat wall trim with per-instance transforms: one draw per material, not one per panel.
+// Unit-box geometry also prevents dozens of duplicate GPU buffer allocations.
+const roomTrimBatches=new Map();
+function finishBox(w,h,d,mat,x,y,z){
+ let batch=roomTrimBatches.get(mat);if(!batch){batch=[];roomTrimBatches.set(mat,batch)}
+ batch.push({w,h,d,x,y,z});
+}
+function flushRoomTrim(){
+ const cube=new T.BoxGeometry(1,1,1),pose=new T.Object3D();
+ for(const [mat,batch] of roomTrimBatches){
+  const mesh=new T.InstancedMesh(cube,mat,batch.length);
+  for(let i=0;i<batch.length;i++){
+   const s=batch[i];pose.position.set(s.x,s.y,s.z);pose.scale.set(s.w,s.h,s.d);pose.updateMatrix();mesh.setMatrixAt(i,pose.matrix);
+  }
+  mesh.instanceMatrix.needsUpdate=true;
+  mesh.receiveShadow=true; // Flat concrete reveals don't cast arbitrary hard shadows.
+  mesh.castShadow=false;
+  scene.add(mesh);
+ }
+}
 const frontWall=box(12,6,.20,wallConcrete,0,3,7);
 frontWall.name='room-front-wall'; // +Z previously had collision but no geometry.
 // Dull painted dado, skirting, chair rail, and ceiling termination on all four walls.
 for(const z of [-6.677,6.877]){
- box(11.73,.96,.026,finishPaint,0,.49,z);
- box(11.75,.13,.068,finishIron,0,.085,z>0?6.846:-6.646);
- box(11.75,.043,.045,steel2,0,1.00,z>0?6.845:-6.645);
- box(11.82,.13,.095,finishIron,0,5.86,z>0?6.816:-6.616);
+ finishBox(11.73,.96,.026,finishPaint,0,.49,z);
+ finishBox(11.75,.13,.068,finishIron,0,.085,z>0?6.846:-6.646);
+ finishBox(11.75,.043,.045,steel2,0,1.00,z>0?6.845:-6.645);
+ finishBox(11.82,.13,.095,finishIron,0,5.86,z>0?6.816:-6.616);
 }
 for(const side of [-1,1]){
- box(.026,.96,13.56,finishPaint,side*5.875,.49,0);
- box(.065,.13,13.58,finishIron,side*5.846,.085,0);
- box(.044,.043,13.56,steel2,side*5.845,1,0);
- box(.095,.13,13.62,finishIron,side*5.815,5.86,0);
- for(const z of [-5.15,-2.57,0,2.57,5.15])box(.026,4.66,.025,seam,side*5.844,3.36,z);
- for(const y of [3.02,4.69])box(.027,.027,13.49,seam,side*5.843,y,0);
+ finishBox(.026,.96,13.56,finishPaint,side*5.875,.49,0);
+ finishBox(.065,.13,13.58,finishIron,side*5.846,.085,0);
+ finishBox(.044,.043,13.56,steel2,side*5.845,1,0);
+ finishBox(.095,.13,13.62,finishIron,side*5.815,5.86,0);
+ for(const z of [-5.15,-2.57,0,2.57,5.15])finishBox(.026,4.66,.025,seam,side*5.844,3.36,z);
+ for(const y of [3.02,4.69])finishBox(.027,.027,13.49,seam,side*5.843,y,0);
 }
-for(const x of [-5.3,-2.65,0,2.65,5.3])box(.033,4.65,.026,seam,x,3.34,6.858);
-for(const y of [3.02,4.69])box(11.55,.030,.028,seam,0,y,6.858);
+for(const x of [-5.3,-2.65,0,2.65,5.3])finishBox(.033,4.65,.026,seam,x,3.34,6.858);
+for(const y of [3.02,4.69])finishBox(11.55,.030,.028,seam,0,y,6.858);
+const tiePoints=[];
 for(const x of [-4.75,-3.17,-1.58,0,1.58,3.17,4.75])for(const y of [1.71,3.60,5.22])
- cyl(.032,.011,tieMat,x,y,6.839,Math.PI/2,0,0,scene,12);
+ tiePoints.push([x,y,6.839]);
+const ties=new T.InstancedMesh(new T.CylinderGeometry(.032,.032,.011,12),tieMat,tiePoints.length);
+const tiePose=new T.Object3D();
+for(let i=0;i<tiePoints.length;i++){
+ tiePose.position.set(...tiePoints[i]);tiePose.rotation.set(Math.PI/2,0,0);tiePose.updateMatrix();ties.setMatrixAt(i,tiePose.matrix);
+}
+ties.instanceMatrix.needsUpdate=true;ties.receiveShadow=true;scene.add(ties);
 for(const x of [-5.81,5.81])for(const z of [-6.62,6.82])
- box(.070,5.53,.065,finishIron,x,3.19,z);
+ finishBox(.070,5.53,.065,finishIron,x,3.19,z);
 // Front-wall service infrastructure is period-specific and doesn't crowd the machine.
 softBox(2.26,1.32,.095,finishIron,-1.87,3.32,6.780,scene,.028);
-decal(2.04,1.10,['ПОРЯДОК УЧЁТА','ДЕЛО № 27-Б','ПЕРЕДАТЬ ПО ОПИСИ'],-1.87,3.32,6.716,scene,'#c0b69a','#37392e');
+const serviceNotice=decal(2.04,1.10,['ПОРЯДОК УЧЁТА','ДЕЛО № 27-Б','ПЕРЕДАТЬ ПО ОПИСИ'],-1.87,3.32,6.716,scene,'#c0b69a','#37392e');
+serviceNotice.rotation.y=Math.PI; // Front wall faces -Z, unlike the existing rear signs.
+serviceNotice.material.emissive.setHex(0xffffff);
+serviceNotice.material.emissiveMap=serviceNotice.material.map;
+serviceNotice.material.emissiveIntensity=.18;serviceNotice.material.needsUpdate=true;
 for(const x of [-2.92,-.82])for(const y of [2.72,3.93])
  cyl(.027,.022,steel2,x,y,6.705,Math.PI/2,0,0,scene,12);
 softBox(1.18,1.57,.17,steel2,3.20,2.85,6.762,scene,.025);
 softBox(1.02,1.40,.025,finishPaint,3.20,2.85,6.655,scene,.014);
-decal(.82,.17,['ЭЛЕКТРОЩИТ № 3'],3.20,3.37,6.638,scene,'#c0b69a');
+const serviceLabel=decal(.82,.17,['ЭЛЕКТРОЩИТ № 3'],3.20,3.37,6.638,scene,'#c0b69a');
+serviceLabel.rotation.y=Math.PI;
+serviceLabel.material.emissive.setHex(0xffffff);
+serviceLabel.material.emissiveMap=serviceLabel.material.map;
+serviceLabel.material.emissiveIntensity=.18;serviceLabel.material.needsUpdate=true;
 box(.17,.028,.04,finishIron,3.57,2.82,6.615);
 cyl(.040,.030,brass,3.57,2.82,6.591,Math.PI/2);
 box(.048,1.04,.065,finishIron,4.19,1.62,6.805);
