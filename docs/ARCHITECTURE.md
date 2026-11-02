@@ -29,6 +29,8 @@ Follow `js/app.js` when changing processing, counter/tray, collisions or geometr
 - `tests/audio-preview.mjs` — checks the seven OGG sources and isolates standalone/service-worker navigation.
 - `tests/audio-corridor.mjs` — deterministic Web Audio unlock, background/approach priority, cooldown and mute.
 - `tests/audio-preview-browser.mjs` — tests actual Chromium OGG decoding, player controls, cache isolation and offline reopen.
+- `tests/room-shell.mjs` — evaluates actual room-finishing source with simple shape fakes, proving front-wall presence, four-wall junction treatment and camera clearance.
+- `tests/room-visual.mjs` — candidate/baseline paired 360° desktop/mobile Chromium screenshots, camera matching and representative render draw-call/triangle samples; needs two local servers.
 - `tests/camera-math.mjs` — real camera controller and obstacle map without a GPU.
 - `tests/paper-path.mjs` — paper path geometry and stamp/UV registration without a browser.
 - `tests/acceptance.mjs` — Playwright/Chromium game workflow, WebGL, offline, document, sound, export, persistence, collisions and viewports.
