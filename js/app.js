@@ -170,12 +170,87 @@ for(let col=0;col<2;col++){
 }
 box(1.7,.08,.65,wood,3.9,.86,-5.20);
 for(const x of [3.15,4.65])for(const z of [-5.43,-4.97])box(.07,.84,.07,dark,x,.42,z);
-const phoneRed=M(0x86291f,.18,.36);
-box(.43,.12,.32,phoneRed,4.18,.96,-5.2);
-cyl(.105,.035,black,4.18,1.04,-5.14,0,0,0,scene,28);
-for(const x of [3.96,4.4])box(.09,.13,.14,phoneRed,x,1.08,-5.29);
-box(.53,.08,.12,phoneRed,4.18,1.15,-5.29);
-for(let i=0;i<4;i++)box(.32,.035,.42,paper,3.48,.935+i*.036,-5.15);
+// A restrained 1982 desk telephone: VEF TA-72-era silhouette, not an
+// oversized barbell. One grouped object makes its actual footprint auditable.
+// The source material and digits are procedural; no copied photographic assets.
+const phoneRed=M(0x96251e,.14,.46),phoneIvory=M(0xd9d1b9,.07,.66);
+const phoneTrim=M(0x51493c,.28,.62),phoneInk=M(0x27231e,.05,.88);
+const deskPhone=new T.Group();deskPhone.name='desk-phone-1982';
+deskPhone.position.set(4.17,.905,-5.19);scene.add(deskPhone);
+box(.58,.02,.46,phoneTrim,0,.014,0,deskPhone).name='phone-rubber-base';
+// The actual 1970s style is a low wedge: taller at the rear under the cradle,
+// lower at the operator side around the rotary dial.
+const phoneProfile=new T.Shape();
+phoneProfile.moveTo(-.22,.018);phoneProfile.lineTo(.22,.018);
+phoneProfile.lineTo(.22,.100);phoneProfile.lineTo(-.22,.174);
+phoneProfile.closePath();
+const phoneShell=new T.Mesh(new T.ExtrudeGeometry(phoneProfile,{
+ depth:.56,steps:1,curveSegments:1,bevelEnabled:true,
+ bevelThickness:.009,bevelSize:.009,bevelSegments:1
+}),phoneRed);
+phoneShell.rotation.y=-Math.PI/2;phoneShell.position.set(.28,0,0);
+phoneShell.castShadow=phoneShell.receiveShadow=true;
+phoneShell.name='phone-sloped-shell';deskPhone.add(phoneShell);
+box(.48,.012,.012,phoneTrim,0,.067,.231,deskPhone).castShadow=false;
+// Single legible ivory dial artwork, with ten correctly ordered finger
+// positions (1–9, 0) and a dark central hub; angle matches the housing slope.
+const rotaryArt=canvasTex(512,512,(g,w,h)=>{
+ const cx=w/2,cy=h/2;
+ g.fillStyle='#ddd3bd';g.fillRect(0,0,w,h);
+ g.fillStyle='#8f8676';g.beginPath();g.arc(cx,cy,248,0,Math.PI*2);g.fill();
+ g.fillStyle='#eadfc5';g.beginPath();g.arc(cx,cy,234,0,Math.PI*2);g.fill();
+ g.fillStyle='#33312a';g.lineWidth=7;g.beginPath();g.arc(cx,cy,216,0,Math.PI*2);g.stroke();
+ for(let i=0;i<10;i++){
+  const angle=.67-i*Math.PI/5,x=cx+Math.sin(angle)*166,y=cy-Math.cos(angle)*166;
+  g.fillStyle='#625848';g.beginPath();g.arc(x+2,y+3,34,0,Math.PI*2);g.fill();
+  g.fillStyle='#faf2db';g.beginPath();g.arc(x,y,28,0,Math.PI*2);g.fill();
+  g.fillStyle='#24231e';g.font='bold 36px Arial';g.textAlign='center';g.textBaseline='middle';
+  g.fillText(i===9?'0':String(i+1),x,y+2);
+ }
+ g.fillStyle='#c7b89c';g.beginPath();g.arc(cx,cy,91,0,Math.PI*2);g.fill();
+ g.fillStyle='#852b24';g.beginPath();g.arc(cx,cy,79,0,Math.PI*2);g.fill();
+ g.fillStyle='#d8b995';g.beginPath();g.arc(cx,cy,10,0,Math.PI*2);g.fill();
+});
+const rotaryFace=new T.Mesh(new T.CircleGeometry(.136,48),new T.MeshStandardMaterial({
+ map:rotaryArt,roughness:.72,metalness:.06,side:T.DoubleSide
+}));
+rotaryFace.name='phone-ten-position-dial';
+rotaryFace.position.set(0,.140,.064);rotaryFace.rotation.x=-Math.PI/2+.17;
+rotaryFace.receiveShadow=true;deskPhone.add(rotaryFace);
+const rotaryRim=new T.Mesh(new T.TorusGeometry(.138,.006,8,48),phoneIvory);
+rotaryRim.position.set(0,.145,.065);rotaryRim.rotation.x=rotaryFace.rotation.x;
+rotaryRim.castShadow=false;deskPhone.add(rotaryRim);
+// Thin metal finger stop sits to the right of the dial, not a fake button.
+box(.015,.013,.070,steel2,.139,.129,.145,deskPhone).rotation.y=-.22;
+// Two inconspicuous cradle rests support a single, gently arched handset.
+for(const x of [-.211,.211]){
+ box(.092,.030,.115,phoneInk,x,.203,-.177,deskPhone);
+ box(.064,.020,.071,phoneTrim,x,.221,-.177,deskPhone);
+}
+const gripCurve=new T.CatmullRomCurve3([
+ new T.Vector3(-.224,.266,-.176),new T.Vector3(-.11,.300,-.177),
+ new T.Vector3(0,.306,-.178),new T.Vector3(.11,.300,-.177),
+ new T.Vector3(.224,.266,-.176)
+]);
+const grip=new T.Mesh(new T.TubeGeometry(gripCurve,26,.038,12,false),phoneRed);
+grip.name='phone-shaped-handset-grip';grip.castShadow=true;deskPhone.add(grip);
+for(const x of [-.228,.228]){
+ const cap=new T.Mesh(new T.SphereGeometry(1,18,10),phoneRed);
+ cap.scale.set(.078,.068,.063);cap.position.set(x,.264,-.176);
+ cap.castShadow=true;deskPhone.add(cap);
+ cyl(.040,.008,phoneInk,x,.203,-.176,0,0,0,deskPhone,20).castShadow=false;
+}
+// Coiled receiver lead, suspended beside the left of the set and ending at
+// the body jack. The spring geometry belongs to the phone, not to the desk.
+const cordPath=[new T.Vector3(-.282,.258,-.176)];
+for(let i=0;i<=64;i++){
+ const t=i/64,turns=t*Math.PI*12;
+ cordPath.push(new T.Vector3(-.32+.023*Math.cos(turns),.127+.024*Math.sin(turns),
+ -.169+t*.271));
+}
+cordPath.push(new T.Vector3(-.285,.107,.151));
+const phoneCord=new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(cordPath),120,.006,6,false),phoneInk);
+phoneCord.name='phone-coiled-cord';phoneCord.castShadow=true;deskPhone.add(phoneCord);
 // Socket and skirting sit low; nothing crosses the poster faces.
 box(11.7,.11,.055,dark,0,.07,-6.66);
 plane(.26,.35,sign([{text:'220 В',size:40}],'#a8a898','#20251f',null,300,400),-1.75,.47,-6.535);
@@ -392,9 +467,46 @@ for(const x of [-4.15,-3.6,-3.05]){box(.39,.37,.48,M(0x655b40,.02,.96),x,.26,-3.
 // A chair has a compact, solid footprint used by the collision map.
 softBox(.50,.055,.48,wood,3.94,.48,-4.36,scene,.035);softBox(.49,.46,.055,wood,3.94,.92,-4.58,scene,.035);for(const x of [3.73,4.15])for(const z of [-4.55,-4.17])cyl(.023,.48,dark,x,.24,z,0,0,0,scene,12);for(const x of [3.73,4.15])cyl(.021,.72,dark,x,.80,-4.58,0,0,0,scene,12);
 // Small mug, pencil cup and bound files on the telephone table.
-cyl(.068,.15,M(0xc7b996,.08,.45),4.49,.98,-5.08);cyl(.044,.004,M(0x33241a,0,.9),4.49,1.057,-5.08);
-const mugHandle=new T.Mesh(new T.TorusGeometry(.041,.01,8,20),M(0xc7b996,.08,.45));mugHandle.position.set(4.555,.993,-5.08);scene.add(mugHandle);
-for(let i=0;i<7;i++)box(.065,.32,.24,M([0x5e5946,0x5d3b2c,0x6a6b4d][i%3],0,.94),3.42+i*.068,1.06,-5.35);
+cyl(.068,.15,M(0xc7b996,.08,.45),4.63,.98,-5.08);cyl(.044,.004,M(0x33241a,0,.9),4.63,1.057,-5.08);
+const mugHandle=new T.Mesh(new T.TorusGeometry(.041,.01,8,20),M(0xc7b996,.08,.45));mugHandle.position.set(4.695,.993,-5.08);scene.add(mugHandle);
+// Closed archive binders live BEHIND a separate flat dossier; their covers,
+// document cores and front-facing spines form coherent bound objects rather
+// than seven slabs driven through the same loose white paper mass.
+const deskFiles=new T.Group();deskFiles.name='desk-archive-binders';scene.add(deskFiles);
+const binderDefs=[
+ {x:3.18,w:.135,h:.340,d:.245,color:0x67644a,lean:-.045,n:12},
+ {x:3.355,w:.142,h:.363,d:.250,color:0x6e4837,lean:.030,n:27},
+ {x:3.540,w:.131,h:.351,d:.232,color:0x59634d,lean:-.020,n:31},
+ {x:3.708,w:.115,h:.324,d:.228,color:0x68614c,lean:.035,n:48}
+];
+for(const def of binderDefs){
+ const folder=new T.Group();
+ folder.name='archive-binder-'+def.n;
+ folder.position.set(def.x,.908,-5.330);folder.rotation.z=def.lean;
+ deskFiles.add(folder);
+ const cloth=M(def.color,.01,.91),inner=M(0xc5b99c,0,.97);
+ // Two rigid cover boards enclose a muted paper block. Only a narrow real
+ // paper edge is visible along top/back; the spine conceals it from the front.
+ box(def.w-.023,def.h-.026,def.d-.042,inner,0,def.h/2,-.008,folder);
+ for(const side of [-1,1])box(.012,def.h,def.d,cloth,
+  side*(def.w/2-.006),def.h/2,0,folder);
+ box(def.w,def.h,.025,cloth,0,def.h/2,def.d/2-.010,folder);
+ box(def.w-.010,.013,def.d-.040,inner,0,def.h-.015,-.004,folder).castShadow=false;
+ // A real paper title strip and two tiny rivets read as a binder spine.
+ decal(def.w-.020,.092,['ДЕЛО','№ '+def.n],0,def.h*.64,def.d/2+.006,
+  folder,'#d3c6a5','#3b3b2e');
+ for(const y of [.058,def.h-.059])
+  cyl(.008,.005,steel2,0,y,def.d/2+.006,Math.PI/2,0,0,folder,10).castShadow=false;
+}
+// One flat tied folio at the front, with a thin, readable paper edge. It is
+// placed forward of the upright binders without intersecting their covers.
+const looseDossier=new T.Group();looseDossier.name='desk-loose-dossier';
+looseDossier.position.set(3.47,.914,-5.013);looseDossier.rotation.y=.025;scene.add(looseDossier);
+const dossierCover=M(0x958362,.01,.94),dossierSheet=M(0xd6cab0,.01,.97);
+box(.43,.013,.238,dossierCover,0,0,0,looseDossier);
+for(let i=0;i<3;i++)box(.368,.0018,.190,dossierSheet,
+ -.006+i*.003,.010+i*.0018,-.003+i*.002,looseDossier).castShadow=false;
+box(.041,.004,.234,dossierCover,-.196,.016,0,looseDossier).castShadow=false;
 
 // A defocused neighbouring housing block, seen through closed winter glass.
 const frost=canvasTex(768,768,(g,w,h)=>{
@@ -524,13 +636,8 @@ for(const x of [3.50,4.30]){
  finishBox(.21,.022,.032,brass,x,.70,-4.808);
 }
 for(const x of [3.15,4.65])finishBox(.09,.065,.72,finishIron,x,.82,-5.20);
-for(const x of [3.94,4.42]){
- cyl(.078,.07,phoneRed,x,1.17,-5.29,0,0,Math.PI/2,scene,20);
- cyl(.050,.075,black,x,1.17,-5.29,0,0,Math.PI/2,scene,16);
-}
-const cordPoints=[new T.Vector3(4.42,1.13,-5.29),new T.Vector3(4.54,1.07,-5.34),new T.Vector3(4.48,.94,-5.37),new T.Vector3(4.60,.91,-5.31),new T.Vector3(4.53,.93,-5.21),new T.Vector3(4.50,.99,-5.15)];
-const phoneCord=new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(cordPoints),32,.012,6,false),black);phoneCord.castShadow=true;scene.add(phoneCord);
-for(let i=0;i<10;i++){const a=i*Math.PI/5;cyl(.012,.005,meterIvory,4.18+Math.sin(a)*.074,1.061,-5.14+Math.cos(a)*.074,0,0,0,scene,10)}
+// Telephone handset, finger-wheel, cradle and cable are all modeled within
+// deskPhone above. Avoid adding a second set of disconnected caps/peg digits.
 for(const z of [-4.12,-3.42])finishBox(1.60,.12,.044,wood,-3.60,.721,z);
 for(const x of [-4.30,-2.90])finishBox(.044,.12,.69,wood,x,.721,-3.77);
 // Chair's structural edge, back rails and foot braces add a convincing silhouette.
@@ -546,7 +653,7 @@ const clockRim=new T.Mesh(new T.TorusGeometry(.383,.011,8,48),steel2);
 clockRim.position.set(0,3.83,-6.499);clockRim.castShadow=true;scene.add(clockRim);
 cyl(.028,.022,steel2,0,3.83,-6.488,Math.PI/2,0,0,scene,16);
 const mugRim=new T.Mesh(new T.TorusGeometry(.063,.009,7,24),steel2);
-mugRim.rotation.x=Math.PI/2;mugRim.position.set(4.49,1.062,-5.08);scene.add(mugRim);
+mugRim.rotation.x=Math.PI/2;mugRim.position.set(4.63,1.062,-5.08);scene.add(mugRim);
 // All decoration is submitted once so repeated fasteners and joinery share draw calls.
 flushRoomTrim();
 
