@@ -39,6 +39,6 @@ A feature is not complete if its new behavior and current guidance contradict ea
 
 ## 6. PR and release boundaries
 
-Package a coherent branch change and reviewable PR with the exact commit, affected source paths, tests/results, known limitations and next action. The old `review.yml` is limited to named historic branches; do not assume an arbitrary branch automatically runs CI. A push to `main` invokes the full Pages/test workflow and may deploy the game; never merge, publish or trigger broad verification without current explicit owner approval.
+Package a coherent branch change and reviewable PR with the exact commit, affected source paths, tests/results, known limitations and next action. `review.yml` runs non-deploying Chromium tests for pull requests targeting `main` and retains named historical branch push triggers. An arbitrary branch without a PR does not automatically run this workflow; verify checks against the exact candidate head. A push to `main` invokes the full Pages/test workflow and may deploy the game; never merge, publish or trigger broad verification without current explicit owner approval.
 
 If interrupted, leave a brief state/next-action record in the existing PR or issue and resume from exact GitHub state in the next conversation. A conversation ending does not make progress happen autonomously.
