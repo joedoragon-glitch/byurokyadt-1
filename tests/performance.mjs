@@ -53,7 +53,13 @@ async function cdpHeapMB() {
 }
 const errors = [], network = [];
 page.on('pageerror', error => errors.push(String(error)));
-context.on('response', response => network.push({ status: response.status(), source: response.fromServiceWorker() ? 'service-worker' : 'network', url: new URL(response.url()).pathname }));
+context.on('response', response => {
+  const url = new URL(response.url());
+  // Locally created blob: image URLs are not requests to a remote server.
+  const source = url.protocol === 'blob:' ? 'object-url' : response.fromServiceWorker() ? 'service-worker' : 'network';
+  network.push({ status: response.status(), source,
+    url: source === 'object-url' ? 'blob:local-decoded-image' : url.pathname });
+});
 await page.addInitScript(() => {
   const probe = window.__BYUR_PERF_PROBE = { scheduled: 0, executed: 0, callbackMs: [], callbackTimes: [], drawCalls: 0, resources: {} };
   const raf = window.requestAnimationFrame.bind(window);
@@ -160,8 +166,12 @@ const runNavigation = async (name, offline = false) => {
   const requests = network.slice(networkStart);
   report.network[name] = { elapsedMs: round(performance.now() - start),
     responses: requests.length, serviceWorkerResponses: requests.filter(x => x.source === 'service-worker').length,
+    networkResponses: requests.filter(x => x.source === 'network').length,
+    localObjectUrlResponses: requests.filter(x => x.source === 'object-url').length,
     resources: requests.map(x => x.url + ' (' + x.status + ', ' + x.source + ')'),
     offline, controller: await page.evaluate(() => !!navigator.serviceWorker.controller) };
+  if (offline) assert.equal(report.network[name].networkResponses, 0,
+    'Offline app reload must not depend on uncached network resources');
 };
 
 try {
