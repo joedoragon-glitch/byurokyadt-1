@@ -113,7 +113,7 @@ try{
   // Phone must have one continuous grip and two endpoints touching their rests.
   assert(data.grip.min[0]<data.earpiece.min[0]+.05);
   assert(data.grip.max[0]>data.mouthpiece.max[0]-.05);
-  assert(Math.abs(data.earpiece.min[1]-data.cradleLeft.max[1])<.05,
+  assert(Math.abs(data.earpiece.min[1]-data.cradleLeft.max[1])<.012,
     'Handset must rest on left cradle, not float above it');
   assert(Math.abs(data.mouthpiece.min[1]-data.cradleRight.max[1])<.05,
     'Handset must rest on right cradle');
