@@ -48,7 +48,8 @@ for(const axis of [-1,1]){
  assert(records.some(o=>o.x===axis*5.846&&o.h===.13),'Both side walls have skirting');
 }
 for(const z of [-6.677,6.877])assert(records.some(o=>o.z===z&&o.h===.96),'Front and rear lower paint exists');
-assert.equal(instances.filter(o=>o.geometry instanceof T.BoxGeometry).length,4,'Four materials batch wall box geometry instead of one mesh per reveal');
+assert.equal(instances.filter(o=>o.geometry instanceof T.BoxGeometry).length,6,'Six reused materials batch wall trim and static service/furniture hardware');
+assert(records.filter(o=>o.kind==='instanced').length>55,'Construction and decorative fittings are submitted as instances');
 assert.equal(instances.filter(o=>o.geometry instanceof T.CylinderGeometry).length,1,'All 21 front wall form-ties are a single draw');
 assert.equal(instances.find(o=>o.geometry instanceof T.CylinderGeometry)?.count,21);
 assert(records.filter(o=>o.parent===env.doorGroup).length>=8,'Door retains constructed frame and fittings');
