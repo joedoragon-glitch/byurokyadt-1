@@ -23,13 +23,29 @@ try{
  assert.deepEqual(audit.frames.map(f=>f.key),expected);
  // Reach the real door using the normal camera and walk controls, then wait for the approach cue.
  await page.keyboard.press('Escape');await page.locator('#sound').click();await page.waitForFunction(()=>window.MinistryAudio.state().decoded.length===10);
- await page.locator('#cinemaEnter').click();await page.locator('#cinemaShot').selectOption('6');await page.locator('#app canvas').click({position:{x:30,y:40}});
+ // Observe the approach event itself. The prior test sampled only lastPass after
+ // waiting for any pass, so an unrelated background pass could overwrite it.
  const before=await page.evaluate(()=>window.MinistryAudio.state().corridor.passes);
+ assert.equal(before,0,'Sound startup must not schedule premature corridor footsteps');
+ await page.evaluate(()=>{
+  window.BYUR_CORRIDOR_EVENTS=[];
+  window.BYUR_CORRIDOR_WATCH=setInterval(()=>{
+   const c=window.MinistryAudio.state().corridor,events=window.BYUR_CORRIDOR_EVENTS;
+   if(c.lastPass && !events.some(e=>e.time===c.lastPass.time))events.push({passes:c.passes,since:c.since,...c.lastPass});
+  },100);
+ });
+ await page.locator('#cinemaEnter').click();await page.locator('#cinemaShot').selectOption('6');await page.locator('#app canvas').click({position:{x:30,y:40}});
  await page.keyboard.down('w');await page.waitForFunction(()=>window.MinistryAudio.state().corridor.near);await page.keyboard.up('w');
- await page.waitForFunction(n=>window.MinistryAudio.state().corridor.passes>n,before);
- const corridor=await page.evaluate(()=>window.MinistryAudio.state().corridor);assert.equal(corridor.lastPass.reason,'approach');assert.equal(corridor.lastPass.positions.length,6);assert(corridor.lastPass.positions.every(p=>p[0]>6.1),'Footsteps originate beyond closed door');
- await page.waitForTimeout(3500);assert.equal(await page.evaluate(()=>window.MinistryAudio.state().corridor.passes),before+1,'Approach cue does not retrigger continuously');
+ await page.waitForFunction(n=>window.BYUR_CORRIDOR_EVENTS.some(e=>e.passes>n&&e.reason==='approach'),before,{timeout:45000});
+ const approach=await page.evaluate(n=>window.BYUR_CORRIDOR_EVENTS.find(e=>e.passes>n&&e.reason==='approach'),before);
+ assert.equal(approach.positions.length,6);assert(approach.positions.every(p=>p[0]>6.1),'Footsteps originate beyond closed door');
+ assert(approach.since!==null&&approach.time-approach.since>=1.1,'Approach follows a short dwell near the door');
+ await page.waitForTimeout(3500);
+ const approaches=await page.evaluate(n=>window.BYUR_CORRIDOR_EVENTS.filter(e=>e.passes>n&&e.reason==='approach').length,before);
+ assert.equal(approaches,1,'Approach cue does not retrigger continuously');
+ const corridor=await page.evaluate(()=>({state:window.MinistryAudio.state().corridor,events:window.BYUR_CORRIDOR_EVENTS}));
+ await page.evaluate(()=>clearInterval(window.BYUR_CORRIDOR_WATCH));
  await page.keyboard.press('Escape');await page.locator('#sound').click();assert.equal(await page.evaluate(()=>window.MinistryAudio.state().voices),0,'Mute stops scheduled corridor voices');
  await page.locator('#resetDoc').click();assert.equal(await page.evaluate(()=>window.BYUR_INSPECT.snapshot().output.visible),false);
  assert.deepEqual(errors,[]);await writeFile('test-results/paper-motion-result.json',JSON.stringify({passed:true,base,checks:['progressive outlet feed','stamp applied at contact','continuous supported delivery','moving-stage rendered evidence','door approach footsteps','corridor source location and cooldown','mute cancels footsteps','output reset'],audit,corridor},null,2));console.log('ОТК: paper motion and corridor approach passed');
-}catch(e){await page.screenshot({path:'test-results/paper-failure.png'}).catch(()=>{});await writeFile('test-results/paper-failure.json',JSON.stringify({error:String(e),errors,snapshot:await page.evaluate(()=>window.BYUR_INSPECT?.snapshot()).catch(()=>null),audio:await page.evaluate(()=>window.MinistryAudio?.state()).catch(()=>null)},null,2));throw e}finally{await browser.close()}
+}catch(e){await page.screenshot({path:'test-results/paper-failure.png'}).catch(()=>{});await writeFile('test-results/paper-failure.json',JSON.stringify({error:String(e),errors,snapshot:await page.evaluate(()=>window.BYUR_INSPECT?.snapshot()).catch(()=>null),audio:await page.evaluate(()=>window.MinistryAudio?.state()).catch(()=>null),corridorEvents:await page.evaluate(()=>window.BYUR_CORRIDOR_EVENTS).catch(()=>null)},null,2));throw e}finally{await browser.close()}

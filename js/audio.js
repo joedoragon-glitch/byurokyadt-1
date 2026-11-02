@@ -1,7 +1,7 @@
 /* Original sampled mechanics + quiet procedural winter. No remote audio. */
 (()=>{
  let context,master,sfx,music,ambience,loading,musicSource,roomSource,windSource;
- let effectsOn=false,musicOn=false,volume=.65,cycling=false,nextTick=0,nextSteps=0;
+ let effectsOn=false,musicOn=false,volume=.65,cycling=false,nextTick=Infinity,nextSteps=Infinity;
  const buffers=new Map(),voices=new Set(),anchors={relay:[-.50,1.66,-1.29],feed:[-.17,1.11,-1.28],scan:[-.17,1.19,-1.28],stamp:[.39,1.15,-1.33],bell:[0,1.85,-1.32],wind:[-5.7,2.7,-2.6],tick:[0,.65,-6.4],step:[6.24,.4,-.8]};
  const corridor={near:false,since:null,handled:false,nextApproach:0,passes:0,lastPass:null};
  const names=['relay','feed','scan','stamp','bell','room','ministry'];let listenerState=null,lastEvent=null;
@@ -24,7 +24,7 @@
   if(!effectsOn||!context||context.state!=='running'||!buffers.has(name)||voices.size>20)return;
   const src=context.createBufferSource(),p=context.createPanner(),g=gain(sfx,level);src.buffer=buffers.get(name);src.loop=looped;p.panningModel='HRTF';p.distanceModel='inverse';p.refDistance=1.8;p.maxDistance=22;p.rolloffFactor=.8;p.setPosition(...position);let filter;if(name==='step'){filter=context.createBiquadFilter();filter.type='lowpass';filter.frequency.value=650;filter.Q.value=.5;src.connect(filter);filter.connect(p)}else src.connect(p);p.connect(g);src.start(context.currentTime+delay);voices.add(src);src.onended=()=>{voices.delete(src);src.disconnect();filter?.disconnect();p.disconnect();g.disconnect()};lastEvent={name,position:[...position]};return src;
  }
- async function setEffects(on){effectsOn=on;try{await ready()}catch(e){effectsOn=false;throw e}fade(sfx,effectsOn?.58:0,.035);if(effectsOn){if(!roomSource)roomSource=loop('room',ambience);if(!windSource)windSource=positioned('wind',anchors.wind,.28,0,true);nextTick=context.currentTime+5;nextSteps=context.currentTime+17;corridor.since=null;corridor.handled=false}else{for(const v of voices)v.stop();voices.clear();windSource=null}}
+ async function setEffects(on){effectsOn=on;if(on){nextTick=Infinity;nextSteps=Infinity}try{await ready()}catch(e){effectsOn=false;throw e}fade(sfx,effectsOn?.58:0,.035);if(effectsOn){if(!roomSource)roomSource=loop('room',ambience);if(!windSource)windSource=positioned('wind',anchors.wind,.28,0,true);nextTick=context.currentTime+5;nextSteps=context.currentTime+17;corridor.since=null;corridor.handled=false}else{for(const v of voices)v.stop();voices.clear();windSource=null}}
  async function setMusic(on){musicOn=on;try{await ready()}catch(e){musicOn=false;throw e}if(musicOn&&!musicSource)musicSource=loop('ministry',music);fade(music,musicOn?(cycling?.075:.15):0,.45)}
  function play(name,position){positioned(name,position||anchors[name]||[0,1.5,-1.6])}
  function listener(position,forward,up){listenerState=[position,forward,up];if(!context)return;const l=context.listener;if(l.positionX){for(const [key,value] of Object.entries({positionX:position[0],positionY:position[1],positionZ:position[2],forwardX:forward[0],forwardY:forward[1],forwardZ:forward[2],upX:up[0],upY:up[1],upZ:up[2]}))l[key].value=value}else{l.setPosition(...position);l.setOrientation(...forward,...up)}}
@@ -40,7 +40,7 @@
   const position=listenerState?.[0];corridor.near=!!position&&Math.hypot(position[0]-5.84,position[2]+.8)<2.25;
   if(!corridor.near){corridor.since=null;corridor.handled=false}else if(corridor.since===null)corridor.since=t;
   if(corridor.near&&!corridor.handled&&t-corridor.since>=1.2&&t>=corridor.nextApproach)corridorPass(t,'approach');
-  else if(t>nextSteps)corridorPass(t,'passing');
+  else if(t>nextSteps&&(!corridor.near||corridor.handled))corridorPass(t,'passing');
  },500);
  document.addEventListener('visibilitychange',()=>{if(!context)return;if(document.hidden)context.suspend();else if(effectsOn||musicOn)context.resume().catch(()=>{})});
  window.MinistryAudio={setEffects,setMusic,play,listener,setVolume,setCycle,state:()=>({effectsOn,musicOn,volume,cycling,context:context?.state||'unstarted',decoded:[...buffers.keys()],spatial:true,corridor:{...corridor},listener:listenerState,lastEvent,voices:voices.size})};

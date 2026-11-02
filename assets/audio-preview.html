@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>БЮРОКЯДТ-1 — Sound Listening Room</title>
+<style>
+:root{color-scheme:dark;--paper:#e8e0cd;--muted:#c0b9a8;--red:#b64b42;--line:#55584f;--panel:#282c29;--dark:#161a18}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 30% 0,#333b34,var(--dark) 68%);color:var(--paper);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+main{width:min(900px,calc(100% - 36px));margin:0 auto;padding:40px 0 64px}
+header{border-bottom:2px solid var(--red);padding-bottom:22px}
+.kicker{letter-spacing:.15em;font-size:.75rem;font-weight:700;color:#db9a85}
+h1{font:700 clamp(1.9rem,5vw,3rem)/1.14 Georgia,serif;margin:12px 0}
+h2{font-size:1.22rem;margin:0 0 6px}
+p{margin:8px 0;color:var(--muted)}
+.lead{max-width:66ch;color:var(--paper)}
+a{color:#e9bd9e;text-underline-offset:3px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:26px 0 16px}
+button{background:#7e332d;color:#fff;border:1px solid #cc8178;padding:10px 14px;border-radius:6px;cursor:pointer;font:inherit}
+button:focus-visible,a:focus-visible,audio:focus-visible{outline:3px solid #e5b97b;outline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+article{border:1px solid var(--line);border-radius:9px;background:var(--panel);padding:18px}
+.tag{display:inline-block;font-size:.74rem;text-transform:uppercase;letter-spacing:.09em;color:#edbfb1;margin-bottom:8px}
+audio{width:100%;margin-top:12px;display:block;min-height:50px}
+.note{border-top:1px solid var(--line);margin-top:30px;padding-top:18px;font-size:.91rem}
+small{color:var(--muted)}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="kicker">MINISTRY OF UNNECESSARY PROCEDURES · AUDIO ARCHIVE № 01</div>
+<h1>БЮРОКЯДТ-1<br>Sound Listening Room</h1>
+<p class="lead">Seven original recordings from the fictional 1982 document-confirmation machine. Play them individually without starting a procedure or altering the game.</p>
+<p><a href="../index.html">Return to the game</a> · <a href="https://github.com/joedoragon-glitch/byurokyadt-1#readme">Project README</a></p>
+</header>
+<div class="toolbar"><p>Choose any recording; starting another pauses the previous one.</p><button id="stopAll" type="button">Stop all playback</button></div>
+<section class="grid" aria-label="Original recordings">
+<article><span class="tag">Music</span><h2>Ministry score</h2><p>Restrained original instrumental underscore for the bureaucratic ceremony.</p><audio controls preload="none" aria-label="Play ministry score" src="./audio/ministry.ogg"></audio></article>
+<article><span class="tag">Atmosphere</span><h2>Office room tone</h2><p>The interior bed beneath the machine and the winter office.</p><audio controls preload="none" aria-label="Play office room ambience" src="./audio/room.ogg"></audio></article>
+<article><span class="tag">Mechanics</span><h2>Relay</h2><p>The apparatus engages its electrical and mechanical systems.</p><audio controls preload="none" aria-label="Play relay" src="./audio/relay.ogg"></audio></article>
+<article><span class="tag">Mechanics</span><h2>Paper feed</h2><p>Rollers carry the certificate through the machine.</p><audio controls preload="none" aria-label="Play paper feed" src="./audio/feed.ogg"></audio></article>
+<article><span class="tag">Mechanics</span><h2>Inspection scan</h2><p>The machine performs its solemn document inspection.</p><audio controls preload="none" aria-label="Play inspection scan" src="./audio/scan.ogg"></audio></article>
+<article><span class="tag">Mechanics</span><h2>Stamp impact</h2><p>Mechanical contact as the red certification mark is applied.</p><audio controls preload="none" aria-label="Play stamp impact" src="./audio/stamp.ogg"></audio></article>
+<article><span class="tag">Mechanics</span><h2>Completion bell</h2><p>The Ministry announces that the necessary paperwork exists.</p><audio controls preload="none" aria-label="Play completion bell" src="./audio/bell.ogg"></audio></article>
+</section>
+<p class="note">This is a standalone listening page, not a spatialized simulation of the full room. Procedural wind, radiator ticks and corridor footsteps are produced by the game itself and are not separate recordings. The page does not open documents, access game saves, change your audio preferences or send telemetry. Browser playback begins on your action; first-visit offline playback is not guaranteed. <a href="https://github.com/joedoragon-glitch/byurokyadt-1/blob/main/docs/AUDIO_DIRECTION.md">Audio direction and production notes</a>.</p>
+<small>БЮРОКЯДТ-1 · Original audio retained without modification.</small>
+</main>
+<script>
+'use strict';
+const players=[...document.querySelectorAll('audio')];
+for(const player of players)player.addEventListener('play',()=>{
+  for(const other of players)if(other!==player){other.pause();other.currentTime=0;}
+});
+document.getElementById('stopAll').addEventListener('click',()=>{
+  for(const player of players){player.pause();player.currentTime=0;}
+});
+</script>
+</body>
+</html>
