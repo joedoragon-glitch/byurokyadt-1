@@ -25,7 +25,7 @@ Use narrow, reproducible checks matched to the affected subsystem:
 | Paper/press surface or sequence | `node tests/paper-path.mjs`, then relevant rendered motion checks |
 | Cinematic routes or collisions | `node tests/camera-math.mjs`, then relevant browser cinematic checks |
 | Core document/file/receipt/persistence | Relevant `tests/acceptance.mjs` behavior |
-| Sound or environmental events | Relevant game/browser audio check and honest listening status |
+| Sound or environmental events | `node tests/audio-corridor.mjs`, relevant game/browser audio checks and honest listening status |
 | README, agent guides or audio-preview page | Run `node tests/documentation-links.mjs` and `node tests/audio-preview.mjs`; use `node tests/audio-preview-browser.mjs` when player/browser behavior changes |
 | Release candidate | Broader `npm test` **only after explicit permission** |
 

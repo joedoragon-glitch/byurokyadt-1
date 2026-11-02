@@ -27,6 +27,7 @@ Follow `js/app.js` when changing processing, counter/tray, collisions or geometr
 `package.json` runs focused source checks and Chromium suites with `npm test`:
 - `tests/documentation-links.mjs` — verifies cross-document local links and the required contributor entry points.
 - `tests/audio-preview.mjs` — checks the seven OGG sources and isolates standalone/service-worker navigation.
+- `tests/audio-corridor.mjs` — deterministic Web Audio unlock, background/approach priority, cooldown and mute.
 - `tests/audio-preview-browser.mjs` — tests actual Chromium OGG decoding, player controls, cache isolation and offline reopen.
 - `tests/camera-math.mjs` — real camera controller and obstacle map without a GPU.
 - `tests/paper-path.mjs` — paper path geometry and stamp/UV registration without a browser.

@@ -14,7 +14,7 @@ The office contains a 3D cabinet with switches, a CRT, analog meters, a printer 
 
 The intended tone is restrained, tactile and gently absurd: institutional bureaucracy treated with the seriousness of a monumental industrial process. The room contains original mechanical sound, a sparse instrumental score, winter ambience and spatially placed corridor footsteps.
 
-**Version 10.1** corrected the continuous paper path and stamp-contact timing, and made the corridor footsteps respond to an operator approaching the door. See the [historical production audit](AUDIT.md) for the recorded work and its verification; the [maintained development state](docs/DEVELOPMENT_STATE.md) distinguishes historical evidence from current verification.
+**Version 10.1** corrected the continuous paper path and stamp-contact timing, and made the corridor footsteps respond to an operator approaching the door. **Source patch 10.1.1 (PR #5, not yet published)** safeguards the approach cue against early background footsteps and adds a separate sound listening room. See the [historical production audit](AUDIT.md) for the recorded work and its verification; the [maintained development state](docs/DEVELOPMENT_STATE.md) distinguishes historical evidence from current verification.
 
 ## Controls
 
