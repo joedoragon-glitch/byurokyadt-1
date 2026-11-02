@@ -10,7 +10,7 @@ assert(start>0&&end>start,'Bounded production room-finishing section exists');
 const records=[],instances=[];
 const material=()=>({map:{},emissive:{setHex(){}},needsUpdate:false});
 const shape=(kind,w,h,d,mat,x,y,z,parent)=>{
- const mesh={kind,w,h,d,x,y,z,parent,name:'',material:material(),position:{z,set(){}},rotation:{x:0,y:0},castShadow:false};
+ const mesh={kind,w,h,d,x,y,z,parent,name:'',material:material(),position:{z,set(){}},rotation:{x:0,y:0},castShadow:true,receiveShadow:true};
  records.push(mesh);return mesh;
 };
 class Object3D{
@@ -41,6 +41,8 @@ const env={T,scene,doorGroup:{},seam:material(),steel2:material(),wallConcrete:m
 vm.createContext(env);vm.runInContext(app.slice(start,end),env);
 const front=vm.runInContext('frontWall',env);
 assert.equal(front.name,'room-front-wall');
+assert.equal(front.castShadow,false,'Physical front wall receives light but must not occlude the interior key when issue #6 is integrated');
+assert.equal(front.receiveShadow,true,'Front wall remains a shadow receiver');
 assert.deepEqual([front.w,front.h,front.d,front.x,front.y,front.z],[12,6,.2,0,3,7]);
 assert.equal(records.filter(o=>o.w===12&&o.h===6&&o.d===.2).length,1,'Fourth wall is a single continuous concrete boundary');
 for(const axis of [-1,1]){
