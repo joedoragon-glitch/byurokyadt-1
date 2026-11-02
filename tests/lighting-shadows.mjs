@@ -37,14 +37,16 @@ const injection=[
  '  const shadow=key.shadow.camera;shadow.updateMatrixWorld(true);',
  '  const points='+JSON.stringify(probes)+';',
  '  const missing=points.filter(s=>{const v=new T.Vector3(s[1],s[2],s[3]).project(shadow);return Math.abs(v.x)>1.00001||Math.abs(v.y)>1.00001||v.z < -1.00001||v.z>1.00001}).map(s=>s[0]);',
- '  let casters=0,receivers=0,shadowLights=0;',
- '  scene.traverse(o=>{if(o.isMesh){casters+=Number(!!o.castShadow);receivers+=Number(!!o.receiveShadow)}if(o.isLight)shadowLights+=Number(!!o.castShadow)});',
+ '  let casters=0,receivers=0,shadowLights=0,wallDetails=0,wallDetailCasters=0;',
+ '  scene.traverse(o=>{if(o.isMesh){casters+=Number(!!o.castShadow);receivers+=Number(!!o.receiveShadow);',
+ '   if(o.material===seam||o.material===tieMat){wallDetails++;wallDetailCasters+=Number(!!o.castShadow)}}',
+ '   if(o.isLight)shadowLights+=Number(!!o.castShadow)});',
  '  const gl=renderer.getContext(),ext=gl.getExtension("WEBGL_debug_renderer_info");',
  '  const gpu=ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER);',
  '  const frontWall=scene.getObjectByName("room-front-wall");',
  '  return {pose:p,coverage:{total:points.length,covered:points.length-missing.length,missing},',
  '   shadow:{left:shadow.left,right:shadow.right,top:shadow.top,bottom:shadow.bottom,near:shadow.near,far:shadow.far,',
- '    width:key.shadow.mapSize.x,height:key.shadow.mapSize.y,lights:shadowLights,casters,receivers,',
+ '    width:key.shadow.mapSize.x,height:key.shadow.mapSize.y,lights:shadowLights,casters,receivers,wallDetails,wallDetailCasters,',
  '    pressCaster:stamp.children.some(o=>o.castShadow),paperReceiver:outPaper.receiveShadow,',
  '    frontWall:frontWall?{casts:frontWall.castShadow,receives:frontWall.receiveShadow}:null},',
  '   renderer:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,',
@@ -135,6 +137,8 @@ try{
   for(const s of after.samples){
    assert.equal(s.coverage.covered,s.coverage.total,view.name+' '+s.pose.name+': clipped shadow targets '+s.coverage.missing.join(', '));
    assert.equal(s.shadow.lights,1,'Maintain precisely one shadow-casting light');
+   assert(s.shadow.wallDetails>=29,'All recessed seams and form-tie marks must be present');
+   assert.equal(s.shadow.wallDetailCasters,0,'Recessed concrete details should not cast isolated shadows');
    assert(s.shadow.pressCaster&&s.shadow.paperReceiver,'Dynamic press/paper shadows must remain eligible');
    if(s.shadow.frontWall){
     assert.equal(s.shadow.frontWall.casts,false,'Issue #7 front wall must never block the simulated interior key');

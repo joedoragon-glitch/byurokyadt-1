@@ -71,14 +71,16 @@ for(const shell of [
 
 /* recessed concrete panel seams — BEHIND propaganda, never in front */
 const seam=M(0x55554f,.02,.96);
-for(const x of [-5.35,-2.75,0,2.75,5.35])box(.035,5.55,.025,seam,x,3,-6.675);
-for(const y of [1.35,3.02,4.68])box(11.55,.035,.025,seam,0,y,-6.675);
+// These are recessed panel joints, not projecting beams; they receive the
+// room illumination but should not issue individual hard shadow-map draws.
+for(const x of [-5.35,-2.75,0,2.75,5.35])box(.035,5.55,.025,seam,x,3,-6.675).castShadow=false;
+for(const y of [1.35,3.02,4.68])box(11.55,.035,.025,seam,0,y,-6.675).castShadow=false;
 
 /* form-tie marks give concrete believable brutalist scale */
 const tieMat=M(0x57564f,.02,.92);
 for(const x of [-5.0,-3.35,-1.70,0,1.70,3.35,5.0]){
  for(const y of [1.70,3.58,5.22]){
-  cyl(.038,.018,tieMat,x,y,-6.65,Math.PI/2,0,0,scene,18);
+  cyl(.038,.018,tieMat,x,y,-6.65,Math.PI/2,0,0,scene,18).castShadow=false;
  }
 }
 
