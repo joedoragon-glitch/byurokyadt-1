@@ -69,7 +69,7 @@ try{
   new MutationObserver(()=>window.BYUR_UI_STATUS_LOG.push(document.getElementById('hint').textContent))
    .observe(document.getElementById('hint'),{childList:true,characterData:true,subtree:true});
  });
- await button('runDoc').click();
+ await button('runDoc').focus();await page.keyboard.press('Enter');
  await page.waitForFunction(()=>window.BYUR_INSPECT.snapshot().busy);
  assert.equal(await button('loadDoc').isDisabled(),true);
  assert.equal(await button('runDoc').isDisabled(),true);
@@ -84,7 +84,7 @@ try{
   assert(liveMessages.some(message=>message.startsWith(phase+' ·')),`Missing readable live announcement: ${phase}`);
  }
  await page.screenshot({path:'test-results/ui-04-certificate-ready.png'});
- await button('receipt').click();assert.equal(await button('certificate').evaluate(el=>el.open),true);
+ await button('receipt').focus();await page.keyboard.press('Enter');assert.equal(await button('certificate').evaluate(el=>el.open),true);
  assert.equal(await page.getByRole('dialog',{name:'Official certificate'}).isVisible(),true);
  assert.match(await button('certificateCanvas').getAttribute('aria-label'),/FORM-27B\.txt/);
  await page.keyboard.press('Escape');assert.equal(await button('certificate').evaluate(el=>el.open),false);
@@ -133,12 +133,20 @@ try{
   await page.keyboard.press('Escape');
  }
 
- await button('resetDoc').click();
+ // Complete the keyboard path: reset, select a second local file and reset again.
+ await button('resetDoc').focus();await page.keyboard.press('Enter');
+ assert.equal(await button('file').inputValue(),'');
+ assert.match(await button('stepLabel').textContent(),/STEP 1/);
+ const keyboardChooser=page.waitForEvent('filechooser');
+ await button('loadDoc').focus();await page.keyboard.press('Enter');
+ await (await keyboardChooser).setFiles({name:'KEYBOARD-DOCUMENT.txt',mimeType:'text/plain',buffer:Buffer.from('Keyboard test')});
+ assert.match(await button('stepLabel').textContent(),/STEP 2/);
+ await button('resetDoc').focus();await page.keyboard.press('Enter');
  assert.equal(await button('file').inputValue(),'');
  assert.match(await button('stepLabel').textContent(),/STEP 1/);
  assert.equal(await page.evaluate(()=>window.BYUR_INSPECT.snapshot().issued),1);
  assert.deepEqual(errors,[]);
- await writeFile('test-results/ui-accessibility-result.json',JSON.stringify({passed:true,base,matrix:reports,checks:['menu keyboard and Escape','help dialog and focus','document flow','busy state','certificate focus','audio and music independence','volume','cinema hidden controls','reduced motion','touch targets','responsive layouts','counter after reset'],errors},null,2));
+ await writeFile('test-results/ui-accessibility-result.json',JSON.stringify({passed:true,base,matrix:reports,checks:['menu keyboard and Escape','keyboard document/confirm/collect/reset','help dialog and focus','document flow','busy state','certificate focus','audio and music independence','volume','cinema hidden controls','reduced motion','touch targets','responsive layouts','counter after reset'],errors},null,2));
  console.log('UI accessibility: Chromium states and viewport matrix passed');
 }catch(error){
  await page.screenshot({path:'test-results/ui-failure.png'}).catch(()=>{});
