@@ -1,5 +1,9 @@
 # Development state — БЮРОКЯДТ-1
 
+## Version 10.2.3 right-desk correction — owner-authorized (2 November 2026)
+
+The [issue #20](https://github.com/joedoragon-glitch/byurokyadt-1/issues/20) correction replaces the interpenetrating file/paper slabs and toy-like red telephone with individually bound office files, a slim separate dossier and a period-plausible red VEF TA-72–inspired rotary instrument. Production geometry is grouped into `deskPhone`, `deskFiles` and `looseDossier` in `js/app.js`. The `tests/desk-props.mjs` browser gate checks their world-space bounds, numbering and supported handset while saving real rendered desktop/mobile photos. The owner authorized implementation and merge **after satisfactory engineering review**. The authoritative `main` status and exact check results live in [PR #21](https://github.com/joedoragon-glitch/byurokyadt-1/pull/21), and publication requires a successful [Pages deployment](https://github.com/joedoragon-glitch/byurokyadt-1/actions/workflows/pages.yml); a GitHub merge alone is not proof of published pages. Physical iPhone Safari render quality and final owner aesthetic review remain unverified.
+
 **Maintained status snapshot, prepared 1 November 2026.** Status is sourced from the repository at the stated checkpoints. Future changes must update this document when they affect current behavior or release claims.
 
 ## Version 10.2.2 — owner-authorized integration (2 November 2026)
