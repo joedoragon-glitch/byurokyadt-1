@@ -17,7 +17,7 @@ const T={
 };
 const scene={add(){}};
 const env={T,scene,doorGroup:{},seam:{},steel2:{},wallConcrete:{},tieMat:{},brass:{},black:{},phoneRed:{},wood:{},meterIvory:{},rad:{},
- M:()=>({}),box:(...args)=>shape('box',...args),softBox:(...args)=>shape('softBox',...args),cyl:(...args)=>shape('cyl',...args),decal:(...args)=>shape('decal',...args)};
+ M:()=>({}),box:(...args)=>shape('box',...args),softBox:(...args)=>shape('softBox',...args),cyl:(r,h,mat,x,y,z,rx,ry,rz,parent)=>shape('cyl',r,h,r,mat,x,y,z,parent),decal:(...args)=>shape('decal',...args)};
 vm.createContext(env);vm.runInContext(app.slice(start,end),env);
 const front=vm.runInContext('frontWall',env);
 assert.equal(front.name,'room-front-wall');
