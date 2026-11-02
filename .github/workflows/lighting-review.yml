@@ -1,0 +1,46 @@
+name: Lighting and shadows review (no deploy)
+on:
+  push:
+    branches: ["issue-6-office-lighting"]
+permissions:
+  contents: read
+jobs:
+  lighting:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout candidate branch
+        uses: actions/checkout@v6
+        with:
+          path: candidate
+      - name: Checkout unchanged main as comparison baseline
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          path: baseline
+      - name: Set up Node 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Install browser test dependencies
+        run: cd candidate && npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install Chromium
+        run: cd candidate && npx playwright install --with-deps chromium
+      - name: Start isolated review servers
+        run: |
+          python3 -m http.server 8000 --directory baseline >/tmp/byur-main.log 2>&1 &
+          python3 -m http.server 8001 --directory candidate >/tmp/byur-candidate.log 2>&1 &
+          sleep 2
+          curl --fail http://127.0.0.1:8000/index.html -o /dev/null
+          curl --fail http://127.0.0.1:8001/index.html -o /dev/null
+      - name: Paired desktop/mobile shadow and stamp evidence
+        run: cd candidate && node tests/lighting-shadows.mjs
+      - name: Complete nondeploying game regression
+        run: cd candidate && BASE_URL=http://127.0.0.1:8001/ npm test
+      - name: Preserve screenshots and actual metrics
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: issue-6-lighting-evidence
+          path: candidate/test-results/
+          retention-days: 14
