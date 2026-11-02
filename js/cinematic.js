@@ -2,14 +2,14 @@
 window.createMinistryCinema=({T,camera,renderer,scene,canStand,invalidate,syncLook,clearKeys,isModal})=>{
  const $=id=>document.getElementById(id),reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const shots=[
-  {name:'01 · THЄ OFFЇCЄ',p:[1.9,2.35,3.5],at:[-.55,2.05,-3.9],fov:57},
-  {name:'02 · CABЇИЄT POЯTЯAЇT',p:[1.48,1.93,.05],at:[0,1.52,-1.46],fov:48},
+  {name:'01 · THЄ OFFICЄ',p:[1.9,2.35,3.5],at:[-.55,2.05,-3.9],fov:57},
+  {name:'02 · CABIИЄT POЯTЯAIT',p:[1.48,1.93,.05],at:[0,1.52,-1.46],fov:48},
   {name:'03 · CRT & MЄTЄЯS',p:[-.29,1.89,-.35],at:[-.15,1.75,-1.27],fov:54},
   {name:'04 · FЄЄD ЯOLLЄЯS',p:[-.42,1.38,-.51],at:[-.18,1.09,-1.20],fov:34},
   {name:'05 · STAMP PЯЄSS',p:[.62,1.43,-.35],at:[.385,1.12,-1.22],fov:40},
-  {name:'06 · WЇИTЄЯ WЇИDOW',p:[-2.55,2.13,-.48],at:[-5.75,2.62,-2.60],fov:54},
-  {name:'07 · COЯЯЇDOЯ DOOЯ',p:[3.64,1.77,1.15],at:[5.7,1.48,-.8],fov:57},
-  {name:'08 · ЯЄCЄЇVЇИG TЯAY',p:[1.58,1.42,-.48],at:[.97,1.02,-1.32],fov:36}
+  {name:'06 · WIИTЄЯ WIИDOW',p:[-2.55,2.13,-.48],at:[-5.75,2.62,-2.60],fov:54},
+  {name:'07 · COЯЯIDOЯ DOOЯ',p:[3.64,1.77,1.15],at:[5.7,1.48,-.8],fov:57},
+  {name:'08 · ЯЄCЄIVIИG TЯAY',p:[1.58,1.42,-.48],at:[.97,1.02,-1.32],fov:36}
  ];
  let active=false,hidden=false,touring=false,route=null,home=null,index=0,hold=0,capturing=false,toastTimer;
  const target=new T.Vector3(),lookCamera=new T.PerspectiveCamera(),bar=$('cinemaBar'),tab=$('cinemaReveal'),live=$('cinemaStatus');
@@ -71,11 +71,11 @@ window.createMinistryCinema=({T,camera,renderer,scene,canStand,invalidate,syncLo
   const oldSize=renderer.getSize(new T.Vector2()),oldRatio=renderer.getPixelRatio(),aspect=camera.aspect;
   const w=Math.min(2560,Math.round(1440*aspect)),h=Math.round(w/aspect);let blob;
   try{renderer.setPixelRatio(1);renderer.setSize(w,h,false);renderer.render(scene,camera);blob=await new Promise((resolve,reject)=>renderer.domElement.toBlob(b=>b?resolve(b):reject(Error('PNG export failed')),'image/png'))}
-  catch(e){report('PHOTO ЇSSUЄ. Please retry, comЯade.');console.error(e)}
+  catch(e){report('PHOTO ISSUЄ. Please retry, comЯade.');console.error(e)}
   finally{renderer.setPixelRatio(oldRatio);renderer.setSize(oldSize.x,oldSize.y,false);renderer.render(scene,camera);invalidate();capturing=false;$('cinemaPhoto').disabled=false}
   if(!blob)return;const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='BYUROKYADT-1-'+['office','cabinet','meters','rollers','stamp','winter','door','archive'][index]+'-'+new Date().toISOString().replace(/[:.]/g,'-')+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),15000);
-  report('PHOTO SAVЄD · '+w+' × '+h+' · NO PAPЄЯWOЯK VЇSЇBLЄ');
-  clearTimeout(toastTimer);$('cinemaToast').textContent='PHOTOGЯAPH ЇSSUЄD';$('cinemaToast').hidden=false;toastTimer=setTimeout(()=>$('cinemaToast').hidden=true,1800);
+  report('PHOTO SAVЄD · '+w+' × '+h+' · NO PAPЄЯWOЯK VISIBLЄ');
+  clearTimeout(toastTimer);$('cinemaToast').textContent='PHOTOGЯAPH ISSUЄD';$('cinemaToast').hidden=false;toastTimer=setTimeout(()=>$('cinemaToast').hidden=true,1800);
  }
  function toggleTour(){if(touring){cancelTravel();report('TOUЯ PAUSЄD. Frame at your leisure.')}else{touring=true;$('cinemaTour').textContent='T · PAUSЄ TOUЯ';$('cinemaTour').setAttribute('aria-pressed','true');hold=0;if(!route)go(index,{tour:true})}}
  function tick(dt){
