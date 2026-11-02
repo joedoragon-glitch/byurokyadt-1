@@ -38,3 +38,7 @@ For an approved change, identify the exact event and current asset; specify what
 `npm test` covers audio decoding, game interaction and offline audio among broader suites. Choose relevant focused checks first and reserve comprehensive browser/device passes for separately authorized work. Human listening on the owner's speakers or phone remains **unverified until actually performed**.
 
 Audio composition and recordings should only be called **accepted** when the owner has made that choice; source review is not a substitute for the owner's ear. See [Creative direction](CREATIVE_DIRECTION.md), [Quality standards](QUALITY_STANDARDS.md) and the historical [AESTHETICS.md](../AESTHETICS.md).
+
+## Issue #16 default-on gesture policy (candidate)
+
+Both sound buses begin enabled. Web Audio remains unstarted until the first trusted pointer/touch/key gesture, when `AudioContext.resume()` is invoked synchronously before downloading/decoding the original seven OGG files. Sound and Music remain independently mutable. A later gesture can retry suspended audio, but Safari will not guarantee sound before input and browser/PWA interruption bugs may remain outside application control. No original recordings are modified. Actual iPhone audio quality and resumption remain unverified.
