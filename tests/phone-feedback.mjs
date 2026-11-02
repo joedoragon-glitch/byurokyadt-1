@@ -22,6 +22,9 @@ try {
   const probe=String.raw`
 window.__SHADOW_REVIEW=()=>{
  const names=['front-wall-service-board','front-wall-electrical-box','front-wall-electrical-face'];
+ const clock=scene.getObjectByName('room-clock-case');
+ const masonry=['room-door-left-masonry','room-door-right-masonry','room-door-lintel'].map(n=>scene.getObjectByName(n));
+ if(!clock||masonry.some(m=>!m))throw Error('Clock or doorway masonry missing');
  const panels=names.map(n=>scene.getObjectByName(n));
  if(panels.some(p=>!p))throw Error('Missing named front-wall panels');
  const before=panels.map(p=>p.castShadow);
@@ -44,6 +47,11 @@ window.__SHADOW_REVIEW=()=>{
  panels.forEach((p,i)=>p.castShadow=before[i]);
  renderer.shadowMap.needsUpdate=true;renderer.render(scene,camera);
  return {names,initialCasters:before,changed,formerDarker,formerBrighter,
+  clock:{casts:clock.castShadow,z:clock.position.z},
+  masonry:masonry.map(m=>({name:m.name,casts:m.castShadow})),
+  rig:{x:key.position.x,y:key.position.y,z:key.position.z,
+   hemisphere:scene.children.filter(o=>o.isHemisphereLight).map(o=>o.intensity),
+   windowFill:daylight.intensity},
   expected:{castersOff:before.every(v=>!v)},resolution:[w,h]};
 };
 window.__SHADOW_REVIEW_RESTORE=()=>{
@@ -65,10 +73,23 @@ window.__SHADOW_REVIEW_RESTORE=()=>{
  const probe=await page.evaluate(()=>window.__SHADOW_REVIEW());
  results.shadow=probe;
  assert(probe.expected.castersOff,'Decorative front-wall backplates must not cast by default');
- assert(probe.changed>100,'Re-enabling panels must measurably recreate the floor shadow defect');
- assert(probe.formerDarker>probe.formerBrighter*2,
-  'The defect must be shadow darkening, not unrelated lighting changes');
+ assert.equal(probe.clock.casts,false,'Wall clock should not project elongated decorative shadows');
+ assert(Math.abs(probe.clock.z+6.665)<.001,'Clock case must rest against rear masonry');
+ assert(probe.masonry.every(m=>!m.casts),'Doorway masonry remains an unshadowed shell');
+ assert(Math.hypot(probe.rig.x,probe.rig.z)/probe.rig.y<.30,
+  'Shadow direction should be dominated by the overhead fluorescent fittings');
+ assert(probe.rig.windowFill<2.5,'Frosted winter window must remain diffuse supplementary fill');
+ // Re-enabling legacy decorative casters is diagnostic only: it must not be
+ // required to recreate a large oblique sun shadow after the lighting correction.
  await page.locator('#app canvas').screenshot({path:'test-results/phone-feedback/front-wall-fixed.png'});
+ await page.evaluate(()=>{
+  camera.position.set(0,3.83,-4.8);camera.lookAt(0,3.83,-6.62);renderer.render(scene,camera);
+ });
+ await page.locator('#app canvas').screenshot({path:'test-results/phone-feedback/clock-wall.png'});
+ await page.evaluate(()=>{
+  camera.position.set(4.5,1.7,-.8);camera.lookAt(6.02,1.5,-.8);renderer.render(scene,camera);
+ });
+ await page.locator('#app canvas').screenshot({path:'test-results/phone-feedback/corridor-door.png'});
  await page.evaluate(()=>window.__SHADOW_REVIEW_RESTORE());
  // Native touch events, including a movement gesture and cleanup.
  const session=await context.newCDPSession(page);
