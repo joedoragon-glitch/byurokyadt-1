@@ -8,6 +8,7 @@ This is the **maintained routing map**, not a duplicate implementation ledger. A
 | [AGENTS.md](../AGENTS.md) | Current AI collaboration policy, source authority, scope and release permission |
 | [Development state](DEVELOPMENT_STATE.md) | Time-qualified status, exact CI evidence and release/device verification distinctions |
 | [Architecture](ARCHITECTURE.md) | Code ownership, actual files, game runtime, test owners and deployment boundaries |
+| [Bureau language standard](LANGUAGE_STYLE.md) | Russian-at-first-glance fictional English, authentic Cyrillic, accessible copy and character safety |
 | [Creative direction](CREATIVE_DIRECTION.md) | World tone, cabinet/office identity, inherited authorial philosophy and art provenance |
 | [Quality standards](QUALITY_STANDARDS.md) | Visual, interaction, sound, performance, accessibility, privacy and acceptance gates |
 | [Performance profiling](PERFORMANCE_PROFILING.md) | CPU/WebGL workload harness, cache measurements, matched baseline protocol and hardware limits |

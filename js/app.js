@@ -1,5 +1,5 @@
 (()=>{
-if(!window.THREE){window.BYUR_LOAD?.fatal('ЄЯЯOЯ: 3D engine unavailable.');return}
+if(!window.THREE){window.BYUR_LOAD?.fatal('ОШИБКА: 3D engine unavailable.');return}
 const T=THREE;window.BYUR_LOAD?.stage('engine_ready');
 const mobile=matchMedia('(max-width:800px)').matches||/Android|iPhone|iPad/i.test(navigator.userAgent);
 let needsFrame=true,renderedFrames=0;
@@ -14,7 +14,7 @@ let yaw=0,pitch=.018;camera.rotation.set(pitch,yaw,0);
 let renderer;
 try{
  renderer=new T.WebGLRenderer({antialias:!mobile,powerPreference:mobile?'default':'high-performance',failIfMajorPerformanceCaveat:false});
-}catch(e){window.BYUR_LOAD?.fatal('ЯEИDEЯЄЯ ЄЯЯOЯ: '+e.message);return}
+}catch(e){window.BYUR_LOAD?.fatal('РЕНДЕР ОШИБКА: '+e.message);return}
 renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,mobile?1.1:1.6));
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=mobile?T.PCFShadowMap:T.PCFSoftShadowMap;
 renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=.96;root.appendChild(renderer.domElement);
@@ -563,22 +563,23 @@ window.BYUR_LOAD?.stage('machine_ready');
 let current=null,busy=false,certificateReady=false,serial='';
 const ui=Object.fromEntries(['loadDoc','runDoc','resetDoc','receipt','certificate','certificateCanvas','cycleCount','sound','roomView','deskView','operator','stepLabel','selectedFile'].map(id=>[id,document.getElementById(id)]));
 let issued=0;try{issued=Math.max(0,Math.min(999999,Math.floor(Number(localStorage.getItem('byur-issued')||0)||0)))}catch{}
-function updateCount(animate=false){ui.cycleCount.textContent='ISSUED: '+String(issued).padStart(3,'0');updateArchive(issued,animate)}updateCount();
+function updateCount(animate=false){ui.cycleCount.textContent='ВЫДАНО: '+String(issued).padStart(3,'0');updateArchive(issued,animate)}updateCount();
 function controls(){
  const stage=busy?'busy':certificateReady?'ready':current?'selected':'empty';
  ui.operator.dataset.stage=stage;
- ui.stepLabel.textContent={empty:'STEP 1 / 3 · SELECT A DOCUMENT',selected:'STEP 2 / 3 · CONFIRM THE PROCEDURE',busy:'STEP 2 / 3 · PROCESSING',ready:'STEP 3 / 3 · COLLECT CERTIFICATE'}[stage];
- ui.selectedFile.textContent=current?'FILE: '+current.name:'No document selected';
+ ui.stepLabel.textContent={empty:'STЕР 1 / 3 · SЕLЕКТ ДОКУМЕНТ',selected:'STЕР 2 / 3 · КОNFIRM РRОЦЕDUR',busy:'STЕР 2 / 3 · РRОЦЕSSING',ready:'STЕР 3 / 3 · СОLLЕКТ СПРАВКА'}[stage];
+ ui.selectedFile.textContent=current?'ФАЙЛ: '+current.name:'НЕТ ДОКУМЕНТА';
  ui.loadDoc.disabled=ui.runDoc.disabled=ui.resetDoc.disabled=busy;
  ui.receipt.disabled=!certificateReady||busy;
- ui.runDoc.textContent=busy?'Processing…':certificateReady?'↵ · Confirm again':'↵ · Confirm';
+ ui.runDoc.textContent=busy?'РRОЦЕSSING…':certificateReady?'↵ · КОNFIRM AGAIN':'↵ · КОNFIRM';
 }
-function status(text){hint.textContent=text}
+// Decorative pseudo-language stays visible; the polite live region speaks readable English.
+function status(visual,spoken){hint.textContent=visual;document.getElementById('srStatus').textContent=spoken||visual}
 const audio=window.MinistryAudio;let soundOn=false,musicOn=false;
 const soundPosition=new T.Vector3();
 function sound(name,source=null){const object=source||{relay:resetKnob,feed:rollers[1],scan:lens,stamp,bell:screen}[name];if(object){object.updateWorldMatrix(true,false);audio.play(name,object.getWorldPosition(soundPosition).toArray())}else audio.play(name)}
-ui.sound.onclick=async()=>{soundOn=!soundOn;ui.sound.textContent='Sound: '+(soundOn?'On':'Off');ui.sound.setAttribute('aria-pressed',String(soundOn));try{await audio.setEffects(soundOn);sound('relay')}catch{soundOn=false;ui.sound.textContent='Sound: Retry';ui.sound.setAttribute('aria-pressed','false');status('Audio delivery delayed. Select Sound to retry, comrade.')}};
-const musicButton=document.getElementById('music');musicButton.onclick=async()=>{musicOn=!musicOn;musicButton.textContent='Music: '+(musicOn?'On':'Off');musicButton.setAttribute('aria-pressed',String(musicOn));try{await audio.setMusic(musicOn)}catch{musicOn=false;musicButton.textContent='Music: Retry';musicButton.setAttribute('aria-pressed','false');status('Orchestra delayed. Select Music to retry.')}};
+ui.sound.onclick=async()=>{soundOn=!soundOn;ui.sound.textContent='SОUND: '+(soundOn?'ОN':'ОFF');ui.sound.setAttribute('aria-pressed',String(soundOn));try{await audio.setEffects(soundOn);sound('relay')}catch{soundOn=false;ui.sound.textContent='SОUND: RЕТRУ';ui.sound.setAttribute('aria-pressed','false');status('ОШИБКА АУДИО · SОUND RЕТRУ, ТОВАРИЩ.','Audio delivery delayed. Select Sound to retry, comrade.')}};
+const musicButton=document.getElementById('music');musicButton.onclick=async()=>{musicOn=!musicOn;musicButton.textContent='МUSIС: '+(musicOn?'ОN':'ОFF');musicButton.setAttribute('aria-pressed',String(musicOn));try{await audio.setMusic(musicOn)}catch{musicOn=false;musicButton.textContent='МUSIС: RЕТRУ';musicButton.setAttribute('aria-pressed','false');status('ОРКЕСТРА DELAУED · МUSIС RЕТRУ.','Orchestra delayed. Select Music to retry.')}};
 document.getElementById('volume').oninput=e=>audio.setVolume(Number(e.target.value)/100);
 const st={cap:cap.position.z,inZ:inPaper.position.z,stampY:stamp.position.y,linkY:stampLink.position.y,scanX:scan.position.x};
 const wait=ms=>new Promise(r=>setTimeout(r,ms)),smooth=t=>t*t*(3-2*t);
@@ -613,18 +614,18 @@ document.getElementById('closeReceipt').onclick=()=>ui.certificate.close();
 document.getElementById('downloadReceipt').onclick=()=>{ui.certificateCanvas.toBlob(blob=>{if(!blob)return;const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='SPRAVKA-27B-'+serial+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)},'image/png')};
 async function run(){
  if(busy)return;
- if(!current){setLamp(2,true);crt(['ОШИБКА.','','ДОКУМЕНТ ИЄT.']);status('ERROR · Select a document first, comrade.');sound('relay');return}
+ if(!current){setLamp(2,true);crt(['ОШИБКА.','','НЕТ ДОКУМЕНТА.']);status('ОШИБКА · SЕLЕКТ ДОКУМЕНТ, ТОВАРИЩ.','ERROR · Select a document first, comrade.');sound('relay');return}
  busy=true;certificateReady=false;resetVisual();phase(0);controls();setLamp(1,true);sound('relay');audio.setCycle(true);knobTime=.24;await tween(85,t=>speedKnob.rotation.z=-.55+.42*t,t=>t<.6?t*.12:.072+(t-.6)*2.32);
  try{
  await tween(110,t=>cap.position.z=st.cap-.10*t);await tween(140,t=>cap.position.z=st.cap-.10*(1-t));
- status('ANALYSIS · Machine considers the existence of this document.');crt(['АНАЛИЗ...','','ОБРАБОТКА: 20%']);sound('feed');
+ status('АНАЛИЗ · MACHINE INSPЕКТ ДОКУМЕНТ EXISTENCE.','ANALYSIS · Machine considers the existence of this document.');crt(['АНАЛИЗ...','','ОБРАБОТКА: 20%']);sound('feed');
  await Promise.all([tween(1700,t=>{inPaper.position.z=st.inZ+(-.58-st.inZ)*t;rollers[0].rotation.x=t*18;rollers[1].rotation.x=-t*18;bendPaper(inPaper,true)}),gauges(.28,.34)]);
- crt(['АНАЛИЗ...','','СКАНЕР WORKЇИG.']);sound('scan');await tween(1350,t=>{scan.position.x=-.74+1.48*t;lens.material.emissiveIntensity=2.2+.5*Math.sin(t*18)});await tween(550,t=>scan.position.x=.74-1.48*t);
- phase(1);status('VERIFICATION · Second department confirms the first department.');crt(['ПРОВЕРКА...','','ОБРАБОТКА: 68%']);await gauges(.66,.72);await wait(500);
- phase(2);status('PRINTING · Certificate emerges for official stamping.');crt(['ПЕЧАТЬ...','','ПОДАЧА БУМАГИ.']);serial=String(Math.floor(100000+Math.random()*900000));drawOut(current.name,serial);outputStage='printing';
+ crt(['АНАЛИЗ...','','СКАНЕР: WОRКINГ.']);sound('scan');await tween(1350,t=>{scan.position.x=-.74+1.48*t;lens.material.emissiveIntensity=2.2+.5*Math.sin(t*18)});await tween(550,t=>scan.position.x=.74-1.48*t);
+ phase(1);status('ПРОВЕРКА · SECOND DEPARTMЕNT KОNFIRMS FIRST.','VERIFICATION · Second department confirms the first department.');crt(['ПРОВЕРКА...','','ОБРАБОТКА: 68%']);await gauges(.66,.72);await wait(500);
+ phase(2);status('ПЕЧАТЬ · СПРАВКА ENTERS STAMP STATION.','PRINTING · Certificate emerges for official stamping.');crt(['ПЕЧАТЬ...','','ПОДАЧА БУМАГИ.']);serial=String(Math.floor(100000+Math.random()*900000));drawOut(current.name,serial);outputStage='printing';
  const stampHead=outputPath.stampS+(1-704/1050)*outputPath.length,contactY=outputPath.height+outputPath.clearance+.1625,stroke=st.stampY-contactY;
  sound('feed',outRollers[0]);await tween(2100,t=>{outputProgress=t;feedOutput(stampHead*t);outRollers[0].rotation.x=-stampHead*t/.071;outRollers[1].rotation.x=-stampHead*t/.067},t=>t);
- outputStage='pressing';outputProgress=0;status('STAMPING · State applies physical certainty.');crt(['ПЕЧАТЬ...','','OFFЇCЇДL ПЕЧАТЬ.']);
+ outputStage='pressing';outputProgress=0;status('ШТАМП · STATE APPLIES CERTAINTУ.','STAMPING · State applies physical certainty.');crt(['ПЕЧАТЬ...','','ОFFIСIAL ПЕЧАТЬ.']);
  await tween(430,t=>{outputProgress=t;stamp.position.y=st.stampY-stroke*t;stampLink.position.y=st.linkY-stroke*t},t=>t*t*t);
  outputStage='impact';outputStamped=true;drawOut(current.name,serial,true);sound('stamp');recoil=.48;await wait(240);
  await tween(420,t=>{stamp.position.y=contactY+stroke*t;stampLink.position.y=st.linkY-stroke*(1-t)});
@@ -632,19 +633,19 @@ async function run(){
  outputStage='ready';await gauges(1,1);setLamp(1,false);phase(3);
  crt(['ПРОВЕРКА ЗАВЕРШЕНА.','','СТАТУС: ХОРОШО.','','ДОКУМЕНТ ЯВЛЯЕТСЯ ДОКУМЕНТОМ.']);
  createCertificate(current.name,serial);certificateReady=true;issued=Math.min(999999,issued+1);try{localStorage.setItem('byur-issued',String(issued))}catch{}updateCount(true);
- status('APPROVED · Certificate ready. Select Collect certificate to save your PNG.');sound('bell');
- }catch(e){setLamp(2,true);status('ERROR · Temporary deviation. Select Reset and retry.');console.error(e)}
+ status('ГОТОВО · СПРАВКА АРРRОVД. СОLLЕКТ TO SAVE PNG.','APPROVED · Certificate ready. Select Collect certificate to save your PNG.');sound('bell');
+ }catch(e){setLamp(2,true);status('ОШИБКА · TEMPORARУ DEVIATION. RЕSЕТ & RЕТRУ.','ERROR · Temporary deviation. Select Reset and retry.');console.error(e)}
  finally{audio.setCycle(false);await tween(95,t=>speedKnob.rotation.z=-.13-.42*t);busy=false;controls()}
 }
-function reset(){if(busy)return;knobTime=.24;current=null;certificateReady=false;fileInput.value='';inPaper.visible=false;resetVisual();controls();crt(['БЮРОКЯДТ-1','ВНИМАНИЕ.','СИСТЕМА ГОТОВА.']);status('Choose a local document or use the machine input tray.');sound('relay')}
+function reset(){if(busy)return;knobTime=.24;current=null;certificateReady=false;fileInput.value='';inPaper.visible=false;resetVisual();controls();crt(['БЮРОКЯДТ-1','ВНИМАНИЕ.','СИСТЕМА ГОТОВА.']);status('SЕLЕКТ ДОКУМЕНТ OR TAP INPUT TRAY.','Choose a local document or use the machine input tray.');sound('relay')}
 function loadDocument(){if(!busy)fileInput.click()}
 ui.loadDoc.onclick=loadDocument;ui.runDoc.onclick=run;ui.resetDoc.onclick=reset;
-fileInput.onchange=()=>{if(busy||!fileInput.files[0])return;resetVisual();certificateReady=false;current=fileInput.files[0];drawInput(current.name);inPaper.visible=true;inPaper.position.z=st.inZ;bendPaper(inPaper);crt(['ДОКУМЕНТ ПРИНЯТ.','','PЯЄSS ПОДТВЕРДИТЬ.']);setLamp(2,false);status('RECEIVED · '+current.name+' · Select Confirm to begin the procedure.');controls();sound('relay')};
+fileInput.onchange=()=>{if(busy||!fileInput.files[0])return;resetVisual();certificateReady=false;current=fileInput.files[0];drawInput(current.name);inPaper.visible=true;inPaper.position.z=st.inZ;bendPaper(inPaper);crt(['ДОКУМЕНТ ПРИНЯТ.','','РRЕSS ПОДТВЕРДИТЬ.']);setLamp(2,false);status('ПОЛУЧЕНО · '+current.name+' · КОNFIRM TO BEGIN.','RECEIVED · '+current.name+' · Select Confirm to begin the procedure.');controls();sound('relay')};
 let viewMoving=false;
 async function setView(view){
  if(viewMoving||cinema?.active)return;viewMoving=true;renderer.domElement.style.opacity='0';await wait(180);
  const side=view==='side',desk=view===true,narrow=Math.max(0,.9/camera.aspect-1)*.85;camera.position.set(side?1.25:0,desk?1.70:side?1.72:1.70,(desk?.42:side?.55:2.7)+(desk||side?narrow:0));
- if(!current&&!busy)status(desk||side?'Choose a document or use the machine input tray.':'Choose a local document, or use Menu to approach the machine.');
+ if(!current&&!busy)status(desk||side?'SЕLЕКТ ДОКУМЕНТ OR TAP TRAY.':'SЕLЕКТ ДОКУМЕНТ · МЕНЮ FOR MACHINE.',desk||side?'Choose a document or use the machine input tray.':'Choose a local document, or use Menu to approach the machine.');
  yaw=side?.46:0;pitch=desk?-.18:side?-.15:.018;camera.rotation.set(pitch,yaw,0);needsFrame=true;renderer.domElement.style.opacity='1';await wait(180);viewMoving=false;
 }
 ui.roomView.onclick=()=>setView(false);ui.deskView.onclick=()=>setView(true);document.getElementById('sideView').onclick=()=>setView('side');

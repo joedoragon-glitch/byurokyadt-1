@@ -28,7 +28,7 @@ const layout=()=>page.evaluate(()=>{
 try{
  await page.goto(url.href);await button('loading').waitFor({state:'hidden',timeout:60000});
  assert.equal(await button('fatal').isVisible(),false);
- assert.equal(await button('stepLabel').textContent(),'STEP 1 / 3 · SELECT A DOCUMENT');
+ assert.equal(await button('stepLabel').textContent(),'STЕР 1 / 3 · SЕLЕКТ ДОКУМЕНТ');
  assert.equal(await button('receipt').isVisible(),false);
  assert.equal(await button('utilityPanel').isVisible(),false);
  assert.equal(await page.getByRole('status').count(),1,'One active operator announcement');
@@ -53,32 +53,33 @@ try{
 
  // An empty procedure reports a comprehensible error.
  await button('runDoc').click();
- assert.match(await button('hint').textContent(),/^ERROR · Select a document first/);
+ assert.match(await button('hint').textContent(),/^ОШИБКА · SЕLЕКТ ДОКУМЕНТ/);
+ assert.match(await button('srStatus').textContent(),/^ERROR · Select a document first/);
  const chooser=page.waitForEvent('filechooser');
  await button('loadDoc').tap();
  await (await chooser).setFiles({name:'FORM-27B.txt',mimeType:'text/plain',buffer:Buffer.from('Local document')});
- assert.match(await button('stepLabel').textContent(),/STEP 2/);
- assert.match(await button('hint').textContent(),/RECEIVED/);
+ assert.match(await button('stepLabel').textContent(),/STЕР 2/);
+ assert.match(await button('hint').textContent(),/ПОЛУЧЕНО/);
  assert.match(await button('selectedFile').textContent(),/FORM-27B\.txt/);
  await page.screenshot({path:'test-results/ui-02-document-selected.png'});
 
  // Actual busy and issued states, not mocked machine status.
- // Capture the live region as a screen-reader-facing processing transcript.
+ // Capture the separate plain-English live region, not the decorative pseudo-Cyrillic status.
  await page.evaluate(()=>{
   window.BYUR_UI_STATUS_LOG=[];
-  new MutationObserver(()=>window.BYUR_UI_STATUS_LOG.push(document.getElementById('hint').textContent))
-   .observe(document.getElementById('hint'),{childList:true,characterData:true,subtree:true});
+  new MutationObserver(()=>window.BYUR_UI_STATUS_LOG.push(document.getElementById('srStatus').textContent))
+   .observe(document.getElementById('srStatus'),{childList:true,characterData:true,subtree:true});
  });
  await button('runDoc').focus();await page.keyboard.press('Enter');
  await page.waitForFunction(()=>window.BYUR_INSPECT.snapshot().busy);
  assert.equal(await button('loadDoc').isDisabled(),true);
  assert.equal(await button('runDoc').isDisabled(),true);
- assert.match(await button('stepLabel').textContent(),/PROCESSING/);
+ assert.match(await button('stepLabel').textContent(),/РRОЦЕSSING/);
  await page.screenshot({path:'test-results/ui-03-busy.png'});
  await page.waitForFunction(()=>window.BYUR_INSPECT.snapshot().output.stage==='ready'&&!window.BYUR_INSPECT.snapshot().busy,{},{timeout:180000});
  assert.equal(await button('receipt').isVisible(),true);
  assert.equal(await button('receipt').isEnabled(),true);
- assert.match(await button('stepLabel').textContent(),/STEP 3/);
+ assert.match(await button('stepLabel').textContent(),/STЕР 3/);
  const liveMessages=await page.evaluate(()=>window.BYUR_UI_STATUS_LOG);
  for(const phase of ['ANALYSIS','VERIFICATION','PRINTING','STAMPING','APPROVED']){
   assert(liveMessages.some(message=>message.startsWith(phase+' ·')),`Missing readable live announcement: ${phase}`);
@@ -142,14 +143,14 @@ try{
  // Complete the keyboard path: reset, select a second local file and reset again.
  await button('resetDoc').focus();await page.keyboard.press('Enter');
  assert.equal(await button('file').inputValue(),'');
- assert.match(await button('stepLabel').textContent(),/STEP 1/);
+ assert.match(await button('stepLabel').textContent(),/STЕР 1/);
  const keyboardChooser=page.waitForEvent('filechooser');
  await button('loadDoc').focus();await page.keyboard.press('Enter');
  await (await keyboardChooser).setFiles({name:'KEYBOARD-DOCUMENT.txt',mimeType:'text/plain',buffer:Buffer.from('Keyboard test')});
- assert.match(await button('stepLabel').textContent(),/STEP 2/);
+ assert.match(await button('stepLabel').textContent(),/STЕР 2/);
  await button('resetDoc').focus();await page.keyboard.press('Enter');
  assert.equal(await button('file').inputValue(),'');
- assert.match(await button('stepLabel').textContent(),/STEP 1/);
+ assert.match(await button('stepLabel').textContent(),/STЕР 1/);
  assert.equal(await page.evaluate(()=>window.BYUR_INSPECT.snapshot().issued),1);
  assert.deepEqual(errors,[]);
  await writeFile('test-results/ui-accessibility-result.json',JSON.stringify({passed:true,base,matrix:reports,checks:['menu keyboard and Escape','keyboard document/confirm/collect/reset','help dialog and focus','document flow','busy state','certificate focus','audio and music independence','volume','cinema hidden controls','reduced motion','touch targets','responsive layouts','nonoverlapping scrollable menu','counter after reset'],errors},null,2));

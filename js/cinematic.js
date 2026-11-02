@@ -2,20 +2,20 @@
 window.createMinistryCinema=({T,camera,renderer,scene,canStand,invalidate,syncLook,clearKeys,isModal})=>{
  const $=id=>document.getElementById(id),reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const shots=[
-  {name:'01 · THЄ OFFЇCЄ',p:[1.9,2.35,3.5],at:[-.55,2.05,-3.9],fov:57},
-  {name:'02 · CABЇИЄT POЯTЯAЇT',p:[1.48,1.93,.05],at:[0,1.52,-1.46],fov:48},
-  {name:'03 · CRT & MЄTЄЯS',p:[-.29,1.89,-.35],at:[-.15,1.75,-1.27],fov:54},
-  {name:'04 · FЄЄD ЯOLLЄЯS',p:[-.42,1.38,-.51],at:[-.18,1.09,-1.20],fov:34},
-  {name:'05 · STAMP PЯЄSS',p:[.62,1.43,-.35],at:[.385,1.12,-1.22],fov:40},
-  {name:'06 · WЇИTЄЯ WЇИDOW',p:[-2.55,2.13,-.48],at:[-5.75,2.62,-2.60],fov:54},
-  {name:'07 · COЯЯЇDOЯ DOOЯ',p:[3.64,1.77,1.15],at:[5.7,1.48,-.8],fov:57},
-  {name:'08 · ЯЄCЄЇVЇИG TЯAY',p:[1.58,1.42,-.48],at:[.97,1.02,-1.32],fov:36}
+  {name:'01 · ТНЕ ОFFIСЕ',label:'The office',p:[1.9,2.35,3.5],at:[-.55,2.05,-3.9],fov:57},
+  {name:'02 · САВINЕТ РОRТRАIТ',label:'Cabinet portrait',p:[1.48,1.93,.05],at:[0,1.52,-1.46],fov:48},
+  {name:'03 · СRТ & МЕТЕRS',label:'CRT and meters',p:[-.29,1.89,-.35],at:[-.15,1.75,-1.27],fov:54},
+  {name:'04 · FЕЕD ЯOLLЕRS',label:'Feed rollers',p:[-.42,1.38,-.51],at:[-.18,1.09,-1.20],fov:34},
+  {name:'05 · STАМР РRЕSS',label:'Stamp press',p:[.62,1.43,-.35],at:[.385,1.12,-1.22],fov:40},
+  {name:'06 · WINТЕR WINDОW',label:'Winter window',p:[-2.55,2.13,-.48],at:[-5.75,2.62,-2.60],fov:54},
+  {name:'07 · СОRRIDОR DООR',label:'Corridor door',p:[3.64,1.77,1.15],at:[5.7,1.48,-.8],fov:57},
+  {name:'08 · ЯЕСЕIVINГ TRАУ',label:'Receiving tray',p:[1.58,1.42,-.48],at:[.97,1.02,-1.32],fov:36}
  ];
  let active=false,hidden=false,touring=false,route=null,home=null,index=0,hold=0,capturing=false,toastTimer;
- const target=new T.Vector3(),lookCamera=new T.PerspectiveCamera(),bar=$('cinemaBar'),tab=$('cinemaReveal'),live=$('cinemaStatus');
- for(const [i,s] of shots.entries()){const o=document.createElement('option');o.value=i;o.textContent=s.name;$('cinemaShot').append(o)}
+ const target=new T.Vector3(),lookCamera=new T.PerspectiveCamera(),bar=$('cinemaBar'),tab=$('cinemaReveal'),live=$('cinemaStatus'),spokenLive=$('srCinemaStatus');
+ for(const [i,s] of shots.entries()){const o=document.createElement('option');o.value=i;o.textContent=s.name;o.setAttribute('aria-label',s.label);$('cinemaShot').append(o)}
  const ease=t=>t*t*(3-2*t),V=a=>new T.Vector3(...a);
- function report(s){live.textContent=s}
+ function report(visual,spoken){live.textContent=visual;spokenLive.textContent=spoken||visual}
  function clearLine(a,b){const n=Math.ceil(a.distanceTo(b)/.05);for(let i=0;i<=n;i++){const t=n?i/n:0;if(!canStand(a.x+(b.x-a.x)*t,a.z+(b.z-a.z)*t))return false}return true}
  function pathTo(end){
   const start=camera.position.clone();if(clearLine(start,end))return [start,end];
@@ -43,26 +43,26 @@ window.createMinistryCinema=({T,camera,renderer,scene,canStand,invalidate,syncLo
   camera.aspect=w/h;camera.updateProjectionMatrix();invalidate();
  }
  function showControls(show){hidden=!show;bar.hidden=hidden;tab.hidden=!hidden;$('cinemaHide').setAttribute('aria-expanded',String(show));if(!show)tab.focus();else $('cinemaHide').focus()}
- function stopTour(){touring=false;$('cinemaTour').textContent='T · STAЯT TOUЯ';$('cinemaTour').setAttribute('aria-pressed','false')}
+ function stopTour(){touring=false;$('cinemaTour').textContent='T · STАЯТ ТОUR';$('cinemaTour').setAttribute('aria-pressed','false')}
  function cancelTravel(){route=null;stopTour();syncLook();clearKeys()}
  function go(n,{tour=false,instant=false}={}){
   if(!active)return;if(!tour)stopTour();index=(n+shots.length)%shots.length;$('cinemaShot').value=index;
-  const s=shots[index],end=V(s.p),nodes=pathTo(end);if(!nodes){report('ЯOUTЄ BLOCKЄD. Choose another view.');return}
+  const s=shots[index],end=V(s.p),nodes=pathTo(end);if(!nodes){report('МАРШРУТ BLОСКЕD. SELECT ОTHER VIEW.','Route blocked. Choose another view.');return}
   const lengths=[0];for(let i=1;i<nodes.length;i++)lengths.push(lengths[i-1]+nodes[i].distanceTo(nodes[i-1]));
   lookCamera.position.copy(end);lookCamera.lookAt(V(s.at));
   route={nodes,lengths,total:lengths.at(-1),time:0,duration:Math.max(1.65,lengths.at(-1)/1.1),q0:camera.quaternion.clone(),q1:lookCamera.quaternion.clone(),f0:camera.fov,f1:s.fov};
-  clearKeys();report(s.name+' · DRAG TO FRAME · P TO PHOTOGRAPH');
+  clearKeys();report(s.name+' · DRAG TO FRAME · P FOR ФОТО',s.label+' · Drag to frame. Press P to photograph.');
   if(instant||reduced.matches){camera.position.copy(end);camera.quaternion.copy(route.q1);camera.fov=s.fov;camera.updateProjectionMatrix();route=null;syncLook();invalidate()}
   $('cinemaLens').value=s.fov;$('cinemaLensValue').textContent=s.fov+'°';hold=0;
  }
  function enter(){
   if(active||isModal())return;home={p:camera.position.clone(),q:camera.quaternion.clone(),fov:camera.fov};active=true;clearKeys();window.BYUR_UI?.closeMenu();
-  document.body.classList.add('cinematic');for(const id of ['hud','menuToggle','utilityPanel','viewControls','operator','hint','fs','installBtn','badge','appMode'])$(id).inert=true;
+  document.body.classList.add('cinematic');for(const id of ['hud','menuToggle','utilityPanel','viewControls','operator','hint','srStatus','fs','installBtn','badge','appMode'])$(id).inert=true;
   $('cinema').hidden=false;bar.hidden=false;tab.hidden=true;hidden=false;resize();go(0);$('cinemaExit').focus();
  }
  function exit(){
   if(!active||capturing)return;cancelTravel();active=false;camera.position.copy(home.p);camera.quaternion.copy(home.q);camera.fov=home.fov;syncLook();
-  document.body.classList.remove('cinematic');for(const id of ['hud','menuToggle','utilityPanel','viewControls','operator','hint','fs','installBtn','badge','appMode'])$(id).inert=false;
+  document.body.classList.remove('cinematic');for(const id of ['hud','menuToggle','utilityPanel','viewControls','operator','hint','srStatus','fs','installBtn','badge','appMode'])$(id).inert=false;
   $('cinema').hidden=true;resize();$('menuToggle').focus();
  }
  async function capture(){
@@ -71,17 +71,17 @@ window.createMinistryCinema=({T,camera,renderer,scene,canStand,invalidate,syncLo
   const oldSize=renderer.getSize(new T.Vector2()),oldRatio=renderer.getPixelRatio(),aspect=camera.aspect;
   const w=Math.min(2560,Math.round(1440*aspect)),h=Math.round(w/aspect);let blob;
   try{renderer.setPixelRatio(1);renderer.setSize(w,h,false);renderer.render(scene,camera);blob=await new Promise((resolve,reject)=>renderer.domElement.toBlob(b=>b?resolve(b):reject(Error('PNG export failed')),'image/png'))}
-  catch(e){report('PHOTO ЇSSUЄ. Please retry, comЯade.');console.error(e)}
+  catch(e){report('ОШИБКА ФОТО · RЕТRУ, ТОВАРИЩ.','Photo issue. Please retry, comrade.');console.error(e)}
   finally{renderer.setPixelRatio(oldRatio);renderer.setSize(oldSize.x,oldSize.y,false);renderer.render(scene,camera);invalidate();capturing=false;$('cinemaPhoto').disabled=false}
   if(!blob)return;const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='BYUROKYADT-1-'+['office','cabinet','meters','rollers','stamp','winter','door','archive'][index]+'-'+new Date().toISOString().replace(/[:.]/g,'-')+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),15000);
-  report('PHOTO SAVЄD · '+w+' × '+h+' · NO PAPЄЯWOЯK VЇSЇBLЄ');
-  clearTimeout(toastTimer);$('cinemaToast').textContent='PHOTOGЯAPH ЇSSUЄD';$('cinemaToast').hidden=false;toastTimer=setTimeout(()=>$('cinemaToast').hidden=true,1800);
+  report('ФОТО SАVЕD · '+w+' × '+h+' · NО РАРЕRWОRК', 'Photo saved, '+w+' by '+h+' pixels. No paperwork visible.');
+  clearTimeout(toastTimer);$('cinemaToast').textContent='ФОТО ВЫДАНО';$('cinemaToast').hidden=false;toastTimer=setTimeout(()=>$('cinemaToast').hidden=true,1800);
  }
- function toggleTour(){if(touring){cancelTravel();report('TOUЯ PAUSЄD. Frame at your leisure.')}else{touring=true;$('cinemaTour').textContent='T · PAUSЄ TOUЯ';$('cinemaTour').setAttribute('aria-pressed','true');hold=0;if(!route)go(index,{tour:true})}}
+ function toggleTour(){if(touring){cancelTravel();report('ТОUR ПАUSЕD. FRAME AT LEISURЕ.','Tour paused. Frame at your leisure.')}else{touring=true;$('cinemaTour').textContent='T · ПАUSЕ ТОUR';$('cinemaTour').setAttribute('aria-pressed','true');hold=0;if(!route)go(index,{tour:true})}}
  function tick(dt){
   if(!active||capturing)return false;
   if(route){const r=route;r.time+=dt;const t=Math.min(1,r.time/r.duration),u=ease(t),d=r.total*u;let j=1;while(j<r.lengths.length-1&&r.lengths[j]<d)j++;const f=(d-r.lengths[j-1])/(r.lengths[j]-r.lengths[j-1]||1);target.lerpVectors(r.nodes[j-1],r.nodes[j],f);
-   if(canStand(target.x,target.z)){camera.position.copy(target)}else{cancelTravel();report('ЯOUTЄ HALTЄD. Furniture has right of way.');return false}
+   if(canStand(target.x,target.z)){camera.position.copy(target)}else{cancelTravel();report('МАРШРУТ HALTED. FURNITURЕ HАS PRIORITY.','Route halted. Furniture has right of way.');return false}
    camera.quaternion.slerpQuaternions(r.q0,r.q1,u);camera.fov=T.MathUtils.lerp(r.f0,r.f1,u);camera.updateProjectionMatrix();syncLook();invalidate();if(t===1){route=null;hold=0}return true;
   }
   if(touring){hold+=dt;if(hold>7)go(index+1,{tour:true})}return false;
