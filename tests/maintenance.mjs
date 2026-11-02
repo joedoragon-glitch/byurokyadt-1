@@ -23,8 +23,8 @@ assert.equal(new Set(core).size,core.length,'Offline precache must not include d
 for(const entry of core){
  assert(entry.startsWith('./'),'Offline precache paths must remain app-relative');
  const path=entry.slice(2).split('?')[0];
- assert(path&&!path.includes('..'),'Invalid offline asset path: '+entry);
- if(path)await access(path);
+ assert(!path.includes('..'),'Invalid offline asset path: '+entry);
+ await access(path||'.');
 }
 
 const paths=['styles.css','js/audio.js','js/cinematic.js','js/app.js'];
