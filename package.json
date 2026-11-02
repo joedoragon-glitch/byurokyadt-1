@@ -4,8 +4,9 @@
   "version": "10.1.0",
   "type": "module",
   "scripts": {
-    "test": "node tests/audio-preview.mjs && node tests/camera-math.mjs && node tests/paper-path.mjs && node tests/acceptance.mjs && node tests/cinematic.mjs && node tests/paper-motion.mjs",
-    "test:preview": "node tests/audio-preview.mjs"
+    "test": "node tests/audio-preview.mjs && node tests/camera-math.mjs && node tests/paper-path.mjs && node tests/acceptance.mjs && node tests/cinematic.mjs && node tests/paper-motion.mjs && node tests/audio-preview-browser.mjs",
+    "test:preview": "node tests/audio-preview.mjs",
+    "test:preview:browser": "node tests/audio-preview-browser.mjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"
