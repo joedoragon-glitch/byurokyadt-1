@@ -14,32 +14,36 @@ The office contains a 3D cabinet with switches, a CRT, analog meters, a printer 
 
 The intended tone is restrained, tactile and gently absurd: institutional bureaucracy treated with the seriousness of a monumental industrial process. The room contains original mechanical sound, a sparse instrumental score, winter ambience and spatially placed corridor footsteps.
 
+The **10.1.2 issue #9 branch candidate** explores a quiet contextual operator interface and accessible secondary controls; it is not a claim of a published build. The maintained [Development state](docs/DEVELOPMENT_STATE.md) records its verification status.
+
 **Version 10.1** corrected the continuous paper path and stamp-contact timing, and made the corridor footsteps respond to an operator approaching the door. The **10.1.1 maintenance patch** protects that approach cue against early background footsteps and adds a separate sound listening room. See [Development state](docs/DEVELOPMENT_STATE.md) for the distinction between source availability and a verified public deployment. See the [historical production audit](AUDIT.md) for the recorded work and its verification; the [maintained development state](docs/DEVELOPMENT_STATE.md) distinguishes historical evidence from current verification.
 
 ## Controls
 
+**First procedure:** Select a local document → Confirm → watch the machine inspect and stamp its certificate → Collect certificate → Save PNG. The operator strip shows the current step, file name and progress in ordinary English; the file is not uploaded. The **Menu** button at the top right opens Room/Machine/Side views, Sound, Music, volume, fullscreen, installation (when supported) and How to operate. Escape closes the menu. The menu is optional for the main procedure and keeps the office unobstructed when closed.
+
 | Action | Keyboard / mouse / touch |
 | --- | --- |
-| Room / machine / side inspection | **1 / 2 / 3** |
+| Room / machine / side inspection | **1 / 2 / 3** or **Menu → Views** |
 | Walk, look around | **WASD**, drag to look; touch drag is supported |
-| Select a document | **F** or **Select Doc** |
-| Confirm the procedure | **Enter** or **Confirm** |
+| Select a document | **F** or **Select document** |
+| Confirm the procedure | **Enter** or **Confirm** (the prompt explains when selection is missing) |
 | Reset current document | **R** or **Reset** |
-| Collect a completed certificate | **Certificate** button, then save PNG |
-| Enter cinematic inspection | **C** |
+| Collect a completed certificate | **Collect certificate**, then save PNG |
+| Enter cinematic inspection | **C** or **Menu → Photography mode** |
 | Exit cinematic inspection | **Escape** |
 | Cinematic camera move, height, lens | **WASD**, **Q / E**, scroll |
 | Select cinematic views / tour | **[ / ]**, **T** |
 | Hide/show cinematic controls | **H** |
-| Save scene-only photograph | **P** |
+| Save scene-only photograph | **P** in photography mode |
 
-The input tray, confirmation button, reset knob and completed output sheet are also clickable. Cinematic inspection offers eight composed views; photography supports 16:9, 2.39:1 and screen-shaped framing. Reduced-motion preferences are respected. Keyboard, touch and small-screen behavior are not assumed to be identical; see [Quality standards](docs/QUALITY_STANDARDS.md).
+The input tray, confirmation button, reset knob and completed output sheet are also clickable. All primary actions are keyboard-accessible and sized for touch. Menu → How to operate provides in-game instructions without requiring this README. Cinematic inspection offers eight composed views; photography supports 16:9, 2.39:1 and screen-shaped framing. Reduced-motion preferences are respected. Keyboard, touch and small-screen behavior are not assumed to be identical; see [Quality standards](docs/QUALITY_STANDARDS.md).
 
 ## Sound and photography
 
 **[Open the sound listening room](https://joedoragon-glitch.github.io/byurokyadt-1/assets/audio-preview.html)** to play each of the seven existing recordings individually, without starting a machine cycle or changing game state. The room has native playback controls and a one-track-at-a-time behavior. It does not preview procedural wind, radiator ticks or corridor footsteps; those are generated inside the game.
 
-Inside the game, **Sound** (mechanics and room) and **Music** are independent and begin off. Your action unlocks browser audio; the master volume is adjustable and music quietens during a procedure. Audio suspends when the tab is hidden. The original 64-second score and mechanical sounds can be regenerated with `python3 scripts/build_audio.py` when NumPy, SciPy and ffmpeg are available.
+Inside the game, **Menu → Sound** (mechanics and room) and **Menu → Music** are independent and begin off. Your action unlocks browser audio; the master volume is adjustable and music quietens during a procedure. Audio suspends when the tab is hidden. The original 64-second score and mechanical sounds can be regenerated with `python3 scripts/build_audio.py` when NumPy, SciPy and ffmpeg are available.
 
 **[Sound identity and production guidance](docs/AUDIO_DIRECTION.md)** explains the creative and technical standards. **[Creative direction](docs/CREATIVE_DIRECTION.md)** records the visual and narrative identity; accepted reference decisions and original texture notes remain in [AESTHETICS.md](AESTHETICS.md).
 

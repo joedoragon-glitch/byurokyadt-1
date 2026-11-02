@@ -4,8 +4,8 @@
 
 ## Runtime and entry points
 
-- `index.html` — game shell, controls, boot/loading UI, certificate dialog and the script loading order.
-- `styles.css` — desktop/mobile HUD, overlay, player controls and visual presentation.
+- `index.html` — game shell, contextual operator controls, secondary Menu and native help/certificate dialogs, inline menu-focus controller, boot/loading UI and script loading order.
+- `styles.css` — quiet desktop/mobile HUD, scrollable secondary settings, stage-specific operator layout, dialogs, focus/contrast/touch targets and visual presentation.
 - `js/app.js` — authoritative Three.js scene, cabinet and office geometry, paper path, animation, interaction, collision, document-processing state, certificate capture and persistence hooks.
 - `js/cinematic.js` — eight inspection shots, routes, camera transitions, movement and photo controls. Uses real room obstacle geometry.
 - `js/audio.js` — Web Audio context, audio unlock, original recorded samples, generated winter effects, source positioning, audio buses and lifecycle. It exposes `window.MinistryAudio`.
@@ -32,9 +32,10 @@ Follow `js/app.js` when changing processing, counter/tray, collisions or geometr
 - `tests/camera-math.mjs` — real camera controller and obstacle map without a GPU.
 - `tests/paper-path.mjs` — paper path geometry and stamp/UV registration without a browser.
 - `tests/acceptance.mjs` — Playwright/Chromium game workflow, WebGL, offline, document, sound, export, persistence, collisions and viewports.
+- `tests/ui-accessibility.mjs` — contextual steps and real busy/receipt states, help/certificate modal focus, keyboard/touch, independent audio and photography, reduced motion and desktop/portrait/landscape bounding-box evidence.
 - `tests/cinematic.mjs` — browser cinematic behavior, photos and related checks.
 - `tests/paper-motion.mjs` — rendered intermediate paper motion, stamping and corridor cues.
 
-`.github/workflows/pages.yml` tests local production files, assembles `_site/`, deploys GitHub Pages on pushes to **`main`**, and checks the deployed URL. Its assembly copies `assets/` wholesale, so the independent listening page can be served without changing the deployment workflow. `.github/workflows/review.yml` runs on pushes to three **historical, explicitly named** review branches; a new arbitrary feature branch does not currently acquire CI automatically. Report the absence of an automated run rather than claiming it passed.
+`.github/workflows/pages.yml` tests local production files, assembles `_site/`, deploys GitHub Pages on pushes to **`main`**, and checks the deployed URL. Its assembly copies `assets/` wholesale, so the independent listening page can be served without changing the deployment workflow. `.github/workflows/review.yml` also runs on pull requests targeting `main` (non-deploying Chromium suites and screenshot artifacts), while preserving the three historical named review-branch push triggers. A feature branch alone, without a PR, does not automatically run CI. Report the absence of an automated run rather than claiming it passed.
 
 See [Engineering workflow](ENGINEERING_WORKFLOW.md) for focused checks and release controls, and [Development state](DEVELOPMENT_STATE.md) for time-qualified evidence.

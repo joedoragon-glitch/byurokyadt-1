@@ -2,6 +2,13 @@
 
 **Maintained status snapshot, prepared 1 November 2026.** Status is sourced from the repository at the stated checkpoints. Future changes must update this document when they affect current behavior or release claims.
 
+## Issue #9 — contextual accessible UI candidate (2 November 2026)
+
+- **Working branch:** [`issue-9-contextual-accessible-ui`](https://github.com/joedoragon-glitch/byurokyadt-1/tree/issue-9-contextual-accessible-ui) based on `main` `9b95387f4e2e`. Proposed app/offline cache version **10.1.2** is a branch candidate, not yet merged or published.
+- **Scope:** stage-aware Select/Confirm/Collect controls, unobtrusive title and help/view/audio menu, native help dialog, keyboard and cinematic focus return, touch/readability rules, independent audio and local-file privacy unchanged. Mechanical geometry, animation, samples and camera routes are not redesigned.
+- **Evidence:** [main baseline Chromium acceptance artifact](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41392927312/artifacts/13118312487) provides **before** screenshots. New Playwright `tests/ui-accessibility.mjs` captures actual first visit, selected, processing and ready states, plus desktop/portrait/short-landscape menu and collapsed views. Its CI outcome and **after** artifact must be verified against the eventual PR head; code changes or source assertions alone do not certify accessible interaction, attractive layout or physical devices.
+- **Review gate:** owner visual/tone review, non-deploying CI, and any remaining screen-reader/hardware limitations explicitly documented. The current Pages URL continues to represent the merged/published baseline, not this candidate.
+
 ## Verified baseline before the documentation migration
 
 - **Default branch:** `main` at `fe68d5e1fc579d899392baef10fa091674a28473`, committed **25 September 2026**, message: "Allow slow software renderers to complete the full paper cycle in acceptance."
