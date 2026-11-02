@@ -108,8 +108,10 @@ plane(3.20,.92,ministry,0,1.56,-6.52);
 
 /* ceiling coffers: heavy concrete mass kept ABOVE sightline */
 const ceilingBeam=M(0x555650,.03,.94);
-for(const z of [-4.8,-1.7,1.4,4.5])box(11.7,.28,.34,ceilingBeam,0,5.72,z);
-for(const x of [-4.3,0,4.3])box(.30,.24,13.1,ceilingBeam,x,5.75,0);
+// The overhead key represents the ceiling luminaires. The fittings cannot
+// cast broad exterior-sun shadows from above their own light source.
+for(const z of [-4.8,-1.7,1.4,4.5])box(11.7,.28,.34,ceilingBeam,0,5.72,z).castShadow=false;
+for(const x of [-4.3,0,4.3])box(.30,.24,13.1,ceilingBeam,x,5.75,0).castShadow=false;
 
 /* cold fluorescent luminaires nested between coffers */
 scene.add(new T.HemisphereLight(0xc4cfcc,0x3e3428,.74));
@@ -146,9 +148,9 @@ fitOfficeShadow(key.shadow.camera,new T.Box3(
 ),.45);
 scene.add(key);
 for(const x of [-3.1,0,3.1]){
- box(2.18,.09,.40,steel2,x,5.54,-.15);
+ box(2.18,.09,.40,steel2,x,5.54,-.15).castShadow=false;
  const tubeMat=M(0xf3f5ec,.02,.32,0xeef3ef,1.8);
- box(1.90,.035,.18,tubeMat,x,5.47,-.15);
+ box(1.90,.035,.18,tubeMat,x,5.47,-.15).castShadow=false;
  const l=new T.PointLight(0xffdfb2,10,6.8,2.1);l.position.set(x,5.25,-.15);scene.add(l);
 }
 
