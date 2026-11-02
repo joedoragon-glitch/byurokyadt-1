@@ -176,7 +176,8 @@ for(const x of [3.15,4.65])for(const z of [-5.43,-4.97])box(.07,.84,.07,dark,x,.
 const phoneRed=M(0x96251e,.14,.46),phoneIvory=M(0xd9d1b9,.07,.66);
 const phoneTrim=M(0x51493c,.28,.62),phoneInk=M(0x27231e,.05,.88);
 const deskPhone=new T.Group();deskPhone.name='desk-phone-1982';
-deskPhone.position.set(4.17,.905,-5.19);scene.add(deskPhone);
+// Keep the rubber feet in true contact with the .90m tabletop.
+deskPhone.position.set(4.17,.896,-5.19);scene.add(deskPhone);
 box(.58,.02,.46,phoneTrim,0,.014,0,deskPhone).name='phone-rubber-base';
 // The actual 1970s style is a low wedge: taller at the rear under the cradle,
 // lower at the operator side around the rotary dial.
@@ -485,7 +486,7 @@ const binderDefs=[
 for(const def of binderDefs){
  const folder=new T.Group();
  folder.name='archive-binder-'+def.n;
- folder.position.set(def.x,.908,-5.330);folder.rotation.z=def.lean;
+ folder.position.set(def.x,.904,-5.330);folder.rotation.z=def.lean;
  deskFiles.add(folder);
  const cloth=M(def.color,.01,.91),inner=M(0xc5b99c,0,.97);
  // Two rigid cover boards enclose a muted paper block. Only a narrow real
@@ -504,7 +505,7 @@ for(const def of binderDefs){
 // One flat tied folio at the front, with a thin, readable paper edge. It is
 // placed forward of the upright binders without intersecting their covers.
 const looseDossier=new T.Group();looseDossier.name='desk-loose-dossier';
-looseDossier.position.set(3.47,.914,-5.013);looseDossier.rotation.y=.025;scene.add(looseDossier);
+looseDossier.position.set(3.47,.907,-5.013);looseDossier.rotation.y=.025;scene.add(looseDossier);
 const dossierCover=M(0x958362,.01,.94),dossierSheet=M(0xd6cab0,.01,.97);
 box(.43,.013,.238,dossierCover,0,0,0,looseDossier);
 for(let i=0;i<3;i++)box(.368,.0018,.190,dossierSheet,
