@@ -128,8 +128,14 @@ try{
   await button('menuToggle').tap();
   assert.equal(await button('utilityPanel').isVisible(),true);
   const panel=await button('utilityPanel').boundingBox();
+  const opRect=await button('operator').boundingBox();
   assert(panel&&panel.y>=0&&panel.y+panel.height<=height+1,name+': menu clipped');
+  assert(opRect&&panel.y+panel.height<=opRect.y-5,name+': secondary menu obscures essential document controls');
   await page.screenshot({path:'test-results/ui-06-'+name+'-menu.png'});
+  // Every secondary function remains reachable through the menu's own scroll area.
+  await button('helpToggle').scrollIntoViewIfNeeded();
+  const helpRect=await button('helpToggle').boundingBox();
+  assert(helpRect&&helpRect.y>=panel.y-1&&helpRect.y+helpRect.height<=panel.y+panel.height+1,name+': help action cannot be scrolled into menu');
   await page.keyboard.press('Escape');
  }
 
@@ -146,7 +152,7 @@ try{
  assert.match(await button('stepLabel').textContent(),/STEP 1/);
  assert.equal(await page.evaluate(()=>window.BYUR_INSPECT.snapshot().issued),1);
  assert.deepEqual(errors,[]);
- await writeFile('test-results/ui-accessibility-result.json',JSON.stringify({passed:true,base,matrix:reports,checks:['menu keyboard and Escape','keyboard document/confirm/collect/reset','help dialog and focus','document flow','busy state','certificate focus','audio and music independence','volume','cinema hidden controls','reduced motion','touch targets','responsive layouts','counter after reset'],errors},null,2));
+ await writeFile('test-results/ui-accessibility-result.json',JSON.stringify({passed:true,base,matrix:reports,checks:['menu keyboard and Escape','keyboard document/confirm/collect/reset','help dialog and focus','document flow','busy state','certificate focus','audio and music independence','volume','cinema hidden controls','reduced motion','touch targets','responsive layouts','nonoverlapping scrollable menu','counter after reset'],errors},null,2));
  console.log('UI accessibility: Chromium states and viewport matrix passed');
 }catch(error){
  await page.screenshot({path:'test-results/ui-failure.png'}).catch(()=>{});
