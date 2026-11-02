@@ -2,7 +2,14 @@
 
 **Maintained status snapshot, prepared 1 November 2026.** Status is sourced from the repository at the stated checkpoints. Future changes must update this document when they affect current behavior or release claims.
 
-## Current source and issue #6 candidate (2 November 2026 UTC)
+
+## Cross-issue integration candidate (2 November 2026)
+
+- [PR #13](https://github.com/joedoragon-glitch/byurokyadt-1/pull/13) (lighting) was merged into `main` and [PR #14](https://github.com/joedoragon-glitch/byurokyadt-1/pull/14) (room) was combined on its branch with the lighting code. The independent PR snapshots below are historical and may predate the combined build.
+- [PR #15](https://github.com/joedoragon-glitch/byurokyadt-1/pull/15) adds contextual accessible operator controls, independent Sound/Music settings, a secondary Menu, first-time Help and reduced HUD noise. The unified 10.2.1 release assets are coordinated with the room and lighting versions; validate the exact combined branch and the future Pages deployment separately.
+- Separate work on [PR #12](https://github.com/joedoragon-glitch/byurokyadt-1/pull/12) (profiling) and [PR #11](https://github.com/joedoragon-glitch/byurokyadt-1/pull/11) (maintenance) must be integrated with docs/test rosters rather than replacing earlier work.
+
+## Historical checkpoint: source and issue #6 candidate (2 November 2026 UTC)
 
 - `main` is at `9b95387f4e2ee1966cfce7f1bc3ec9a66e4b0e9d`, following the authorized PR #5 merge. Exact-main [CI/Pages run #41392927312](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41392927312) passed the existing acceptance and deployment checks. The sections below are dated historical snapshots and should not be read as the current PR #5 state.
 - [Issue #6](https://github.com/joedoragon-glitch/byurokyadt-1/issues/6) / [draft PR #13](https://github.com/joedoragon-glitch/byurokyadt-1/pull/13): an **unmerged and unpublished** 10.1.2 lighting candidate, confined to office shadow coverage, caster selection, source-aligned regression and offline cache revision. Owner visual approval, actual physical handset/GPU verification, any PR merge, and deployment remain outstanding.

@@ -4,8 +4,8 @@
 
 ## Runtime and entry points
 
-- `index.html` — game shell, controls, boot/loading UI, certificate dialog and the script loading order.
-- `styles.css` — desktop/mobile HUD, overlay, player controls and visual presentation.
+- `index.html` — game shell, contextual operator controls, secondary Menu and native help/certificate dialogs, boot/loading UI and script loading order.
+- `styles.css` — quiet desktop/mobile HUD, secondary settings, state-specific operator strip, focus/contrast/touch targets and visual presentation.
 - `js/app.js` — authoritative Three.js scene, cabinet and office geometry, paper path, animation, interaction, collision, document-processing state, certificate capture and persistence hooks.
 - `js/cinematic.js` — eight inspection shots, routes, camera transitions, movement and photo controls. Uses real room obstacle geometry.
 - `js/audio.js` — Web Audio context, audio unlock, original recorded samples, generated winter effects, source positioning, audio buses and lifecycle. It exposes `window.MinistryAudio`.
@@ -46,3 +46,8 @@ Follow `js/app.js` when changing processing, counter/tray, collisions or geometr
 `.github/workflows/pages.yml` tests local production files, assembles `_site/`, deploys GitHub Pages on pushes to **`main`**, and checks the deployed URL. Its assembly copies `assets/` wholesale, so the independent listening page can be served without changing the deployment workflow. `.github/workflows/review.yml` runs on pushes to three **historical, explicitly named** review branches; a new arbitrary feature branch does not currently acquire CI automatically. Report the absence of an automated run rather than claiming it passed.
 
 See [Engineering workflow](ENGINEERING_WORKFLOW.md) for focused checks and release controls, and [Development state](DEVELOPMENT_STATE.md) for time-qualified evidence.
+
+## Contextual UI verification (issue #9)
+
+- `tests/ui-accessibility.mjs` exercises contextual state, keyboard/touch, Help/Certificate/Cinema focus, reduced motion and responsive menu positions.
+- `.github/workflows/review.yml` runs non-deploying Chromium tests for PRs targeting `main`; historical review branch triggers and room visual probes remain. Verify the actual current workflow and job conclusion, not its mere presence.
