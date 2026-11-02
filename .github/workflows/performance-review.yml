@@ -6,6 +6,7 @@ on:
       # Do not impose the expensive browser matrix on unrelated runtime/documentation PRs.
       # Engineers can explicitly use workflow_dispatch when a normal JS change merits profiling.
       - "tests/performance.mjs"
+      - "tests/performance-compare.mjs"
       - ".github/workflows/performance-review.yml"
   workflow_dispatch:
 permissions:
@@ -47,12 +48,15 @@ jobs:
             done
             curl -fsS "http://127.0.0.1:$port/" >/dev/null
           done
+      - name: Validate paired-trace comparison contract
+        working-directory: candidate
+        run: node tests/performance-compare.mjs
       - name: Baseline profiling (unchanged main files)
         working-directory: candidate
-        run: node tests/performance.mjs --base=http://127.0.0.1:8001/ --label=base --out=test-results/performance/base.json --idle-ms=30000
+        run: node tests/performance.mjs --base=http://127.0.0.1:8001/ --label=base --out=test-results/performance/base.json --idle-ms=30000 --source-sha=$(git -C ../baseline rev-parse HEAD)
       - name: Candidate profiling (matched settings)
         working-directory: candidate
-        run: node tests/performance.mjs --base=http://127.0.0.1:8000/ --label=candidate --out=test-results/performance/candidate.json --idle-ms=30000
+        run: node tests/performance.mjs --base=http://127.0.0.1:8000/ --label=candidate --out=test-results/performance/candidate.json --idle-ms=30000 --source-sha=$(git -C . rev-parse HEAD)
       - name: Paired report (no automatic speedup verdict)
         working-directory: candidate
         run: node tests/performance.mjs --compare=test-results/performance/base.json --candidate=test-results/performance/candidate.json --out=test-results/performance/compare.json
