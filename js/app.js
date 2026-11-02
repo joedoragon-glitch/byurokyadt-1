@@ -2,6 +2,9 @@
 if(!window.THREE){window.BYUR_LOAD?.fatal('ЄЯЯOЯ: 3D engine unavailable.');return}
 const T=THREE;window.BYUR_LOAD?.stage('engine_ready');
 const mobile=matchMedia('(max-width:800px)').matches||/Android|iPhone|iPad/i.test(navigator.userAgent);
+// Use input capabilities, not just viewport dimensions, to distinguish
+// touch-first phones/tablets from keyboard-and-mouse desktops.
+const touchMovement=matchMedia('(pointer:coarse)').matches&&(matchMedia('(hover:none)').matches||/Android|iPhone|iPad/i.test(navigator.userAgent));
 let needsFrame=true,renderedFrames=0;
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
 let cinema=null;
@@ -466,7 +469,10 @@ ties.instanceMatrix.needsUpdate=true;ties.receiveShadow=true;scene.add(ties);
 for(const x of [-5.81,5.81])for(const z of [-6.62,6.82])
  finishBox(.070,5.53,.065,finishIron,x,3.19,z);
 // Front-wall service infrastructure is period-specific and doesn't crowd the machine.
-softBox(2.26,1.32,.095,finishIron,-1.87,3.32,6.780,scene,.028);
+// Wall-mounted backplates were incorrectly issuing large, detached floor
+// silhouettes from the simulated overhead directional key.
+const serviceBoard=softBox(2.26,1.32,.095,finishIron,-1.87,3.32,6.780,scene,.028);
+serviceBoard.name='front-wall-service-board';serviceBoard.castShadow=false;
 const serviceNotice=decal(2.04,1.10,['ПОРЯДОК УЧЁТА','ДЕЛО № 27-Б','ПЕРЕДАТЬ ПО ОПИСИ'],-1.87,3.32,6.716,scene,'#c0b69a','#37392e');
 serviceNotice.rotation.y=Math.PI; // Front wall faces -Z, unlike the existing rear signs.
 serviceNotice.material.emissive.setHex(0xffffff);
@@ -474,8 +480,10 @@ serviceNotice.material.emissiveMap=serviceNotice.material.map;
 serviceNotice.material.emissiveIntensity=.18;serviceNotice.material.needsUpdate=true;
 for(const x of [-2.92,-.82])for(const y of [2.72,3.93])
  cyl(.027,.022,steel2,x,y,6.705,Math.PI/2,0,0,scene,12);
-softBox(1.18,1.57,.17,steel2,3.20,2.85,6.762,scene,.025);
-softBox(1.02,1.40,.025,finishPaint,3.20,2.85,6.655,scene,.014);
+const electricalBox=softBox(1.18,1.57,.17,steel2,3.20,2.85,6.762,scene,.025);
+electricalBox.name='front-wall-electrical-box';electricalBox.castShadow=false;
+const electricalFace=softBox(1.02,1.40,.025,finishPaint,3.20,2.85,6.655,scene,.014);
+electricalFace.name='front-wall-electrical-face';electricalFace.castShadow=false;
 const serviceLabel=decal(.82,.17,['ЭЛЕКТРОЩИТ № 3'],3.20,3.37,6.638,scene,'#c0b69a');
 serviceLabel.rotation.y=Math.PI;
 serviceLabel.material.emissive.setHex(0xffffff);
@@ -574,7 +582,11 @@ function controls(){
  ui.runDoc.textContent=busy?'Processing…':certificateReady?'↵ · Confirm again':'↵ · Confirm';
 }
 function status(text){hint.textContent=text}
-const audio=window.MinistryAudio;let soundOn=false,musicOn=false;
+const audio=window.MinistryAudio;let soundOn=true,musicOn=true;
+// AudioContext must be started from the trusted gesture itself on iOS Safari.
+function unlockAudio(){audio.activate().catch(()=>status('Audio delayed. Tap again or retry in Menu.'))}
+for(const event of ['pointerdown','touchstart','touchend','keydown'])
+ document.addEventListener(event,unlockAudio,{capture:true,passive:event.startsWith('touch')});
 const soundPosition=new T.Vector3();
 function sound(name,source=null){const object=source||{relay:resetKnob,feed:rollers[1],scan:lens,stamp,bell:screen}[name];if(object){object.updateWorldMatrix(true,false);audio.play(name,object.getWorldPosition(soundPosition).toArray())}else audio.play(name)}
 ui.sound.onclick=async()=>{soundOn=!soundOn;ui.sound.textContent='Sound: '+(soundOn?'On':'Off');ui.sound.setAttribute('aria-pressed',String(soundOn));try{await audio.setEffects(soundOn);sound('relay')}catch{soundOn=false;ui.sound.textContent='Sound: Retry';ui.sound.setAttribute('aria-pressed','false');status('Audio delivery delayed. Select Sound to retry, comrade.')}};
@@ -619,12 +631,12 @@ async function run(){
  await tween(110,t=>cap.position.z=st.cap-.10*t);await tween(140,t=>cap.position.z=st.cap-.10*(1-t));
  status('ANALYSIS · Machine considers the existence of this document.');crt(['АНАЛИЗ...','','ОБРАБОТКА: 20%']);sound('feed');
  await Promise.all([tween(1700,t=>{inPaper.position.z=st.inZ+(-.58-st.inZ)*t;rollers[0].rotation.x=t*18;rollers[1].rotation.x=-t*18;bendPaper(inPaper,true)}),gauges(.28,.34)]);
- crt(['АНАЛИЗ...','','СКАНЕР WORKЇИG.']);sound('scan');await tween(1350,t=>{scan.position.x=-.74+1.48*t;lens.material.emissiveIntensity=2.2+.5*Math.sin(t*18)});await tween(550,t=>scan.position.x=.74-1.48*t);
+ crt(['АНАЛИЗ...','','СКАНЕР WORKIИG.']);sound('scan');await tween(1350,t=>{scan.position.x=-.74+1.48*t;lens.material.emissiveIntensity=2.2+.5*Math.sin(t*18)});await tween(550,t=>scan.position.x=.74-1.48*t);
  phase(1);status('VERIFICATION · Second department confirms the first department.');crt(['ПРОВЕРКА...','','ОБРАБОТКА: 68%']);await gauges(.66,.72);await wait(500);
  phase(2);status('PRINTING · Certificate emerges for official stamping.');crt(['ПЕЧАТЬ...','','ПОДАЧА БУМАГИ.']);serial=String(Math.floor(100000+Math.random()*900000));drawOut(current.name,serial);outputStage='printing';
  const stampHead=outputPath.stampS+(1-704/1050)*outputPath.length,contactY=outputPath.height+outputPath.clearance+.1625,stroke=st.stampY-contactY;
  sound('feed',outRollers[0]);await tween(2100,t=>{outputProgress=t;feedOutput(stampHead*t);outRollers[0].rotation.x=-stampHead*t/.071;outRollers[1].rotation.x=-stampHead*t/.067},t=>t);
- outputStage='pressing';outputProgress=0;status('STAMPING · State applies physical certainty.');crt(['ПЕЧАТЬ...','','OFFЇCЇДL ПЕЧАТЬ.']);
+ outputStage='pressing';outputProgress=0;status('STAMPING · State applies physical certainty.');crt(['ПЕЧАТЬ...','','OFFICIДL ПЕЧАТЬ.']);
  await tween(430,t=>{outputProgress=t;stamp.position.y=st.stampY-stroke*t;stampLink.position.y=st.linkY-stroke*t},t=>t*t*t);
  outputStage='impact';outputStamped=true;drawOut(current.name,serial,true);sound('stamp');recoil=.48;await wait(240);
  await tween(420,t=>{stamp.position.y=contactY+stroke*t;stampLink.position.y=st.linkY-stroke*(1-t)});
@@ -651,18 +663,65 @@ ui.roomView.onclick=()=>setView(false);ui.deskView.onclick=()=>setView(true);doc
 controls();
 
 /* interaction */
-const ray=new T.Raycaster(),mouse=new T.Vector2();renderer.domElement.onclick=e=>{if(cinema?.active)return;if(dragMoved){dragMoved=false;return}const r=renderer.domElement.getBoundingClientRect();mouse.x=(e.clientX-r.left)/r.width*2-1;mouse.y=-(e.clientY-r.top)/r.height*2+1;ray.setFromCamera(mouse,camera);const hits=ray.intersectObjects(interactives,true).filter(h=>{for(let o=h.object;o;o=o.parent)if(!o.visible)return false;return true});if(!hits.length)return;let o=hits[0].object;while(o&&!o.userData.action)o=o.parent;if(!o)return;if(o.userData.action==='load'&&!busy)fileInput.click();if(o.userData.action==='confirm')run();if(o.userData.action==='reset')reset();if(o.userData.action==='receipt')showCertificate()};
+const ray=new T.Raycaster(),mouse=new T.Vector2();renderer.domElement.onclick=e=>{if(cinema?.active)return;if(dragMoved||performance.now()<suppressTapUntil){dragMoved=false;return}const r=renderer.domElement.getBoundingClientRect();mouse.x=(e.clientX-r.left)/r.width*2-1;mouse.y=-(e.clientY-r.top)/r.height*2+1;ray.setFromCamera(mouse,camera);const hits=ray.intersectObjects(interactives,true).filter(h=>{for(let o=h.object;o;o=o.parent)if(!o.visible)return false;return true});if(!hits.length)return;let o=hits[0].object;while(o&&!o.userData.action)o=o.parent;if(!o)return;if(o.userData.action==='load'&&!busy)fileInput.click();if(o.userData.action==='confirm')run();if(o.userData.action==='reset')reset();if(o.userData.action==='receipt')showCertificate()};
 
 /* Look/walk and cinematic framing share the same furniture boundaries. */
 const keys={},velocity=new T.Vector3();
 function clearKeys(){for(const k in keys)keys[k]=false;velocity.set(0,0,0)}
 function syncLook(){yaw=camera.rotation.y;pitch=camera.rotation.x}
 cinema=window.createMinistryCinema({T,camera,renderer,scene,canStand,invalidate:()=>needsFrame=true,syncLook,clearKeys,isModal:()=>ui.certificate.open||document.getElementById('helpDialog').open||viewMoving});
-let dragging=false,lastX=0,lastY=0,dragMoved=false;
-renderer.domElement.tabIndex=0;renderer.domElement.setAttribute('aria-label','3D office. Drag to look; use W A S D to walk. Document controls are available in the operator panel.');
-renderer.domElement.onpointerdown=e=>{if(viewMoving||cinema.capturing||e.button>0)return;renderer.domElement.focus({preventScroll:true});dragging=true;lastX=e.clientX;lastY=e.clientY;dragMoved=false;if(cinema.active)cinema.cancelTravel();renderer.domElement.setPointerCapture(e.pointerId)};
-renderer.domElement.onpointerup=renderer.domElement.onpointercancel=()=>dragging=false;
-renderer.domElement.onpointermove=e=>{if(!dragging||viewMoving)return;const dx=e.clientX-lastX,dy=e.clientY-lastY;if(Math.abs(dx)+Math.abs(dy)>2)dragMoved=true;yaw-=dx*(cinema.active?.0024:.004);pitch=T.MathUtils.clamp(pitch-dy*(cinema.active?.0024:.003),-1.15,1.15);camera.rotation.set(pitch,yaw,0);needsFrame=true;lastX=e.clientX;lastY=e.clientY};
+const stick=document.getElementById('moveStick'),stickThumb=document.getElementById('moveThumb');
+let lookId=null,lastX=0,lastY=0,dragMoved=false,suppressTapUntil=0;
+let stickId=null,stickOriginX=0,stickOriginY=0,stickX=0,stickY=0;
+function stopStick(){
+ stickId=null;stickX=stickY=0;stick.hidden=true;stickThumb.style.transform='translate(0px,0px)';
+}
+function updateStick(e){
+ const dx=e.clientX-stickOriginX,dy=e.clientY-stickOriginY;
+ const length=Math.hypot(dx,dy),scale=length?Math.min(length,46)/length:0;
+ stickX=dx*scale/46;stickY=dy*scale/46;
+ stickThumb.style.transform='translate('+(stickX*46)+'px,'+(stickY*46)+'px)';
+}
+function startStick(e){
+ stickId=e.pointerId;stickOriginX=e.clientX;stickOriginY=e.clientY;
+ const maxY=Math.max(58,ui.operator.getBoundingClientRect().top-58);
+ stick.style.left=Math.max(58,Math.min(innerWidth-58,e.clientX))+'px';
+ stick.style.top=Math.max(58,Math.min(maxY,e.clientY))+'px';
+ stick.hidden=false;updateStick(e);suppressTapUntil=performance.now()+450;
+ renderer.domElement.setPointerCapture(e.pointerId);
+}
+renderer.domElement.tabIndex=0;
+renderer.domElement.setAttribute('aria-label',touchMovement?
+ '3D office. Touch and move on the left to walk; drag on the right to look. Document controls are in the operator panel.':
+ '3D office. Drag to look; use W A S D to walk. Document controls are available in the operator panel.');
+renderer.domElement.onpointerdown=e=>{
+ if(viewMoving||cinema.capturing||e.button>0)return;
+ if(touchMovement&&e.pointerType==='touch'&&stickId===null&&e.clientX<innerWidth*.52&&
+    e.clientY<ui.operator.getBoundingClientRect().top&&!ui.certificate.open&&
+    !document.getElementById('helpDialog').open){
+  if(cinema.active)cinema.cancelTravel();startStick(e);return;
+ }
+ if(lookId!==null)return;
+ renderer.domElement.focus({preventScroll:true});lookId=e.pointerId;
+ lastX=e.clientX;lastY=e.clientY;dragMoved=false;
+ if(cinema.active)cinema.cancelTravel();
+ renderer.domElement.setPointerCapture(e.pointerId);
+};
+function releasePointer(e){
+ if(e.pointerId===stickId){stopStick();suppressTapUntil=performance.now()+350}
+ if(e.pointerId===lookId)lookId=null;
+}
+renderer.domElement.onpointerup=renderer.domElement.onpointercancel=releasePointer;
+renderer.domElement.onlostpointercapture=releasePointer;
+renderer.domElement.onpointermove=e=>{
+ if(e.pointerId===stickId){updateStick(e);return}
+ if(e.pointerId!==lookId||viewMoving)return;
+ const dx=e.clientX-lastX,dy=e.clientY-lastY;
+ if(Math.abs(dx)+Math.abs(dy)>2)dragMoved=true;
+ yaw-=dx*(cinema.active?.0024:.004);
+ pitch=T.MathUtils.clamp(pitch-dy*(cinema.active?.0024:.003),-1.15,1.15);
+ camera.rotation.set(pitch,yaw,0);needsFrame=true;lastX=e.clientX;lastY=e.clientY;
+};
 addEventListener('keydown',e=>{
  if(ui.certificate.open||document.getElementById('helpDialog').open||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
  if(e.target.closest('button,a,[role="button"]'))return;
@@ -670,15 +729,16 @@ addEventListener('keydown',e=>{
  keys[k]=true;if(e.repeat)return;
  if(k==='f'){e.preventDefault();loadDocument()}if(k==='r')reset();
  if(k==='enter'){e.preventDefault();run()}if(k==='1')setView(false);if(k==='2')setView(true);if(k==='3')setView('side');
-});addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);addEventListener('blur',()=>{clearKeys();dragging=false});
-document.addEventListener('visibilitychange',()=>{clearKeys();dragging=false});
+});addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);addEventListener('blur',()=>{clearKeys();lookId=null;stopStick()});
+document.addEventListener('visibilitychange',()=>{clearKeys();lookId=null;stopStick()});
 function move(dt){
  if(viewMoving||ui.certificate.open||cinema.capturing||cinema.travelling)return;
- let forward=Number(!!keys.w)-Number(!!keys.s),side=Number(!!keys.d)-Number(!!keys.a);const norm=Math.hypot(forward,side);
- if(cinema.active){const targetX=norm?(-Math.sin(yaw)*forward+Math.cos(yaw)*side)*.70/norm:0,targetZ=norm?(-Math.cos(yaw)*forward-Math.sin(yaw)*side)*.70/norm:0;
+ let forward=Number(!!keys.w)-Number(!!keys.s)-stickY,side=Number(!!keys.d)-Number(!!keys.a)+stickX;
+ const norm=Math.hypot(forward,side),power=Math.min(1,norm);
+ if(cinema.active){const targetX=norm?(-Math.sin(yaw)*forward+Math.cos(yaw)*side)*.70*power/norm:0,targetZ=norm?(-Math.cos(yaw)*forward-Math.sin(yaw)*side)*.70*power/norm:0;
   velocity.x=T.MathUtils.damp(velocity.x,targetX,7,dt);velocity.z=T.MathUtils.damp(velocity.z,targetZ,7,dt);velocity.y=T.MathUtils.damp(velocity.y,(Number(!!keys.e)-Number(!!keys.q))*.40,7,dt);
   if(velocity.lengthSq()<.00001){velocity.set(0,0,0);return}walk(velocity.x*dt,velocity.z*dt);camera.position.y=T.MathUtils.clamp(camera.position.y+velocity.y*dt,1.08,3.8);needsFrame=true;
- }else if(norm){needsFrame=true;const speed=1.7*dt/norm;walk((-Math.sin(yaw)*forward+Math.cos(yaw)*side)*speed,(-Math.cos(yaw)*forward-Math.sin(yaw)*side)*speed)}
+ }else if(norm){needsFrame=true;const speed=1.7*dt*power/norm;walk((-Math.sin(yaw)*forward+Math.cos(yaw)*side)*speed,(-Math.cos(yaw)*forward-Math.sin(yaw)*side)*speed)}
 }
 document.getElementById('fs').onclick=()=>document.fullscreenElement?document.exitFullscreen?.():document.documentElement.requestFullscreen?.();
 renderer.domElement.style.touchAction='none';
@@ -689,7 +749,7 @@ function recordOutputFrame(){
  for(const mark of marks[outputStage]||[]){const key=outputStage+'-'+mark;if(outputProgress>=mark&&!outputAudit.frames.some(f=>f.key===key))outputAudit.frames.push({key,state,png:renderer.domElement.toDataURL('image/png')})}
  if(outputStage==='ready')outputAudit.done=true;
 }
-if(new URLSearchParams(location.search).has('inspect'))window.BYUR_INSPECT={viewReady:()=>!viewMoving&&Number(getComputedStyle(renderer.domElement).opacity)>.999,recordOutput:()=>{outputAudit={samples:[],frames:[]}},outputAudit:()=>outputAudit,snapshot:()=>({output:outputSnapshot(),camera:camera.position.toArray(),safe:canStand(camera.position.x,camera.position.z),machine:new T.Box3().setFromObject(machine).getSize(new T.Vector3()).toArray(),room:{frontWall:frontWall.name,frontWallSize:new T.Box3().setFromObject(frontWall).getSize(new T.Vector3()).toArray(),frontWallZ:frontWall.position.z},calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,frames:renderedFrames,cinema:cinema.snapshot(),recoilPeak,issued,archiveSheets:issuedSheets.count,counterDisplay,paperBend:Math.max(...inPaper.geometry.attributes.position.array.filter((v,i)=>i%3===2)),winter:{time:winterTime,daylight:daylight.intensity,passing:passingGlow.intensity},busy}),canStand,shots:cinema.shots};
+if(new URLSearchParams(location.search).has('inspect'))window.BYUR_INSPECT={viewReady:()=>!viewMoving&&Number(getComputedStyle(renderer.domElement).opacity)>.999,recordOutput:()=>{outputAudit={samples:[],frames:[]}},outputAudit:()=>outputAudit,snapshot:()=>({output:outputSnapshot(),camera:camera.position.toArray(),safe:canStand(camera.position.x,camera.position.z),machine:new T.Box3().setFromObject(machine).getSize(new T.Vector3()).toArray(),room:{touchMovement,stickActive:stickId!==null,stickVector:[stickX,stickY],frontWall:frontWall.name,frontWallSize:new T.Box3().setFromObject(frontWall).getSize(new T.Vector3()).toArray(),frontWallZ:frontWall.position.z},calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,frames:renderedFrames,cinema:cinema.snapshot(),recoilPeak,issued,archiveSheets:issuedSheets.count,counterDisplay,paperBend:Math.max(...inPaper.geometry.attributes.position.array.filter((v,i)=>i%3===2)),winter:{time:winterTime,daylight:daylight.intensity,passing:passingGlow.intensity},busy}),canStand,shots:cinema.shots};
 addEventListener('resize',()=>cinema.resize());
 resetVisual();renderer.render(scene,camera);window.BYUR_LOAD?.stage('first_frame');setTimeout(()=>window.BYUR_LOAD?.complete(),180);
 const listenerForward=new T.Vector3(),listenerUp=new T.Vector3();let last=performance.now(),sceneTime=0;
