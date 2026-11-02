@@ -82,6 +82,10 @@ try{
   assert.equal(await page.locator('#fatal').isVisible(),false);
   const data=await page.evaluate(()=>window.__DESK_PROBE.details());
   assert.equal(data.files.length,4);
+  const instrumentWidth=data.phone.max[0]-data.phone.min[0];
+  const binderHeight=data.binders.max[1]-data.binders.min[1];
+  assert(instrumentWidth>.35&&instrumentWidth<.49,'Desk telephone must read at period-plausible scale, not a giant toy');
+  assert(instrumentWidth<1.50*binderHeight,'Handset must not dwarf a full-height archival binder');
   assert(data.phone.meshCount>=12,'Phone must be modeled, not a single abstract block');
   assert(data.binders.meshCount>=24,'Closed files need real covers and document cores');
   assert.equal(data.shellType,'ExtrudeGeometry','Period sloped casing must be modeled');
