@@ -1,3 +1,7 @@
+## Issue #16 phone-playthrough feedback — 10.2.2 unmerged candidate (2 November 2026)
+
+The 10.2.2 branch candidate adjusts default-on, gesture-unlocked Web Audio; removes directional floor shadows from +Z wall-mounted service backplates; adds touch-only floating reddish movement input; and corrects mistaken double-dotted `Ї` in stylized English UI. Dedicated Chromium probe `tests/phone-feedback.mjs` is a **candidate test**, not proof of native-device playback. Exact source and CI results are in issue #16 / its PR. **Unmerged, unpublished, owner visual and real iPhone/PWA tests outstanding.**
+
 # Development state — БЮРОКЯДТ-1
 
 **Maintained status snapshot, prepared 1 November 2026.** Status is sourced from the repository at the stated checkpoints. Future changes must update this document when they affect current behavior or release claims.
