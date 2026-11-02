@@ -224,7 +224,7 @@ rotaryRim.castShadow=false;deskPhone.add(rotaryRim);
 box(.015,.013,.070,steel2,.139,.129,.145,deskPhone).rotation.y=-.22;
 // Two inconspicuous cradle rests support a single, gently arched handset.
 for(const x of [-.211,.211]){
- box(.092,.030,.115,phoneInk,x,.203,-.177,deskPhone);
+ box(.092,.030,.115,phoneInk,x,.203,-.177,deskPhone).name=x<0?'phone-cradle-left':'phone-cradle-right';
  box(.064,.020,.071,phoneTrim,x,.221,-.177,deskPhone);
 }
 const gripCurve=new T.CatmullRomCurve3([
@@ -237,6 +237,7 @@ grip.name='phone-shaped-handset-grip';grip.castShadow=true;deskPhone.add(grip);
 for(const x of [-.228,.228]){
  const cap=new T.Mesh(new T.SphereGeometry(1,18,10),phoneRed);
  cap.scale.set(.078,.068,.063);cap.position.set(x,.264,-.176);
+ cap.name=x<0?'phone-earpiece':'phone-mouthpiece';
  cap.castShadow=true;deskPhone.add(cap);
  cyl(.040,.008,phoneInk,x,.203,-.176,0,0,0,deskPhone,20).castShadow=false;
 }
