@@ -171,6 +171,14 @@ async function stage(name, operation) {
   report.stages.push(entry);
   console.log('PERF STAGE ' + label + ' ' + JSON.stringify(entry));
 }
+// Optional controls stay behind the secondary menu in issue #9's UI candidate.
+// Preserve the actual player click path on both the current and future interfaces.
+async function clickUtility(id) {
+  const menu = page.locator('#menuToggle');
+  if (await menu.count() && await menu.getAttribute('aria-expanded') !== 'true')
+    await menu.click();
+  await page.locator('#' + id).click();
+}
 async function ready() {
   await page.locator('#loading').waitFor({ state: 'hidden', timeout: 90000 });
   assert.equal(await page.locator('#fatal').isVisible(), false, 'Game scene initializes');
@@ -207,7 +215,7 @@ try {
     await page.keyboard.down('d'); await page.waitForTimeout(2500); await page.keyboard.up('d');
   });
   await stage('eight-cinematic-views', async () => {
-    await page.locator('#cinemaEnter').click();
+    await clickUtility('cinemaEnter');
     for (let i = 0; i < 8; i++) {
       await page.locator('#cinemaShot').selectOption(String(i));
       await page.waitForFunction(() => !window.BYUR_INSPECT.snapshot().cinema.travelling, null, { timeout: 90000, polling: 250 });
@@ -220,7 +228,7 @@ try {
   });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await stage('audio-on-idle', async () => {
-    await page.locator('#sound').click();
+    await clickUtility('sound');
     await page.waitForFunction(() => window.MinistryAudio.state().decoded.length === 10, null, { timeout: 45000 });
     await page.waitForTimeout(8000);
   });
@@ -231,7 +239,7 @@ try {
   });
   assert.equal((await page.evaluate(() => window.BYUR_INSPECT.snapshot())).issued, 1);
   await page.screenshot({ path: await outputPath('complete.png') });
-  await page.locator('#sound').click();
+  await clickUtility('sound');
   await runNavigation('warm');
   await context.setOffline(true);
   await runNavigation('offline', true);
