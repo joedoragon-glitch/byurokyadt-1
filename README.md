@@ -16,12 +16,12 @@ The intended tone is restrained, tactile and gently absurd: institutional bureau
 
 ## Recent updates
 
-The current **`main` source is version 10.2.4** (2 November 2026). A merge does not establish a completed GitHub Pages deployment: use the [Pages workflow](https://github.com/joedoragon-glitch/byurokyadt-1/actions/workflows/pages.yml) for the published build and [Development state](docs/DEVELOPMENT_STATE.md) for time-qualified integration, CI and device-review status.
+The current **`main` source is version 10.2.4** (2 November 2026). The exact-head [Pages deployment and local/live acceptance run](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41466794235) **completed successfully** for `21e36a178a56`. This verifies publication by the workflow, not that a previously installed browser has refreshed its cache or that native-device visuals have been approved. See [Development state](docs/DEVELOPMENT_STATE.md) for verification boundaries.
 
 - **10.2.4:** [PR #24](https://github.com/joedoragon-glitch/byurokyadt-1/pull/24) seats the closed corridor door in a real concrete opening and changes winter shadows to be predominantly ceiling-driven, with diffuse light at the frosted window.
 - **10.2.3:** [PR #21](https://github.com/joedoragon-glitch/byurokyadt-1/pull/21) replaces intersecting desk files with separate archive binders and a loose dossier, and models a more credible red Soviet-era rotary telephone.
 - **10.2.2:** [PR #17](https://github.com/joedoragon-glitch/byurokyadt-1/pull/17) adds first-gesture, default-on mobile audio, a discreet touch joystick, a shadow-caster correction and typography fixes.
-- **10.2.1:** [PRs #11–#15](https://github.com/joedoragon-glitch/byurokyadt-1/pull/15) integrate the completed room shell, fitted shadows, contextual accessible operator UI, profiling and maintenance guards.
+- **10.2.1:** PRs #11–#15 (including [UI integration PR #15](https://github.com/joedoragon-glitch/byurokyadt-1/pull/15)) integrate the completed room shell, fitted shadows, contextual accessible operator UI, profiling and maintenance guards.
 - **10.1/10.1.1:** Corrected continuous paper/stamp motion and corridor approach sound, then added startup/audio-cache fixes and the separate listening room.
 
 The proposed broader Russian-first-glance lettering pass is tracked separately in [PR #19](https://github.com/joedoragon-glitch/byurokyadt-1/pull/19); it is **not** part of the 10.2.4 source. These notes describe source changes, not physical-phone visual or acoustic certification.
