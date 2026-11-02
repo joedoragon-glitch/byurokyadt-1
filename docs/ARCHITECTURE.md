@@ -22,6 +22,12 @@ The user picks a local file; the program displays and records its **filename**, 
 
 Follow `js/app.js` when changing processing, counter/tray, collisions or geometry; `js/cinematic.js` for inspection motion; `js/audio.js` for game sound. Review all touched interfaces when a change crosses these boundaries. A separate audio preview must not reference game saves or `window.MinistryAudio` to function.
 
+## Office lighting and shadow ownership
+
+`js/app.js` owns the fixed shadow rig: one cool, shadow-casting directional interior key, a fitted orthographic shadow camera spanning the occupied 12 × 14 office, and unshadowed warm practical lights. The key's shadow-space origin is moved along its existing direction to keep the whole scene inside its near/far range; its orientation, color and energy are preserved. The five solid enclosing shell surfaces receive interior prop shadows but do not cast artificial roof/wall darkness against the simulated key. Desktop maps are 2048²; narrow/mobile maps are 1024². Tiny screw heads, shallow concrete seams and flush form-tie marks do not contribute shadow casts; this preserves their surfaces while avoiding work for implausible micro-shadows. The mechanical press and output paper remain eligible for dynamic shadowing. The shadow volume is static rather than following the operator, to avoid view-dependent flicker.
+
+`tests/lighting-shadows.mjs` is a focused **paired baseline/candidate** Chromium diagnostic. It requires two separately served repositories (main at port 8000 and candidate at 8001), applies a test-only scene probe via Playwright request interception, checks world-space coverage at representative room points, drives real WASD movement, and saves desktop/mobile views plus intermediate press states and renderer metadata. This probe is not included in production. `.github/workflows/lighting-review.yml` provisions both checkouts, runs the paired diagnostic, then runs `npm test` without deploying. Headless SwiftShader/Chromium is not native-phone or physical-GPU evidence.
+
 ## Tests and deployment
 
 `package.json` runs focused source checks and Chromium suites with `npm test`:

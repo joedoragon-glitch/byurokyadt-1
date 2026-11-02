@@ -58,22 +58,29 @@ const floorTex=canvasTex(512,512,(g,w,h)=>{
 floorTex.wrapS=floorTex.wrapT=T.RepeatWrapping;floorTex.repeat.set(5,6);
 const institutionalFloor=new T.MeshStandardMaterial({map:floorTex,metalness:.04,roughness:.88});
 
-box(12,.18,14,institutionalFloor,0,-.09,0);
-box(12,6,.2,wallConcrete,0,3,-6.8);
-box(.2,6,14,wallConcrete,-6,3,0);
-box(.2,6,14,wallConcrete,6,3,0);
-box(12,.2,14,M(0x6d6c66,.03,.94),0,6,0);
+// The solid room shell receives prop shadows, but must not block the interior's
+// simulated overhead key. Casting the ceiling from an exterior light position
+// would black out the office; floors and solid walls add no useful interior casts.
+for(const shell of [
+ box(12,.18,14,institutionalFloor,0,-.09,0),
+ box(12,6,.2,wallConcrete,0,3,-6.8),
+ box(.2,6,14,wallConcrete,-6,3,0),
+ box(.2,6,14,wallConcrete,6,3,0),
+ box(12,.2,14,M(0x6d6c66,.03,.94),0,6,0)
+])shell.castShadow=false;
 
 /* recessed concrete panel seams — BEHIND propaganda, never in front */
 const seam=M(0x55554f,.02,.96);
-for(const x of [-5.35,-2.75,0,2.75,5.35])box(.035,5.55,.025,seam,x,3,-6.675);
-for(const y of [1.35,3.02,4.68])box(11.55,.035,.025,seam,0,y,-6.675);
+// These are recessed panel joints, not projecting beams; they receive the
+// room illumination but should not issue individual hard shadow-map draws.
+for(const x of [-5.35,-2.75,0,2.75,5.35])box(.035,5.55,.025,seam,x,3,-6.675).castShadow=false;
+for(const y of [1.35,3.02,4.68])box(11.55,.035,.025,seam,0,y,-6.675).castShadow=false;
 
 /* form-tie marks give concrete believable brutalist scale */
 const tieMat=M(0x57564f,.02,.92);
 for(const x of [-5.0,-3.35,-1.70,0,1.70,3.35,5.0]){
  for(const y of [1.70,3.58,5.22]){
-  cyl(.038,.018,tieMat,x,y,-6.65,Math.PI/2,0,0,scene,18);
+  cyl(.038,.018,tieMat,x,y,-6.65,Math.PI/2,0,0,scene,18).castShadow=false;
  }
 }
 
@@ -103,16 +110,49 @@ plane(3.20,.92,ministry,0,1.56,-6.52);
 
 /* ceiling coffers: heavy concrete mass kept ABOVE sightline */
 const ceilingBeam=M(0x555650,.03,.94);
-for(const z of [-4.8,-1.7,1.4,4.5])box(11.7,.28,.34,ceilingBeam,0,5.72,z);
-for(const x of [-4.3,0,4.3])box(.30,.24,13.1,ceilingBeam,x,5.75,0);
+// The overhead key represents the ceiling luminaires. The fittings cannot
+// cast broad exterior-sun shadows from above their own light source.
+for(const z of [-4.8,-1.7,1.4,4.5])box(11.7,.28,.34,ceilingBeam,0,5.72,z).castShadow=false;
+for(const x of [-4.3,0,4.3])box(.30,.24,13.1,ceilingBeam,x,5.75,0).castShadow=false;
 
 /* cold fluorescent luminaires nested between coffers */
 scene.add(new T.HemisphereLight(0xc4cfcc,0x3e3428,.74));
-const key=new T.DirectionalLight(0xf1efe8,1.10);key.position.set(-3,5,3);key.castShadow=true;key.shadow.bias=-.0002;key.shadow.normalBias=.015;key.shadow.mapSize.set(mobile?1024:1536,mobile?1024:1536);scene.add(key);
+// One shadowed, cool interior key; warm practicals stay unshadowed. Moving the
+// key along its ORIGINAL direction changes shadow-camera depth, not the look.
+// It keeps the entire occupied room in front of the shadow camera.
+const key=new T.DirectionalLight(0xf1efe8,1.10);
+key.position.set(-24,40,24);
+key.castShadow=true;key.shadow.bias=-.0002;key.shadow.normalBias=.015;
+key.shadow.mapSize.set(mobile?1024:2048,mobile?1024:2048);
+// Fit the fixed map ONCE to all reachable floor, walls, ceiling, door and
+// moving machinery. A camera-following shadow volume would shimmer during walks.
+function fitOfficeShadow(camera,bounds,padding){
+ camera.position.copy(key.position);
+ camera.lookAt(key.target.position);
+ camera.updateMatrixWorld(true);
+ let left=Infinity,right=-Infinity,bottom=Infinity,top=-Infinity,near=Infinity,far=-Infinity;
+ const point=new T.Vector3();
+ for(const x of [bounds.min.x,bounds.max.x])
+  for(const y of [bounds.min.y,bounds.max.y])
+   for(const z of [bounds.min.z,bounds.max.z]){
+    point.set(x,y,z).applyMatrix4(camera.matrixWorldInverse);
+    left=Math.min(left,point.x);right=Math.max(right,point.x);
+    bottom=Math.min(bottom,point.y);top=Math.max(top,point.y);
+    near=Math.min(near,-point.z);far=Math.max(far,-point.z);
+   }
+ camera.left=left-padding;camera.right=right+padding;
+ camera.bottom=bottom-padding;camera.top=top+padding;
+ camera.near=Math.max(.5,near-1);camera.far=far+1;
+ camera.updateProjectionMatrix();
+}
+fitOfficeShadow(key.shadow.camera,new T.Box3(
+ new T.Vector3(-6.05,-.20,-6.95),new T.Vector3(6.05,6.05,6.95)
+),.45);
+scene.add(key);
 for(const x of [-3.1,0,3.1]){
- box(2.18,.09,.40,steel2,x,5.54,-.15);
+ box(2.18,.09,.40,steel2,x,5.54,-.15).castShadow=false;
  const tubeMat=M(0xf3f5ec,.02,.32,0xeef3ef,1.8);
- box(1.90,.035,.18,tubeMat,x,5.47,-.15);
+ box(1.90,.035,.18,tubeMat,x,5.47,-.15).castShadow=false;
  const l=new T.PointLight(0xffdfb2,10,6.8,2.1);l.position.set(x,5.25,-.15);scene.add(l);
 }
 
@@ -189,7 +229,8 @@ box(4.70,1.38,.12,dark,0,1.02,-1.09,machine);
 for(const x of [-2.08,2.08])for(const z of [-.85,.90])softBox(.42,.13,.42,bakelite,x,.065,z,machine,.04);
 const screwBatches=new Map(),screwPose=new T.Object3D();
 function screw(x,y,z,p=machine){
- let batch=screwBatches.get(p);if(!batch){const heads=new T.InstancedMesh(new T.CylinderGeometry(.036,.036,.024,10),edgeMetal,128),slots=new T.InstancedMesh(new T.BoxGeometry(.039,.007,.004),black,128);heads.count=slots.count=0;heads.castShadow=heads.receiveShadow=true;p.add(heads,slots);batch={heads,slots};screwBatches.set(p,batch);}
+ let batch=screwBatches.get(p);if(!batch){const heads=new T.InstancedMesh(new T.CylinderGeometry(.036,.036,.024,10),edgeMetal,128),slots=new T.InstancedMesh(new T.BoxGeometry(.039,.007,.004),black,128);heads.count=slots.count=0;// Millimetre-scale screw heads add shadow draws but no legible projected shape.
+  heads.castShadow=false;heads.receiveShadow=true;p.add(heads,slots);batch={heads,slots};screwBatches.set(p,batch);}
  const i=batch.heads.count;screwPose.position.set(x,y,z);screwPose.rotation.set(Math.PI/2,0,0);screwPose.updateMatrix();batch.heads.setMatrixAt(i,screwPose.matrix);
  screwPose.position.z+=.014;screwPose.rotation.set(0,0,(x+y)*1.7);screwPose.updateMatrix();batch.slots.setMatrixAt(i,screwPose.matrix);batch.heads.count=batch.slots.count=i+1;batch.heads.instanceMatrix.needsUpdate=batch.slots.instanceMatrix.needsUpdate=true;
 }
