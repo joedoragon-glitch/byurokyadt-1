@@ -10,7 +10,7 @@
 
 ## Two different linguistic materials
 
-**Actual Russian must always be written in real Cyrillic, uncorrupted and correctly spelled.** Examples: `МИНИСТЕРСТВО`, `ТОВАРИЩ`, `ДОКУМЕНТ`, `НЕТ ДОКУМЕНТА`, `ПРОВЕРКА`, `ГОТОВО`, `СПРАВКА`, `ПЕЧАТЬ`. Never write NYET, SPRAVKA, TOVARISHCH or a half-Latin spelling when the intended word is authentic Russian.
+**Actual Russian must always be written in real Cyrillic, uncorrupted and correctly spelled.** Examples: `МЕНЮ`, `РЕЖИМ`, `КОМИССИЯ`, `МИНИСТЕРСТВО`, `ТОВАРИЩ`, `ДОКУМЕНТ`, `НЕТ ДОКУМЕНТА`, `ПРОВЕРКА`, `ГОТОВО`, `СПРАВКА`, `ПЕЧАТЬ`. Never write NYET, SPRAVKA, TOVARISHCH or a half-Latin spelling when the intended word is authentic Russian.
 
 **Invented English may be misspelled and mixed-script**, e.g. `SЕLЕКТ` (select/selekt), `КОNFIRM` (confirm/konfirm), `РRОЦЕSSING` (processing), `АPРRОVД` (approved), `РЕRМIТ` (permit), `МЕNЮ` (menu). Those are invented bureaucratic English tokens, *not* Russian words. Unusual characters are a discretionary visual ingredient, not a global replace-all transformation. Ordinary capital `I` is retained; never use Ukrainian `Ї` as a decorative English I.
 
@@ -25,7 +25,7 @@ Aim for a mix of official authentic Russian on the machine, more aggressive hybr
 | Processing | `РRОЦЕSSING` | First-glance Cyrillic, recoverable English |
 | Collect certificate | `СОLLЕКТ СПРАВКА` | English verb, real Russian administrative noun |
 | No document | `НЕТ ДОКУМЕНТА` | Proper Russian phrase in its context |
-| Photo mode | `ФОТО RЕЖИМ` | Russian word + corrupt English mode-like fragment |
+| Photo mode | `ФОТО РЕЖИМ` | Two ordinary Russian words, deducible from the camera context |
 | Approved | `АPРRОVД` | Shrunken/spliced English with a Cyrillic-style ending |
 
 The sample phrases are copy decisions, not a transliteration dictionary. Reuse terms consistently at critical interaction points; vary surrounding ministry prose where it feels intentionally institutional. The existing original physical Russian labels, red stamp, certificate, and posters are the authentic backbone and must not be unintentionally converted.

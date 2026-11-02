@@ -645,7 +645,7 @@ let viewMoving=false;
 async function setView(view){
  if(viewMoving||cinema?.active)return;viewMoving=true;renderer.domElement.style.opacity='0';await wait(180);
  const side=view==='side',desk=view===true,narrow=Math.max(0,.9/camera.aspect-1)*.85;camera.position.set(side?1.25:0,desk?1.70:side?1.72:1.70,(desk?.42:side?.55:2.7)+(desk||side?narrow:0));
- if(!current&&!busy)status(desk||side?'SЕLЕКТ ДОКУМЕНТ OR TAP TRAY.':'SЕLЕКТ ДОКУМЕНТ · МЕNЮ FOR MACHINE.',desk||side?'Choose a document or use the machine input tray.':'Choose a local document, or use Menu to approach the machine.');
+ if(!current&&!busy)status(desk||side?'SЕLЕКТ ДОКУМЕНТ OR TAP TRAY.':'SЕLЕКТ ДОКУМЕНТ · МЕНЮ FOR MACHINE.',desk||side?'Choose a document or use the machine input tray.':'Choose a local document, or use Menu to approach the machine.');
  yaw=side?.46:0;pitch=desk?-.18:side?-.15:.018;camera.rotation.set(pitch,yaw,0);needsFrame=true;renderer.domElement.style.opacity='1';await wait(180);viewMoving=false;
 }
 ui.roomView.onclick=()=>setView(false);ui.deskView.onclick=()=>setView(true);document.getElementById('sideView').onclick=()=>setView('side');
