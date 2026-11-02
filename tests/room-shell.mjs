@@ -61,7 +61,7 @@ assert.equal(front.name,'room-front-wall');
 assert.equal(front.castShadow,false,'Physical front wall receives light but must not occlude the interior key when issue #6 is integrated');
 assert.equal(front.receiveShadow,true,'Front wall remains a shadow receiver');
 assert.deepEqual([front.w,front.h,front.d,front.x,front.y,front.z],[12,6,.2,0,3,7]);
-assert.equal(records.filter(o=>o.w===12&&o.h===6&&o.d===.2).length,1,'Fourth wall is a single continuous concrete boundary');
+assert.equal(records.filter(o=>o.w===12&&o.h===6&&o.d===.2&&o.z===7).length,1,'Fourth +Z wall remains one continuous concrete boundary');
 for(const axis of [-1,1]){
  assert(records.some(o=>o.x===axis*5.875&&o.h===.96),'Both side walls carry lower paint');
  assert(records.some(o=>o.x===axis*5.846&&o.h===.13),'Both side walls have skirting');
