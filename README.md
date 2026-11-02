@@ -46,7 +46,7 @@ The input tray, confirmation button, reset knob and completed output sheet are a
 
 **[Open the sound listening room](https://joedoragon-glitch.github.io/byurokyadt-1/assets/audio-preview.html)** to play each of the seven existing recordings individually, without starting a machine cycle or changing game state. The room has native playback controls and a one-track-at-a-time behavior. It does not preview procedural wind, radiator ticks or corridor footsteps; those are generated inside the game.
 
-Inside the game, **Sound** (mechanics and room) and **Music** are independent and begin off. Your action unlocks browser audio; the master volume is adjustable and music quietens during a procedure. Audio suspends when the tab is hidden. The original 64-second score and mechanical sounds can be regenerated with `python3 scripts/build_audio.py` when NumPy, SciPy and ffmpeg are available.
+Inside the game, **Sound** (mechanics and room) and **Music** begin enabled and remain independent. iPhone Safari requires a user gesture before audible playback: the first tap or key press in the game automatically unlocks Web Audio without opening Menu. A subsequent tap can resume an interrupted context; the master volume is adjustable and music quietens during a procedure. Audio suspends when the tab is hidden. The original 64-second score and mechanical sounds can be regenerated with `python3 scripts/build_audio.py` when NumPy, SciPy and ffmpeg are available.
 
 **[Sound identity and production guidance](docs/AUDIO_DIRECTION.md)** explains the creative and technical standards. **[Creative direction](docs/CREATIVE_DIRECTION.md)** records the visual and narrative identity; accepted reference decisions and original texture notes remain in [AESTHETICS.md](AESTHETICS.md).
 
@@ -85,3 +85,7 @@ The full `npm test` command runs the documented Node and Chromium regression sui
 | All maintained guides and historical reference paths | [Documentation index](docs/DOCUMENTATION_INDEX.md) |
 
 **Historical records remain intact:** [AESTHETICS.md](AESTHETICS.md) contains approved visual references and texture provenance; [AUDIT.md](AUDIT.md) contains V9–V10.1 testing and release history. These are evidence, not fresh work orders. The authorial and engineering principles above were adapted from the separately maintained *So I Became the Dark Lord's Problem* repository; its fantasy setting, game mechanics, code paths and platform-specific policies do **not** apply here.
+
+## 10.2.2 review candidate — issue #16
+
+This unmerged follow-up addresses default-on gesture-unlocked audio, detached floor shadows projected by front-wall service fittings, a floating reddish touch-first joystick, and accidental double-dotted I glyphs in player-facing copy. The native iPhone Safari and installed-PWA experience still require real-device confirmation. This is not a published release.
