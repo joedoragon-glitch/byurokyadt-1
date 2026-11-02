@@ -7,7 +7,7 @@
 <title>БЮРОКЯДТ-1 — Операторская № 3</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./styles.css?v=10.1.1">
+<link rel="stylesheet" href="./styles.css?v=10.1.2">
 </head>
 <body>
 <div id="loading">
@@ -24,28 +24,71 @@
 </div>
 <div id="fatal">ЄЯЯOЯ. STATE APP COULD NOT START.</div>
 <div id="app"></div>
-<div id="hud">
-  <b>MЇИЇSTЯY OF UИИЄCЄSSAЯY PЯOCЄDUЯЄS</b>
-  <div class="small">WASD · WALK &nbsp; / &nbsp; DRAG · LOOK AROUND<br>SELECT DOCUMENT → COИFЇЯM → COLLECT CERTЇFЇCATЄ</div>
-</div>
-<div id="cross"></div>
-<div id="hint" role="status" aria-live="polite">COMЯADE, press 2 to approach the machine.</div>
-<nav id="viewControls" aria-label="Camera and audio controls">
-  <button aria-label="Room view" id="roomView">1 · ЯOOM VЇЄW</button><button aria-label="Approach machine" id="deskView">2 · TO THЄ MACHЇИЄ</button><button aria-label="Inspect machine from the side" id="sideView">3 · SЇDЄ ЇИSPЄCTЇOИ</button>
-  <button aria-label="Toggle mechanical sound" id="sound" aria-pressed="false">SOUИD: OFF</button><button aria-label="Toggle background music" id="music" aria-pressed="false">MUSЇC: OFF</button>
-  <button aria-label="Enter cinematic inspection" id="cinemaEnter">C · CЇИЄMATЇC ЇИSPЄCTЇOИ</button>
-  <label class="volumeLabel" for="volume">VOLUMЄ <input id="volume" type="range" min="0" max="100" value="65" aria-label="Audio volume"></label>
-</nav>
-<section id="operator" aria-label="Operator controls">
-  <div class="operatorHead"><span>OПЄЯATOЯ STATЇOИ № 03</span><span id="cycleCount">ЇSSUЄD: 000</span></div>
-  <div class="operatorActions"><button aria-label="Select a document" id="loadDoc">F · SЄLЄCT DOC</button><button aria-label="Confirm and process document" id="runDoc" class="redButton">↵ · COИFЇЯM</button><button aria-label="Reset machine" id="resetDoc">R · ЯЄSЄT</button><button aria-label="Collect certificate" id="receipt" disabled>CERTЇFЇCATЄ ↗</button></div>
-  <div class="privacy">File stays on your device. Ministry receives no uploads.</div>
+<header id="hud" aria-label="Game title">
+  <strong>БЮРОКЯДТ-1</strong><span>OFFICE № 3 · 1982</span>
+</header>
+<div id="cross" aria-hidden="true"></div>
+<button id="menuToggle" aria-controls="utilityPanel" aria-expanded="false" aria-label="Open view, audio and help menu">☰ · MENU</button>
+<aside id="utilityPanel" aria-label="View, audio and help" hidden>
+  <div class="utilityTitle">MINISTRY CONTROL DESK</div>
+  <div class="utilityGroupTitle">INSPECTION VIEWS</div>
+  <nav id="viewControls" aria-label="Camera and audio controls">
+    <button id="roomView" aria-label="Room view">1 · Room</button>
+    <button id="deskView" aria-label="Approach machine">2 · Machine</button>
+    <button id="sideView" aria-label="Inspect machine from the side">3 · Side</button>
+    <button id="cinemaEnter" aria-label="Enter cinematic inspection">C · Photography mode</button>
+    <div class="utilityGroupTitle">AUDIO</div>
+    <button id="sound" aria-label="Toggle mechanical sound" aria-pressed="false">Sound: Off</button>
+    <button id="music" aria-label="Toggle background music" aria-pressed="false">Music: Off</button>
+    <label class="volumeLabel" for="volume">Master volume <input id="volume" type="range" min="0" max="100" value="65" aria-label="Audio volume"></label>
+  </nav>
+  <div class="utilityGroupTitle">ASSISTANCE</div>
+  <button id="helpToggle" aria-haspopup="dialog" aria-controls="helpDialog">? · How to operate</button>
+  <button id="fs" aria-label="Toggle full screen">Fullscreen</button>
+  <button id="installBtn" aria-label="Install application">Install app</button>
+  <div class="utilityMeta"><span id="badge">V10 · CINEMA BUREAU</span><span id="appMode">MODE: WEB</span></div>
+</aside>
+<section id="operator" aria-label="Document processing controls" data-stage="empty">
+  <div class="operatorHead"><span>MINISTRY OF UNNECESSARY PROCEDURES</span><span id="cycleCount">ISSUED: 000</span></div>
+  <div class="workflowLine"><strong id="stepLabel">STEP 1 / 3 · SELECT A DOCUMENT</strong><span id="selectedFile">No document selected</span></div>
+  <div class="operatorActions">
+    <button aria-label="Select a document" id="loadDoc">F · Select document</button>
+    <button aria-label="Confirm and process document" id="runDoc" class="redButton">↵ · Confirm</button>
+    <button aria-label="Reset machine" id="resetDoc">R · Reset</button>
+    <button aria-label="Collect certificate" id="receipt" disabled>Collect certificate ↗</button>
+  </div>
+  <div id="hint" role="status" aria-live="polite" aria-atomic="true">Choose any local document to start. Only its name is used.</div>
+  <div class="privacy">Local procedure only. Your file is never uploaded.</div>
 </section>
-<button aria-label="Toggle full screen" id="fs">FULL SCЯЄЄИ</button>
-<button aria-label="Install application" id="installBtn">ЇИSTALL APP</button>
-<div id="badge">V10 · CЇИЄMA BUЯЄAU</div>
-<div id="appMode">MODЄ: WЄB</div>
 <input id="file" type="file">
+<dialog id="helpDialog" aria-labelledby="helpTitle" aria-describedby="helpIntro">
+  <div class="helpHeading"><h2 id="helpTitle" tabindex="-1">Operator's instructions · № 03</h2><button id="helpClose" aria-label="Close help">Close ×</button></div>
+  <p id="helpIntro">Your task: prove that a document is, in fact, a document. The ministry has provided the necessary machinery.</p>
+  <ol>
+    <li><strong>Select document.</strong> Choose any file on your device. The machine uses the filename only; nothing is uploaded.</li>
+    <li><strong>Confirm.</strong> Watch the feed rollers, inspection and official stamp. Controls remain disabled while the procedure runs.</li>
+    <li><strong>Collect certificate.</strong> Open the finished certificate and save its PNG. Reset to begin a new procedure.</li>
+  </ol>
+  <h3>Getting around</h3>
+  <p>Drag to look around; use WASD to walk. Choose Room, Machine or Side in Menu, or press 1, 2 or 3. F selects, Enter confirms, R resets. Tap the machine's tray, red button and output paper to interact directly.</p>
+  <h3>Photography and sound</h3>
+  <p>Menu → Photography (or C) opens eight inspection views. Use the on-screen camera tools or P to save a scene-only photo; Escape returns to the office. Sound and Music are separate, optional toggles in Menu and begin off. Reduced-motion preferences are respected.</p>
+</dialog>
+<script>
+(()=>{
+  const menu=document.getElementById('menuToggle'),panel=document.getElementById('utilityPanel'),help=document.getElementById('helpDialog');
+  function closeMenu(restore=false){if(panel.hidden)return;panel.hidden=true;menu.setAttribute('aria-expanded','false');menu.setAttribute('aria-label','Open view, audio and help menu');if(restore)menu.focus();}
+  function openMenu(){panel.hidden=false;menu.setAttribute('aria-expanded','true');menu.setAttribute('aria-label','Close view, audio and help menu');}
+  menu.addEventListener('click',()=>panel.hidden?openMenu():closeMenu());
+  document.addEventListener('pointerdown',event=>{if(!panel.hidden&&!panel.contains(event.target)&&event.target!==menu)closeMenu()});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!panel.hidden&&!help.open){event.preventDefault();closeMenu(true)}});
+  for(const id of ['roomView','deskView','sideView','cinemaEnter','fs'])document.getElementById(id).addEventListener('click',()=>closeMenu());
+  document.getElementById('helpToggle').addEventListener('click',()=>{closeMenu();help.showModal();document.getElementById('helpTitle').focus()});
+  document.getElementById('helpClose').addEventListener('click',()=>help.close());
+  help.addEventListener('close',()=>menu.focus());
+  window.BYUR_UI={closeMenu,menuIsOpen:()=>!panel.hidden};
+})();
+</script>
 <section id="cinema" aria-label="Cinematic inspection" hidden>
  <div id="cinemaBar">
   <div class="cinemaHeading"><span>★ MЇИЇSTЯY CЇИЄMA BUЯЄAU <small>PHOTOGЯAPHY PЄЯMЇT № 10</small></span><button id="cinemaExit" aria-label="Exit cinematic mode">ESC · ЯЄTUЯИ TO DUTY</button></div>
@@ -151,11 +194,11 @@ function runCode(code,name){(0,eval)(code+'\n//# sourceURL='+name)}
   await preloadAsset('./assets/enamel-v9.webp',20,25,'DELЇVEЯЇИG CABЇИЄT EИAMЄL...','enamel');
   const engine=await fetchTextProgress('./vendor/three.min.js',25,62,'DELЇVEЯЇИG LOCAL 3D ENGINE...');
   runCode(engine,'three-r152.min.js');if(!window.THREE)throw new Error('THREE global not created');
-  const audioCode=await fetchTextProgress('./js/audio.js?v=10.1.1',62,64,'DELЇVEЯЇИG MЇИЇSTЯY OЯCHЄSTЯA...');
+  const audioCode=await fetchTextProgress('./js/audio.js?v=10.1.2',62,64,'DELЇVEЯЇИG MЇИЇSTЯY OЯCHЄSTЯA...');
   runCode(audioCode,'byurokyadt-audio.js');
-  const cinemaCode=await fetchTextProgress('./js/cinematic.js?v=10.1.1',64,66,'DELЇVEЯЇИG CЇИЄMA BUЯЄAU...');
+  const cinemaCode=await fetchTextProgress('./js/cinematic.js?v=10.1.2',64,66,'DELЇVEЯЇИG CЇИЄMA BUЯЄAU...');
   runCode(cinemaCode,'byurokyadt-cinematic.js');
-  const app=await fetchTextProgress('./js/app.js?v=10.1.1',62,68,'OPENЇИG OПЄЯATOЯ STATЇOИ...');
+  const app=await fetchTextProgress('./js/app.js?v=10.1.2',62,68,'OPENЇИG OПЄЯATOЯ STATЇOИ...');
   runCode(app,'byurokyadt-app.js');
  }catch(e){L.fatal('LOADЇИG ЄЯЯOЯ V10: '+(e.message||e))}
 })();
