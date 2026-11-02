@@ -111,8 +111,10 @@ try{
   // Leave mug inside this tabletop and at least .05m away from phone housing.
   assert(data.phone.max[0]<4.55,'Moved mug must clear the phone housing');
   // Phone must have one continuous grip and two endpoints touching their rests.
-  assert(data.grip.min[0]<data.earpiece.min[0]+.05);
-  assert(data.grip.max[0]>data.mouthpiece.max[0]-.05);
+  assert(data.grip.min[0]<data.earpiece.max[0]-.008,
+    'Molded grip must enter and connect to the left earpiece');
+  assert(data.grip.max[0]>data.mouthpiece.min[0]+.008,
+    'Molded grip must enter and connect to the right mouthpiece');
   assert(Math.abs(data.earpiece.min[1]-data.cradleLeft.max[1])<.012,
     'Handset must rest on left cradle, not float above it');
   assert(Math.abs(data.mouthpiece.min[1]-data.cradleRight.max[1])<.012,
