@@ -26,7 +26,7 @@ The harness exercises cold boot, 30-second idle, keyboard walking, eight animate
 
     node tests/performance.mjs --compare=test-results/performance/base.json --candidate=test-results/performance/candidate.json --out=test-results/performance/compare.json
 
-The Issue 8 performance review pull-request workflow runs the script against base and candidate in isolated local static servers with the same browser/version, viewport, DPR and instrumentation. It runs existing comprehensive regressions, does not deploy, and uploads JSON/screenshots even on failure.
+The Issue 8 performance review pull-request workflow runs the script against base and candidate in isolated local static servers with the same browser/version, viewport, DPR and instrumentation. Each JSON trace retains its **exact checked-out source commit SHA**. Comparison rejects mismatched browser, WebGL renderer, viewport/DPR, idle duration, or stage names rather than quietly presenting unrelated measurements as paired. `node tests/performance-compare.mjs` verifies both valid comparisons and intentional mismatches without launching Chromium. The workflow runs existing comprehensive regressions, does not deploy, and uploads JSON/screenshots even on failure.
 
 ## What the numbers establish — and what they do not
 
