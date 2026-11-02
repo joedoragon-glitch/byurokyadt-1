@@ -46,6 +46,11 @@ const browser = await chromium.launch();
 const context = await browser.newContext({ viewport: { width: 960, height: 680 }, deviceScaleFactor: 1, acceptDownloads: true });
 const page = await context.newPage();
 page.setDefaultTimeout(90000);
+const cdp = await context.newCDPSession(page);
+async function cdpHeapMB() {
+  try { const usage = await cdp.send('Runtime.getHeapUsage'); return round(usage.usedSize / 1048576); }
+  catch { return null; }
+}
 const errors = [], network = [];
 page.on('pageerror', error => errors.push(String(error)));
 context.on('response', response => network.push({ status: response.status(), source: response.fromServiceWorker() ? 'service-worker' : 'network', url: new URL(response.url()).pathname }));
@@ -96,7 +101,7 @@ await page.addInitScript(() => {
 const report = { meta: { label, base, startedAt: new Date().toISOString(),
   runner: 'Playwright Chromium, context 960x680 at DPR 1, instrumented WebGL draw and RAF callbacks',
   caveat: 'Callback wall time includes JS and driver stalls; WebGL draws are submissions, not measured GPU time. Never infer physical-device FPS.',
-  idleMs, node: process.version }, boot: {}, stages: [], network: {}, failures: [] };
+  idleMs, node: process.version, memorySource: 'CDP Runtime.getHeapUsage (JavaScript heap, not GPU VRAM)' }, boot: {}, stages: [], network: {}, failures: [] };
 const inspect = new URL(base); inspect.searchParams.set('inspect', '1');
 
 async function read() {
@@ -121,9 +126,9 @@ async function read() {
   });
 }
 async function stage(name, operation) {
-  const before = await read(), wallStart = performance.now(), networkStart = network.length;
+  const before = await read(), heapStart = await cdpHeapMB(), wallStart = performance.now(), networkStart = network.length;
   await operation();
-  const after = await read();
+  const after = await read(), heapEnd = await cdpHeapMB();
   const callbackMs = after.callbackMs.slice(before.cpuCount);
   const times = after.callbackTimes.slice(before.cpuCount);
   const intervals = times.slice(1).map((t, i) => t - times[i]).filter(t => t >= 0);
@@ -136,7 +141,7 @@ async function stage(name, operation) {
     lastRenderCalls: after.callsPerLastRender, lastRenderTriangles: after.trianglesPerLastRender,
     callbackP50Ms: median(callbackMs), callbackP95Ms: percentile(callbackMs, .95),
     callbackIntervalP95Ms: percentile(intervals, .95),
-    jsHeapMB: after.heapMB === null ? null : round(after.heapMB),
+    jsHeapMB: heapEnd, jsHeapDeltaMB: heapStart === null || heapEnd === null ? null : round(heapEnd - heapStart),
     network: { responses: network.length - networkStart,
       serviceWorkerResponses: network.slice(networkStart).filter(x => x.source === 'service-worker').length },
     outputEnd: after.output };
@@ -165,7 +170,7 @@ try {
   report.meta.browser = browser.version();
   report.meta.environment = { userAgent: environment.userAgent, dpr: environment.dpr,
     viewport: environment.viewport, gl: environment.gl, reducedMotion: environment.reducedMotion };
-  report.boot = { renders: environment.renders, drawCalls: environment.drawCalls, heapMB: environment.heapMB,
+  report.boot = { renders: environment.renders, drawCalls: environment.drawCalls, heapMB: await cdpHeapMB(),
     resources: environment.resources };
   await page.screenshot({ path: (await outputPath('room.png')) });
   await stage('idle', () => page.waitForTimeout(idleMs));
