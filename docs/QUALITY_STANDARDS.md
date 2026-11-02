@@ -15,6 +15,8 @@
 
 A shadowed interior key must reach representative walkable positions, both ends of the room, the door/window, archive furniture, and the moving press without a camera-dependent cutoff. Keep warm practicals and cold daylight visually distinct. Check for acne, detached contact, unrealistically darkened walls, and lost poster/document legibility in matched scene-only captures. The same shadow-camera fit must be correct at desktop and mobile map sizes. Do not turn on shadows for every ceiling/desk point light.
 
+For frosted-glass winter scenes, the ceiling luminaires should produce the primary shadow direction; window illumination is diffuse, subordinate fill. Wall-mounted clocks and almost flush picture frames should not project exaggerated diagonal silhouettes. The corridor door must have actual interrupted masonry, aligned leaf/jamb/threshold geometry, and side-wall dado and rails that terminate against the opening rather than passing through it. Prefer one fitted overhead key with soft contact and hemisphere fill over multiple costly shadowed fluorescent bulbs.
+
 For source-based verification use the paired `tests/lighting-shadows.mjs` gate (and the non-deploying lighting review workflow), the existing cinematic and paper-motion browser suites, and matched renderer draw-call/triangle/map-size evidence. Shadow-camera coverage is a deterministic requirement, **not** a substitute for image review. Keep subjective atmosphere and real-device GPU behavior pending owner/device confirmation.
 
 ## Audio and experience
