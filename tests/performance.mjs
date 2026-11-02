@@ -235,7 +235,12 @@ try {
   await page.locator('#file').setInputFiles({ name: 'PROFILE-27B.txt', mimeType: 'text/plain', buffer: Buffer.from('performance audit: no file uploaded') });
   await stage('full-document-cycle', async () => {
     await page.locator('#runDoc').click();
-    await page.waitForFunction(() => !document.querySelector('#runDoc').disabled && document.querySelector('#hint').textContent.startsWith('APPЯOVЄD'), null, { timeout: 180000, polling: 250 });
+    // The mechanical state is authoritative; issue #9 changes the visible approval wording.
+    // Measure completion without coupling the profiler to the HUD's localizable text.
+    await page.waitForFunction(() => {
+      const game = window.BYUR_INSPECT.snapshot();
+      return !game.busy && game.output.stage === 'ready';
+    }, null, { timeout: 180000, polling: 250 });
   });
   assert.equal((await page.evaluate(() => window.BYUR_INSPECT.snapshot())).issued, 1);
   await page.screenshot({ path: await outputPath('complete.png') });
