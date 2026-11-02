@@ -58,22 +58,29 @@ const floorTex=canvasTex(512,512,(g,w,h)=>{
 floorTex.wrapS=floorTex.wrapT=T.RepeatWrapping;floorTex.repeat.set(5,6);
 const institutionalFloor=new T.MeshStandardMaterial({map:floorTex,metalness:.04,roughness:.88});
 
-box(12,.18,14,institutionalFloor,0,-.09,0);
-box(12,6,.2,wallConcrete,0,3,-6.8);
-box(.2,6,14,wallConcrete,-6,3,0);
-box(.2,6,14,wallConcrete,6,3,0);
-box(12,.2,14,M(0x6d6c66,.03,.94),0,6,0);
+// The solid room shell receives prop shadows, but must not block the interior's
+// simulated overhead key. Casting the ceiling from an exterior light position
+// would black out the office; floors and solid walls add no useful interior casts.
+for(const shell of [
+ box(12,.18,14,institutionalFloor,0,-.09,0),
+ box(12,6,.2,wallConcrete,0,3,-6.8),
+ box(.2,6,14,wallConcrete,-6,3,0),
+ box(.2,6,14,wallConcrete,6,3,0),
+ box(12,.2,14,M(0x6d6c66,.03,.94),0,6,0)
+])shell.castShadow=false;
 
 /* recessed concrete panel seams — BEHIND propaganda, never in front */
 const seam=M(0x55554f,.02,.96);
-for(const x of [-5.35,-2.75,0,2.75,5.35])box(.035,5.55,.025,seam,x,3,-6.675);
-for(const y of [1.35,3.02,4.68])box(11.55,.035,.025,seam,0,y,-6.675);
+// These are recessed panel joints, not projecting beams; they receive the
+// room illumination but should not issue individual hard shadow-map draws.
+for(const x of [-5.35,-2.75,0,2.75,5.35])box(.035,5.55,.025,seam,x,3,-6.675).castShadow=false;
+for(const y of [1.35,3.02,4.68])box(11.55,.035,.025,seam,0,y,-6.675).castShadow=false;
 
 /* form-tie marks give concrete believable brutalist scale */
 const tieMat=M(0x57564f,.02,.92);
 for(const x of [-5.0,-3.35,-1.70,0,1.70,3.35,5.0]){
  for(const y of [1.70,3.58,5.22]){
-  cyl(.038,.018,tieMat,x,y,-6.65,Math.PI/2,0,0,scene,18);
+  cyl(.038,.018,tieMat,x,y,-6.65,Math.PI/2,0,0,scene,18).castShadow=false;
  }
 }
 
@@ -103,16 +110,49 @@ plane(3.20,.92,ministry,0,1.56,-6.52);
 
 /* ceiling coffers: heavy concrete mass kept ABOVE sightline */
 const ceilingBeam=M(0x555650,.03,.94);
-for(const z of [-4.8,-1.7,1.4,4.5])box(11.7,.28,.34,ceilingBeam,0,5.72,z);
-for(const x of [-4.3,0,4.3])box(.30,.24,13.1,ceilingBeam,x,5.75,0);
+// The overhead key represents the ceiling luminaires. The fittings cannot
+// cast broad exterior-sun shadows from above their own light source.
+for(const z of [-4.8,-1.7,1.4,4.5])box(11.7,.28,.34,ceilingBeam,0,5.72,z).castShadow=false;
+for(const x of [-4.3,0,4.3])box(.30,.24,13.1,ceilingBeam,x,5.75,0).castShadow=false;
 
 /* cold fluorescent luminaires nested between coffers */
 scene.add(new T.HemisphereLight(0xc4cfcc,0x3e3428,.74));
-const key=new T.DirectionalLight(0xf1efe8,1.10);key.position.set(-3,5,3);key.castShadow=true;key.shadow.bias=-.0002;key.shadow.normalBias=.015;key.shadow.mapSize.set(mobile?1024:1536,mobile?1024:1536);scene.add(key);
+// One shadowed, cool interior key; warm practicals stay unshadowed. Moving the
+// key along its ORIGINAL direction changes shadow-camera depth, not the look.
+// It keeps the entire occupied room in front of the shadow camera.
+const key=new T.DirectionalLight(0xf1efe8,1.10);
+key.position.set(-24,40,24);
+key.castShadow=true;key.shadow.bias=-.0002;key.shadow.normalBias=.015;
+key.shadow.mapSize.set(mobile?1024:2048,mobile?1024:2048);
+// Fit the fixed map ONCE to all reachable floor, walls, ceiling, door and
+// moving machinery. A camera-following shadow volume would shimmer during walks.
+function fitOfficeShadow(camera,bounds,padding){
+ camera.position.copy(key.position);
+ camera.lookAt(key.target.position);
+ camera.updateMatrixWorld(true);
+ let left=Infinity,right=-Infinity,bottom=Infinity,top=-Infinity,near=Infinity,far=-Infinity;
+ const point=new T.Vector3();
+ for(const x of [bounds.min.x,bounds.max.x])
+  for(const y of [bounds.min.y,bounds.max.y])
+   for(const z of [bounds.min.z,bounds.max.z]){
+    point.set(x,y,z).applyMatrix4(camera.matrixWorldInverse);
+    left=Math.min(left,point.x);right=Math.max(right,point.x);
+    bottom=Math.min(bottom,point.y);top=Math.max(top,point.y);
+    near=Math.min(near,-point.z);far=Math.max(far,-point.z);
+   }
+ camera.left=left-padding;camera.right=right+padding;
+ camera.bottom=bottom-padding;camera.top=top+padding;
+ camera.near=Math.max(.5,near-1);camera.far=far+1;
+ camera.updateProjectionMatrix();
+}
+fitOfficeShadow(key.shadow.camera,new T.Box3(
+ new T.Vector3(-6.05,-.20,-6.95),new T.Vector3(6.05,6.05,6.95)
+),.45);
+scene.add(key);
 for(const x of [-3.1,0,3.1]){
- box(2.18,.09,.40,steel2,x,5.54,-.15);
+ box(2.18,.09,.40,steel2,x,5.54,-.15).castShadow=false;
  const tubeMat=M(0xf3f5ec,.02,.32,0xeef3ef,1.8);
- box(1.90,.035,.18,tubeMat,x,5.47,-.15);
+ box(1.90,.035,.18,tubeMat,x,5.47,-.15).castShadow=false;
  const l=new T.PointLight(0xffdfb2,10,6.8,2.1);l.position.set(x,5.25,-.15);scene.add(l);
 }
 
@@ -189,7 +229,8 @@ box(4.70,1.38,.12,dark,0,1.02,-1.09,machine);
 for(const x of [-2.08,2.08])for(const z of [-.85,.90])softBox(.42,.13,.42,bakelite,x,.065,z,machine,.04);
 const screwBatches=new Map(),screwPose=new T.Object3D();
 function screw(x,y,z,p=machine){
- let batch=screwBatches.get(p);if(!batch){const heads=new T.InstancedMesh(new T.CylinderGeometry(.036,.036,.024,10),edgeMetal,128),slots=new T.InstancedMesh(new T.BoxGeometry(.039,.007,.004),black,128);heads.count=slots.count=0;heads.castShadow=heads.receiveShadow=true;p.add(heads,slots);batch={heads,slots};screwBatches.set(p,batch);}
+ let batch=screwBatches.get(p);if(!batch){const heads=new T.InstancedMesh(new T.CylinderGeometry(.036,.036,.024,10),edgeMetal,128),slots=new T.InstancedMesh(new T.BoxGeometry(.039,.007,.004),black,128);heads.count=slots.count=0;// Millimetre-scale screw heads add shadow draws but no legible projected shape.
+  heads.castShadow=false;heads.receiveShadow=true;p.add(heads,slots);batch={heads,slots};screwBatches.set(p,batch);}
  const i=batch.heads.count;screwPose.position.set(x,y,z);screwPose.rotation.set(Math.PI/2,0,0);screwPose.updateMatrix();batch.heads.setMatrixAt(i,screwPose.matrix);
  screwPose.position.z+=.014;screwPose.rotation.set(0,0,(x+y)*1.7);screwPose.updateMatrix();batch.slots.setMatrixAt(i,screwPose.matrix);batch.heads.count=batch.slots.count=i+1;batch.heads.instanceMatrix.needsUpdate=batch.slots.instanceMatrix.needsUpdate=true;
 }
@@ -368,6 +409,139 @@ let winterTime=0,lastWinter=-1;
 function updateWinter(now){if(document.hidden||reducedMotion.matches)return;const seconds=now/1000,phase=seconds%83,passing=phase>43&&phase<48,interval=passing?.12:1;if(seconds-lastWinter<interval)return;lastWinter=seconds;winterTime=seconds;daylight.intensity=3.15+.24*Math.sin(seconds/29);windowPane.emissiveIntensity=.23+.014*Math.sin(seconds/29);passingGlow.intensity=passing?Math.sin((phase-43)/5*Math.PI)*.85:0;passingGlow.position.z=-3.9+(phase-43)*.51;needsFrame=true;}
 const doorGroup=new T.Group();doorGroup.position.set(5.84,0,-.8);doorGroup.rotation.y=-Math.PI/2;scene.add(doorGroup);
 softBox(1.17,2.52,.14,dark,0,1.26,0,doorGroup,.015);softBox(1.02,2.37,.09,wood,0,1.205,.10,doorGroup,.018);softBox(.78,1.34,.035,M(0x4a4232,.04,.92),0,1.57,.16,doorGroup,.01);softBox(.78,.51,.035,wood,0,.53,.16,doorGroup,.01);decal(.43,.18,['ОПЕРАТОРСКАЯ','№ 3'],0,1.81,.189,doorGroup,'#b9a777');cyl(.038,.055,brass,.37,1.07,.205,Math.PI/2,0,0,doorGroup);box(.16,.027,.027,brass,.32,1.07,.247,doorGroup);
+/* ROOM COMPLETENESS: intentionally physical institutional fittings; no cabinet redesign. */
+const finishPaint=M(0x697165,.02,.93),finishIron=M(0x464d46,.31,.72);
+// Repeat wall trim with per-instance transforms: one draw per material, not one per panel.
+// Unit-box geometry also prevents dozens of duplicate GPU buffer allocations.
+const roomTrimBatches=new Map();
+function finishBox(w,h,d,mat,x,y,z){
+ let batch=roomTrimBatches.get(mat);if(!batch){batch=[];roomTrimBatches.set(mat,batch)}
+ batch.push({w,h,d,x,y,z});
+}
+function flushRoomTrim(){
+ const cube=new T.BoxGeometry(1,1,1),pose=new T.Object3D();
+ for(const [mat,batch] of roomTrimBatches){
+  const mesh=new T.InstancedMesh(cube,mat,batch.length);
+  for(let i=0;i<batch.length;i++){
+   const s=batch[i];pose.position.set(s.x,s.y,s.z);pose.scale.set(s.w,s.h,s.d);pose.updateMatrix();mesh.setMatrixAt(i,pose.matrix);
+  }
+  mesh.instanceMatrix.needsUpdate=true;
+  mesh.receiveShadow=true; // Flat concrete reveals don't cast arbitrary hard shadows.
+  mesh.castShadow=false;
+  scene.add(mesh);
+ }
+}
+const frontWall=box(12,6,.20,wallConcrete,0,3,7);
+// The room-facing shell receives shadows but must not cast from the simulated
+// overhead key: issue #6 extends that shadow camera through the whole office.
+// A casting front wall would occlude the key and darken occupied floor space.
+frontWall.castShadow=false;
+frontWall.name='room-front-wall'; // +Z previously had collision but no geometry.
+// Dull painted dado, skirting, chair rail, and ceiling termination on all four walls.
+for(const z of [-6.677,6.877]){
+ finishBox(11.73,.96,.026,finishPaint,0,.49,z);
+ finishBox(11.75,.13,.068,finishIron,0,.085,z>0?6.846:-6.646);
+ finishBox(11.75,.043,.045,steel2,0,1.00,z>0?6.845:-6.645);
+ finishBox(11.82,.13,.095,finishIron,0,5.86,z>0?6.816:-6.616);
+}
+for(const side of [-1,1]){
+ finishBox(.026,.96,13.56,finishPaint,side*5.875,.49,0);
+ finishBox(.065,.13,13.58,finishIron,side*5.846,.085,0);
+ finishBox(.044,.043,13.56,steel2,side*5.845,1,0);
+ finishBox(.095,.13,13.62,finishIron,side*5.815,5.86,0);
+ for(const z of [-5.15,-2.57,0,2.57,5.15])finishBox(.026,4.66,.025,seam,side*5.844,3.36,z);
+ for(const y of [3.02,4.69])finishBox(.027,.027,13.49,seam,side*5.843,y,0);
+}
+for(const x of [-5.3,-2.65,0,2.65,5.3])finishBox(.033,4.65,.026,seam,x,3.34,6.858);
+for(const y of [3.02,4.69])finishBox(11.55,.030,.028,seam,0,y,6.858);
+const tiePoints=[];
+for(const x of [-4.75,-3.17,-1.58,0,1.58,3.17,4.75])for(const y of [1.71,3.60,5.22])
+ tiePoints.push([x,y,6.839]);
+const ties=new T.InstancedMesh(new T.CylinderGeometry(.032,.032,.011,12),tieMat,tiePoints.length);
+const tiePose=new T.Object3D();
+for(let i=0;i<tiePoints.length;i++){
+ tiePose.position.set(...tiePoints[i]);tiePose.rotation.set(Math.PI/2,0,0);tiePose.updateMatrix();ties.setMatrixAt(i,tiePose.matrix);
+}
+ties.instanceMatrix.needsUpdate=true;ties.receiveShadow=true;scene.add(ties);
+for(const x of [-5.81,5.81])for(const z of [-6.62,6.82])
+ finishBox(.070,5.53,.065,finishIron,x,3.19,z);
+// Front-wall service infrastructure is period-specific and doesn't crowd the machine.
+softBox(2.26,1.32,.095,finishIron,-1.87,3.32,6.780,scene,.028);
+const serviceNotice=decal(2.04,1.10,['ПОРЯДОК УЧЁТА','ДЕЛО № 27-Б','ПЕРЕДАТЬ ПО ОПИСИ'],-1.87,3.32,6.716,scene,'#c0b69a','#37392e');
+serviceNotice.rotation.y=Math.PI; // Front wall faces -Z, unlike the existing rear signs.
+serviceNotice.material.emissive.setHex(0xffffff);
+serviceNotice.material.emissiveMap=serviceNotice.material.map;
+serviceNotice.material.emissiveIntensity=.18;serviceNotice.material.needsUpdate=true;
+for(const x of [-2.92,-.82])for(const y of [2.72,3.93])
+ cyl(.027,.022,steel2,x,y,6.705,Math.PI/2,0,0,scene,12);
+softBox(1.18,1.57,.17,steel2,3.20,2.85,6.762,scene,.025);
+softBox(1.02,1.40,.025,finishPaint,3.20,2.85,6.655,scene,.014);
+const serviceLabel=decal(.82,.17,['ЭЛЕКТРОЩИТ № 3'],3.20,3.37,6.638,scene,'#c0b69a');
+serviceLabel.rotation.y=Math.PI;
+serviceLabel.material.emissive.setHex(0xffffff);
+serviceLabel.material.emissiveMap=serviceLabel.material.map;
+serviceLabel.material.emissiveIntensity=.18;serviceLabel.material.needsUpdate=true;
+finishBox(.17,.028,.04,finishIron,3.57,2.82,6.615);
+cyl(.040,.030,brass,3.57,2.82,6.591,Math.PI/2);
+finishBox(.048,1.04,.065,finishIron,4.19,1.62,6.805);
+finishBox(1.16,.040,.065,finishIron,3.63,2.12,6.805);
+finishBox(1.22,.69,.062,finishIron,3.20,4.87,6.81);
+for(let i=0;i<8;i++)finishBox(1.04,.034,.042,steel2,3.20,4.60+i*.074,6.747);
+// Original closed corridor door keeps its leaf, sign, handle and obstacle.
+for(const x of [-.615,.615])softBox(.115,2.57,.095,finishIron,x,1.285,.204,doorGroup,.015);
+softBox(1.34,.13,.10,finishIron,0,2.55,.205,doorGroup,.016);
+box(.91,.17,.015,steel2,0,.14,.198,doorGroup);
+for(const y of [.45,1.32,2.18]){
+ box(.085,.15,.05,brass,-.525,y,.235,doorGroup);
+ cyl(.017,.19,finishIron,-.525,y,.272,0,0,0,doorGroup,12);
+}
+cyl(.034,.014,brass,-.11,2.15,.227,Math.PI/2,0,0,doorGroup,20);
+cyl(.013,.016,black,-.11,2.15,.242,Math.PI/2,0,0,doorGroup,12);
+box(.14,.022,1.44,steel2,5.68,.016,-.80);
+// Cast-metal archival drawer details preserve original cabinet labels and bounds.
+for(const x of [-4.65,-3.86]){
+ finishBox(.79,.11,.67,finishIron,x,.067,-5.55);
+ finishBox(.79,.038,.69,steel2,x,1.485,-5.55);
+ for(const y of [.28,.74,1.20]){
+  finishBox(.43,.066,.017,finishIron,x,y+.016,-5.135);
+  finishBox(.32,.018,.035,steel2,x,y+.027,-5.106);
+  for(const dx of [-.27,.27])cyl(.013,.014,steel2,x+dx,y-.135,-5.176,Math.PI/2,0,0,scene,10);
+ }
+ for(const y of [.506,.965])finishBox(.72,.016,.024,finishIron,x,y,-5.176);
+}
+// Telephone desk has supporting apron and drawers, receiver caps and a trailing cord.
+finishBox(1.57,.19,.053,wood,3.9,.71,-4.88);
+for(const x of [3.50,4.30]){
+ softBox(.66,.14,.033,wood,x,.71,-4.845,scene,.014);
+ finishBox(.21,.022,.032,brass,x,.70,-4.808);
+}
+for(const x of [3.15,4.65])finishBox(.09,.065,.72,finishIron,x,.82,-5.20);
+for(const x of [3.94,4.42]){
+ cyl(.078,.07,phoneRed,x,1.17,-5.29,0,0,Math.PI/2,scene,20);
+ cyl(.050,.075,black,x,1.17,-5.29,0,0,Math.PI/2,scene,16);
+}
+const cordPoints=[new T.Vector3(4.42,1.13,-5.29),new T.Vector3(4.54,1.07,-5.34),new T.Vector3(4.48,.94,-5.37),new T.Vector3(4.60,.91,-5.31),new T.Vector3(4.53,.93,-5.21),new T.Vector3(4.50,.99,-5.15)];
+const phoneCord=new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(cordPoints),32,.012,6,false),black);phoneCord.castShadow=true;scene.add(phoneCord);
+for(let i=0;i<10;i++){const a=i*Math.PI/5;cyl(.012,.005,meterIvory,4.18+Math.sin(a)*.074,1.061,-5.14+Math.cos(a)*.074,0,0,0,scene,10)}
+for(const z of [-4.12,-3.42])finishBox(1.60,.12,.044,wood,-3.60,.721,z);
+for(const x of [-4.30,-2.90])finishBox(.044,.12,.69,wood,x,.721,-3.77);
+// Chair's structural edge, back rails and foot braces add a convincing silhouette.
+softBox(.51,.030,.49,finishIron,3.94,.435,-4.36,scene,.02);
+for(const y of [.765,.91,1.055])finishBox(.45,.025,.065,steel2,3.94,y,-4.535);
+for(const x of [3.73,4.15])finishBox(.035,.035,.39,finishIron,x,.30,-4.36);
+// Radiator manifolds, control valve and winter-window sill brackets.
+for(const y of [.275,.94])cyl(.023,1.58,rad,0,y,-6.442,0,0,Math.PI/2,scene,16);
+cyl(.041,.055,steel2,.87,.31,-6.439,0,0,Math.PI/2,scene,18);
+cyl(.052,.035,brass,.91,.36,-6.43,0,0,0,scene,16);
+for(const z of [-3.97,-1.23])finishBox(.17,.18,.29,finishIron,-5.63,1.24,z);
+const clockRim=new T.Mesh(new T.TorusGeometry(.383,.011,8,48),steel2);
+clockRim.position.set(0,3.83,-6.499);clockRim.castShadow=true;scene.add(clockRim);
+cyl(.028,.022,steel2,0,3.83,-6.488,Math.PI/2,0,0,scene,16);
+const mugRim=new T.Mesh(new T.TorusGeometry(.063,.009,7,24),steel2);
+mugRim.rotation.x=Math.PI/2;mugRim.position.set(4.49,1.062,-5.08);scene.add(mugRim);
+// All decoration is submitted once so repeated fasteners and joinery share draw calls.
+flushRoomTrim();
+
 /* Radius-expanded floor footprints. Axis sliding keeps contact natural. */
 const obstacles=[
  {x0:-1.32,x1:1.32,z0:-2.39,z1:-.875}, // main workbench, including machine and projecting trays
@@ -380,7 +554,7 @@ const obstacles=[
  {x0:5.57,x1:5.94,z0:-1.41,z1:-.19} // door and handle
 ];
 const playerRadius=.19;
-function canStand(x,z){return x>-5.68&&x<5.68&&z>-6.40&&z<6.70&&!obstacles.some(o=>x>o.x0-playerRadius&&x<o.x1+playerRadius&&z>o.z0-playerRadius&&z<o.z1+playerRadius)}
+function canStand(x,z){return x>-5.60&&x<5.60&&z>-6.40&&z<6.60&&!obstacles.some(o=>x>o.x0-playerRadius&&x<o.x1+playerRadius&&z>o.z0-playerRadius&&z<o.z1+playerRadius)}
 function walk(dx,dz){const steps=Math.max(1,Math.ceil(Math.hypot(dx,dz)/.065));for(let i=0;i<steps;i++){let x=camera.position.x+dx/steps,z=camera.position.z;if(canStand(x,z))camera.position.x=x;z=camera.position.z+dz/steps;if(canStand(camera.position.x,z))camera.position.z=z;}}
 
 window.BYUR_LOAD?.stage('machine_ready');
@@ -515,7 +689,7 @@ function recordOutputFrame(){
  for(const mark of marks[outputStage]||[]){const key=outputStage+'-'+mark;if(outputProgress>=mark&&!outputAudit.frames.some(f=>f.key===key))outputAudit.frames.push({key,state,png:renderer.domElement.toDataURL('image/png')})}
  if(outputStage==='ready')outputAudit.done=true;
 }
-if(new URLSearchParams(location.search).has('inspect'))window.BYUR_INSPECT={viewReady:()=>!viewMoving&&Number(getComputedStyle(renderer.domElement).opacity)>.999,recordOutput:()=>{outputAudit={samples:[],frames:[]}},outputAudit:()=>outputAudit,snapshot:()=>({output:outputSnapshot(),camera:camera.position.toArray(),safe:canStand(camera.position.x,camera.position.z),machine:new T.Box3().setFromObject(machine).getSize(new T.Vector3()).toArray(),calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,frames:renderedFrames,cinema:cinema.snapshot(),recoilPeak,issued,archiveSheets:issuedSheets.count,counterDisplay,paperBend:Math.max(...inPaper.geometry.attributes.position.array.filter((v,i)=>i%3===2)),winter:{time:winterTime,daylight:daylight.intensity,passing:passingGlow.intensity},busy}),canStand,shots:cinema.shots};
+if(new URLSearchParams(location.search).has('inspect'))window.BYUR_INSPECT={viewReady:()=>!viewMoving&&Number(getComputedStyle(renderer.domElement).opacity)>.999,recordOutput:()=>{outputAudit={samples:[],frames:[]}},outputAudit:()=>outputAudit,snapshot:()=>({output:outputSnapshot(),camera:camera.position.toArray(),safe:canStand(camera.position.x,camera.position.z),machine:new T.Box3().setFromObject(machine).getSize(new T.Vector3()).toArray(),room:{frontWall:frontWall.name,frontWallSize:new T.Box3().setFromObject(frontWall).getSize(new T.Vector3()).toArray(),frontWallZ:frontWall.position.z},calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,frames:renderedFrames,cinema:cinema.snapshot(),recoilPeak,issued,archiveSheets:issuedSheets.count,counterDisplay,paperBend:Math.max(...inPaper.geometry.attributes.position.array.filter((v,i)=>i%3===2)),winter:{time:winterTime,daylight:daylight.intensity,passing:passingGlow.intensity},busy}),canStand,shots:cinema.shots};
 addEventListener('resize',()=>cinema.resize());
 resetVisual();renderer.render(scene,camera);window.BYUR_LOAD?.stage('first_frame');setTimeout(()=>window.BYUR_LOAD?.complete(),180);
 const listenerForward=new T.Vector3(),listenerUp=new T.Vector3();let last=performance.now(),sceneTime=0;

@@ -2,13 +2,18 @@
 
 **Maintained status snapshot, prepared 1 November 2026.** Status is sourced from the repository at the stated checkpoints. Future changes must update this document when they affect current behavior or release claims.
 
-## Issue #9 — contextual accessible UI candidate (2 November 2026)
 
-- **Working branch:** [`issue-9-contextual-accessible-ui`](https://github.com/joedoragon-glitch/byurokyadt-1/tree/issue-9-contextual-accessible-ui) based on `main` `9b95387f4e2e`. Proposed app/offline cache version **10.1.2** is a branch candidate, not yet merged or published.
-- **Scope:** stage-aware Select/Confirm/Collect controls, unobtrusive title and help/view/audio menu, native help dialog, keyboard and cinematic focus return, touch/readability rules, independent audio and local-file privacy unchanged. Mechanical geometry, animation, samples and camera routes are not redesigned.
-- **Implementation evidence:** [Main's before screenshots](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41392927312/artifacts/13118312487); [actual after screenshots](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41402099712/artifacts/13121807394). The 10.1.2 UI implementation passed the [full non-deploying Chromium regression](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41402099712) and [documentation/audio checks](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41402099694) at `85cc14b516cbef671a897bfbe07882312efd9d3f`. The subsequent packaging correction synchronizes `package-lock.json` with the candidate version; recheck the **latest** PR head and its checks for release readiness.
-- **Cross-issue integration (coordination review, 2 Nov):** `main` remains `9b95387f4e2e`; the five PRs remain independently unmerged. [#13 lighting](https://github.com/joedoragon-glitch/byurokyadt-1/pull/13) changes `js/app.js` shadow logic and claims candidate 10.1.2; [#14 room](https://github.com/joedoragon-glitch/byurokyadt-1/pull/14) changes room geometry and collisions and claims 10.2.0; [#12 performance](https://github.com/joedoragon-glitch/byurokyadt-1/pull/12) adds measurement tooling; [#11 maintenance](https://github.com/joedoragon-glitch/byurokyadt-1/pull/11) adds release/lockfile/test-roster guards. The UI PR overlaps with these branches in HTML loader versions, PWA cache, package metadata, acceptance tests and/or maintained docs. Each currently targets unchanged `main`, but separate green CI runs do **not** establish combined compatibility. Keep issue #9 independent; after an authorized integration of preceding PRs, rebase this PR if needed, reconcile one shared release/cache version and test roster, and rerun relevant UI/offline/document regression tests against the combined head. No sibling branch was modified here.
-- **Review gate:** **conditionally ready for owner visual/tone review** after exact-head UI CI; combined-game integration remains conditional on unmerged siblings. Real-device touch/safe-area and human VoiceOver/TalkBack remain unverified. The current Pages URL is not this candidate; no merge/deploy authorization is implied.
+## Cross-issue integration candidate (2 November 2026)
+
+- [PR #13](https://github.com/joedoragon-glitch/byurokyadt-1/pull/13) (lighting) was merged into `main` and [PR #14](https://github.com/joedoragon-glitch/byurokyadt-1/pull/14) (room) was combined on its branch with the lighting code. The independent PR snapshots below are historical and may predate the combined build.
+- [PR #15](https://github.com/joedoragon-glitch/byurokyadt-1/pull/15) adds contextual accessible operator controls, independent Sound/Music settings, a secondary Menu, first-time Help and reduced HUD noise. The unified 10.2.1 release assets are coordinated with the room and lighting versions; validate the exact combined branch and the future Pages deployment separately.
+- Separate work on [PR #12](https://github.com/joedoragon-glitch/byurokyadt-1/pull/12) (profiling) and [PR #11](https://github.com/joedoragon-glitch/byurokyadt-1/pull/11) (maintenance) must be integrated with docs/test rosters rather than replacing earlier work.
+
+## Historical checkpoint: source and issue #6 candidate (2 November 2026 UTC)
+
+- `main` is at `9b95387f4e2ee1966cfce7f1bc3ec9a66e4b0e9d`, following the authorized PR #5 merge. Exact-main [CI/Pages run #41392927312](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41392927312) passed the existing acceptance and deployment checks. The sections below are dated historical snapshots and should not be read as the current PR #5 state.
+- [Issue #6](https://github.com/joedoragon-glitch/byurokyadt-1/issues/6) / [draft PR #13](https://github.com/joedoragon-glitch/byurokyadt-1/pull/13): an **unmerged and unpublished** 10.1.2 lighting candidate, confined to office shadow coverage, caster selection, source-aligned regression and offline cache revision. Owner visual approval, actual physical handset/GPU verification, any PR merge, and deployment remain outstanding.
+- The dedicated lighting review workflow compares the exact main baseline with the branch in Chromium at desktop and narrow/mobile viewports; the complete existing browser game suite runs without publishing. Use the final CI run, attached before/after frames and measured results on PR #13 to determine its actual verified status; the presence of a workflow or candidate commit does **not** imply a pass.
 
 ## Verified baseline before the documentation migration
 
@@ -31,6 +36,12 @@ The listening room contains no new music, engine, online service or game-state i
 - The previous failing runs were used to diagnose a real background-footstep/approach race and overly eager browser/test assertions. The three-line `js/audio.js` fix preserves original sound assets and the real paper-cycle logic. Earlier failures are historical evidence, not current passes.
 - The final documentation cleanup and restoration of the historical `review.yml` branch filter do not alter the tested app, game tests, assets or package version. Verify the focused PR check on that documentation-only commit before merge.
 - **No publication or real-device/acoustic certification is implied.** `main` and the public Pages build remain at the prior verified baseline until the owner explicitly authorizes merge. Device audio quality, physical iPhone/Chromebook performance and installed PWA update behavior remain unverified.
+
+## Issue #7 environment candidate — 2 November 2026
+
+The `issue-7-room-completeness` feature branch proposes the **10.2.0 room visual update** from main `9b95387f4e2e`: a physical +Z wall, continuous four-wall joins, period service fittings, door details, and refined cabinets/chair/telephone/radiator. It does **not** change the accepted central machine, original poster files, paper timing, lighting, audio, save data or eight cinematic shot definitions. A new cache namespace `byurokyadt-v10-2-0` and query string `?v=10.2.0` isolate the candidate from installed 10.1.1 shells.
+
+The issue-specific [environment evidence guide](ROOM_COMPLETENESS_REVIEW.md) inventories changes and specifies repeatable before/after Chromium captures from the pinned main base. Test results and evidence should be linked from the issue and PR **only after an actual run**. This branch is **implemented, not merged, published, accepted artistically, or device verified**; physical-device and native-GPU performance remain unmeasured.
 
 ## Ongoing accuracy rules
 

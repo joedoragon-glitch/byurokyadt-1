@@ -1,0 +1,136 @@
+name: Lighting and shadows review (no deploy)
+on:
+  push:
+    branches: ["issue-6-office-lighting"]
+permissions:
+  contents: read
+jobs:
+  lighting:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout candidate branch
+        uses: actions/checkout@v6
+        with:
+          path: candidate
+      - name: Checkout unchanged main as comparison baseline
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          path: baseline
+      - name: Set up Node 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Install browser test dependencies
+        run: cd candidate && npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install Chromium
+        run: cd candidate && npx playwright install --with-deps chromium
+      - name: Start isolated review servers
+        run: |
+          python3 -m http.server 8000 --directory baseline >/tmp/byur-main.log 2>&1 &
+          python3 -m http.server 8001 --directory candidate >/tmp/byur-candidate.log 2>&1 &
+          sleep 2
+          curl --fail http://127.0.0.1:8000/index.html -o /dev/null
+          curl --fail http://127.0.0.1:8001/index.html -o /dev/null
+      - name: Paired desktop/mobile shadow and stamp evidence
+        run: cd candidate && node tests/lighting-shadows.mjs
+      - name: Complete nondeploying game regression
+        run: cd candidate && BASE_URL=http://127.0.0.1:8001/ npm test
+      - name: Preserve screenshots and actual metrics
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: issue-6-lighting-evidence
+          path: candidate/test-results/
+          retention-days: 14
+
+  # Test a throwaway local merge with the related (still unmerged) room branch.
+  # Never push, merge into main, deploy, or claim this resolves future version/docs conflicts.
+  integrate-room:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout lighting candidate with history
+        uses: actions/checkout@v6
+        with:
+          path: candidate
+          fetch-depth: 0
+      - name: Checkout unchanged main baseline
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          path: baseline
+      - name: Set up Node 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Install candidate dependencies
+        run: cd candidate && npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install Chromium
+        run: cd candidate && npx playwright install --with-deps chromium
+      - name: Create ephemeral candidate plus issue 7 tree (never pushed)
+        run: |
+          git -C candidate fetch origin refs/heads/issue-7-room-completeness:refs/remotes/origin/issue-7-room-completeness
+          git -C candidate worktree add --detach "$GITHUB_WORKSPACE/combined" HEAD
+          git -C combined config user.name "Local integration review"
+          git -C combined config user.email "review@localhost"
+          set +e
+          git -C combined merge --no-commit --no-ff origin/issue-7-room-completeness
+          merged=$?
+          set -e
+          if [ "$merged" -ne 0 ]; then
+            # The expected independent release-number and documentation edits
+            # conflict. Keep lighting versions only for this local runtime probe.
+            # A conflict in source code or relevant tests is a real blocker.
+            while IFS= read -r path; do
+              [ -z "$path" ] && continue
+              case "$path" in
+                js/*|tests/lighting-shadows.mjs|tests/room-shell.mjs|tests/room-visual.mjs)
+                  echo "::error::Source/test conflict requires deliberate integration: $path"
+                  exit 1 ;;
+                README.md|index.html|package.json|package-lock.json|service-worker.js|tests/acceptance.mjs|docs/*)
+                  git -C combined checkout --ours -- "$path"
+                  git -C combined add -- "$path" ;;
+                *) echo "::error::Unexpected conflict: $path"; exit 1 ;;
+              esac
+            done < <(git -C combined diff --name-only --diff-filter=U)
+          fi
+          test -z "$(git -C combined diff --name-only --diff-filter=U)"
+          git -C combined add -A
+          git -C combined commit -m "Ephemeral review composition: lighting and room PRs" --no-verify
+          echo "lighting=$(git -C candidate rev-parse HEAD)" | tee integration-heads.txt
+          echo "room=$(git -C candidate rev-parse origin/issue-7-room-completeness)" | tee -a integration-heads.txt
+          echo "combined=$(git -C combined rev-parse HEAD)" | tee -a integration-heads.txt
+          test -f combined/tests/room-shell.mjs
+          grep -q 'fitOfficeShadow(key.shadow.camera' combined/js/app.js
+          grep -q "frontWall.castShadow=false" combined/js/app.js
+          ln -s "$GITHUB_WORKSPACE/candidate/node_modules" combined/node_modules
+      - name: Start baseline and temporary merged-game servers
+        run: |
+          python3 -m http.server 8000 --directory baseline >/tmp/lighting-baseline.log 2>&1 &
+          python3 -m http.server 8002 --directory combined >/tmp/lighting-combined.log 2>&1 &
+          sleep 2
+          curl --fail http://127.0.0.1:8000/index.html -o /dev/null
+          curl --fail http://127.0.0.1:8002/index.html -o /dev/null
+      - name: Combined geometry and shadow coverage / paired capture
+        run: |
+          cd combined
+          node tests/room-shell.mjs
+          node tests/camera-math.mjs
+          LIGHTING_BEFORE_URL=http://127.0.0.1:8000/ LIGHTING_AFTER_URL=http://127.0.0.1:8002/ node tests/lighting-shadows.mjs
+      - name: Combined camera, mechanical motion and room photographs
+        run: |
+          cd combined
+          BASE_URL=http://127.0.0.1:8002/ node tests/cinematic.mjs
+          BASE_URL=http://127.0.0.1:8002/ node tests/paper-motion.mjs
+          ROOM_BEFORE_URL=http://127.0.0.1:8000/ ROOM_AFTER_URL=http://127.0.0.1:8002/ node tests/room-visual.mjs
+      - name: Preserve actual temporary integration results
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: issue-6-room-integration-evidence
+          path: |
+            combined/test-results/
+            integration-heads.txt
+          retention-days: 14

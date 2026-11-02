@@ -14,11 +14,14 @@ The office contains a 3D cabinet with switches, a CRT, analog meters, a printer 
 
 The intended tone is restrained, tactile and gently absurd: institutional bureaucracy treated with the seriousness of a monumental industrial process. The room contains original mechanical sound, a sparse instrumental score, winter ambience and spatially placed corridor footsteps.
 
-The **10.1.2 issue #9 branch candidate** explores a quiet contextual operator interface and accessible secondary controls; it is not a claim of a published build. The maintained [Development state](docs/DEVELOPMENT_STATE.md) records its verification status.
+**The 10.1.2 lighting improvement** in [issue #6](https://github.com/joedoragon-glitch/byurokyadt-1/issues/6) fits a single shadow camera across the office without changing the original lamp palette or mechanical animation. The overall lighting appearance remains subject to the owner's evaluation of the integrated game.
 
-**Version 10.1** corrected the continuous paper path and stamp-contact timing, and made the corridor footsteps respond to an operator approaching the door. The **10.1.1 maintenance patch** protects that approach cue against early background footsteps and adds a separate sound listening room. See [Development state](docs/DEVELOPMENT_STATE.md) for the distinction between source availability and a verified public deployment. See the [historical production audit](AUDIT.md) for the recorded work and its verification; the [maintained development state](docs/DEVELOPMENT_STATE.md) distinguishes historical evidence from current verification.
+**Version 10.1** corrected the continuous paper path and stamp-contact timing, and made the corridor footsteps respond to an operator approaching the door. The **10.1.1 maintenance patch** protects that approach cue against early background footsteps and adds a separate sound listening room. The **10.2.0 room-completeness pass** completes the fourth wall, door joinery, office surfaces and period props without replacing the approved machine or posters; see [the matched environment review](docs/ROOM_COMPLETENESS_REVIEW.md). See [Development state](docs/DEVELOPMENT_STATE.md) for the distinction between source availability and a verified public deployment. See the [historical production audit](AUDIT.md) for the recorded work and its verification; the [maintained development state](docs/DEVELOPMENT_STATE.md) distinguishes historical evidence from current verification.
 
 ## Controls
+
+The **10.2.1 integration candidate** brings the lighting, room architecture and contextual UI improvements together. The complete package is subject to final combined tests and publication authorization.
+
 
 **First procedure:** Select a local document → Confirm → watch the machine inspect and stamp its certificate → Collect certificate → Save PNG. The operator strip shows the current step, file name and progress in ordinary English; the file is not uploaded. The **Menu** button at the top right opens Room/Machine/Side views, Sound, Music, volume, fullscreen, installation (when supported) and How to operate. Escape closes the menu. The menu is optional for the main procedure and keeps the office unobstructed when closed.
 
@@ -43,7 +46,7 @@ The input tray, confirmation button, reset knob and completed output sheet are a
 
 **[Open the sound listening room](https://joedoragon-glitch.github.io/byurokyadt-1/assets/audio-preview.html)** to play each of the seven existing recordings individually, without starting a machine cycle or changing game state. The room has native playback controls and a one-track-at-a-time behavior. It does not preview procedural wind, radiator ticks or corridor footsteps; those are generated inside the game.
 
-Inside the game, **Menu → Sound** (mechanics and room) and **Menu → Music** are independent and begin off. Your action unlocks browser audio; the master volume is adjustable and music quietens during a procedure. Audio suspends when the tab is hidden. The original 64-second score and mechanical sounds can be regenerated with `python3 scripts/build_audio.py` when NumPy, SciPy and ffmpeg are available.
+Inside the game, **Sound** (mechanics and room) and **Music** are independent and begin off. Your action unlocks browser audio; the master volume is adjustable and music quietens during a procedure. Audio suspends when the tab is hidden. The original 64-second score and mechanical sounds can be regenerated with `python3 scripts/build_audio.py` when NumPy, SciPy and ffmpeg are available.
 
 **[Sound identity and production guidance](docs/AUDIO_DIRECTION.md)** explains the creative and technical standards. **[Creative direction](docs/CREATIVE_DIRECTION.md)** records the visual and narrative identity; accepted reference decisions and original texture notes remain in [AESTHETICS.md](AESTHETICS.md).
 
