@@ -2,6 +2,8 @@ name: Inspect review build
 on:
   push:
     branches: ["v9-aesthetic-review", "v10-cinema-review", "v10-paper-review"]
+  pull_request:
+    branches: ["main"]
 permissions:
   contents: read
 jobs:

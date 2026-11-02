@@ -50,6 +50,9 @@ try {
   assert.equal(await page.locator('#fatal').isVisible(),false);
   const sceneInfo=await page.evaluate(()=>window.BYUR_INSPECT.snapshot());
   assert.equal(sceneInfo.issued,1,'Issued counter survives reload');assert.equal(sceneInfo.archiveSheets,1,'Receiving tray restores');assert(sceneInfo.safe);assert(sceneInfo.machine[0]>1.1&&sceneInfo.machine[0]<1.5);
+  const saved=await page.evaluate(()=>({entries:Object.entries(localStorage),pageText:document.body.textContent}));
+  assert.deepEqual(saved.entries,[['byur-issued','1']],'Only the numeric issued total may persist in local storage');
+  assert(!saved.pageText.includes('FORM-27B.txt')&&!saved.pageText.includes('SECOND.txt'),'Reload must not restore a private filename into the page');
   const blocked=await page.evaluate(()=>[[0,-1.5],[-4.4,-5.5],[-3.6,-3.7],[4,-5.2],[3.94,-4.3],[6,0]].map(([x,z])=>window.BYUR_INSPECT.canStand(x,z)));assert.deepEqual(blocked,[false,false,false,false,false,false]);
   await page.locator('#deskView').click();await page.waitForFunction(()=>window.BYUR_INSPECT.viewReady());
   await page.locator('#app canvas').click({position:{x:30,y:600}});

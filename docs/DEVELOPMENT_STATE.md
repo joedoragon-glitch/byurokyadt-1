@@ -1,8 +1,18 @@
 # Development state — БЮРОКЯДТ-1
 
-**Maintained status snapshot, prepared 1 November 2026.** Status is sourced from the repository at the stated checkpoints. Future changes must update this document when they affect current behavior or release claims.
+**Maintained status snapshot, refreshed 2 November 2026.** Check the dated checkpoint and exact commit before treating a result as current. Future changes must update this document when they affect current behavior or release claims.
 
-## Verified baseline before the documentation migration
+## Current verified repository state — 2 November 2026 UTC
+
+This section supersedes the **current-status interpretation** of the historical checkpoints below; their original observations remain useful evidence.
+
+- **Current `main` baseline:** [`9b95387f4e2ee1966cfce7f1bc3ec9a66e4b0e9d`](https://github.com/joedoragon-glitch/byurokyadt-1/commit/9b95387f4e2ee1966cfce7f1bc3ec9a66e4b0e9d), merge commit for [PR #5](https://github.com/joedoragon-glitch/byurokyadt-1/pull/5), merged **2 November 2026 UTC**.
+- **Version/source:** `package.json` and lockfile are **10.1.1**. The HTML module URL suffixes and curated service-worker cache are 10.1.1; the on-screen `V10 · CЇИЄMA BUЯЄAU` plaque denotes the V10 cinematic feature era, not a semver release label.
+- **Publication evidence:** exact-head [Pages run #41392927312](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41392927312) finished **successfully** on 2 November 2026, including local and deployed acceptance stages. This confirms that release's automated deployment, **not** physical-device, installed-app-update, or acoustic verification.
+- **Review workflow:** `.github/workflows/pages.yml` publishes on `main` only. Issue [#10](https://github.com/joedoragon-glitch/byurokyadt-1/issues/10) proposes adding pull-request coverage to the **non-deploying** review workflow, alongside maintenance checks; the changes remain unmerged until authorized.
+- **Known outstanding platform limitations:** real iPhone/Chromebook controls and audio, physical GPU performance, and installed service-worker update behavior have not been certified by the GitHub CI run.
+
+## Historical baseline before the documentation migration (1 November checkpoint)
 
 - **Default branch:** `main` at `fe68d5e1fc579d899392baef10fa091674a28473`, committed **25 September 2026**, message: "Allow slow software renderers to complete the full paper cycle in acceptance."
 - **Published-baseline package version:** `10.1.0`; the published service-worker cache was `byurokyadt-v10-1`. **PR #5 candidate:** package `10.1.1`, updated query-string assets and `byurokyadt-v10-1-1` offline cache. The candidate is not yet published.
