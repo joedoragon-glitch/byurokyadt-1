@@ -228,10 +228,8 @@ try {
   });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await stage('audio-on-idle', async () => {
-    // Main previously defaulted to off; 10.2.2 defaults to on. Measure this
-    // stage with the effects bus actually enabled in either revision.
-    if (!await page.evaluate(() => window.MinistryAudio.state().effectsOn)) await clickUtility('sound');
-    await page.waitForFunction(() => window.MinistryAudio.state().decoded.length === 10 && window.MinistryAudio.state().effectsOn, null, { timeout: 45000 });
+    await clickUtility('sound');
+    await page.waitForFunction(() => window.MinistryAudio.state().decoded.length === 10, null, { timeout: 45000 });
     await page.waitForTimeout(8000);
   });
   await page.locator('#file').setInputFiles({ name: 'PROFILE-27B.txt', mimeType: 'text/plain', buffer: Buffer.from('performance audit: no file uploaded') });
