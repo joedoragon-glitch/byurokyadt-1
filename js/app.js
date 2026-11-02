@@ -61,14 +61,20 @@ const floorTex=canvasTex(512,512,(g,w,h)=>{
 floorTex.wrapS=floorTex.wrapT=T.RepeatWrapping;floorTex.repeat.set(5,6);
 const institutionalFloor=new T.MeshStandardMaterial({map:floorTex,metalness:.04,roughness:.88});
 
-// The solid room shell receives prop shadows, but must not block the interior's
-// simulated overhead key. Casting the ceiling from an exterior light position
-// would black out the office; floors and solid walls add no useful interior casts.
+// A real aperture in the +X concrete wall receives the CLOSED corridor door.
+// The wall's jambs and lintel enclose the leaf instead of hiding a full wall
+// behind a floating door-sized slab.
+const corridorOpening={z0:-1.47,z1:-.13,top:2.64};
+// The solid room shell receives prop shadows but does not cast from the
+// simulated interior ceiling key. Exterior-wall shadowing would occlude it.
 for(const shell of [
  box(12,.18,14,institutionalFloor,0,-.09,0),
  box(12,6,.2,wallConcrete,0,3,-6.8),
  box(.2,6,14,wallConcrete,-6,3,0),
- box(.2,6,14,wallConcrete,6,3,0),
+ box(.2,6,corridorOpening.z0+7,wallConcrete,6,3,(corridorOpening.z0-7)/2),
+ box(.2,6,7-corridorOpening.z1,wallConcrete,6,3,(corridorOpening.z1+7)/2),
+ box(.2,6-corridorOpening.top,corridorOpening.z1-corridorOpening.z0,wallConcrete,
+  6,(6+corridorOpening.top)/2,(corridorOpening.z0+corridorOpening.z1)/2),
  box(12,.2,14,M(0x6d6c66,.03,.94),0,6,0)
 ])shell.castShadow=false;
 
@@ -119,12 +125,14 @@ for(const z of [-4.8,-1.7,1.4,4.5])box(11.7,.28,.34,ceilingBeam,0,5.72,z).castSh
 for(const x of [-4.3,0,4.3])box(.30,.24,13.1,ceilingBeam,x,5.75,0).castShadow=false;
 
 /* cold fluorescent luminaires nested between coffers */
-scene.add(new T.HemisphereLight(0xc4cfcc,0x3e3428,.74));
-// One shadowed, cool interior key; warm practicals stay unshadowed. Moving the
-// key along its ORIGINAL direction changes shadow-camera depth, not the look.
-// It keeps the entire occupied room in front of the shadow camera.
-const key=new T.DirectionalLight(0xf1efe8,1.10);
-key.position.set(-24,40,24);
+scene.add(new T.HemisphereLight(0xc4cfcc,0x3e3428,.88));
+// Frosted winter glass gives diffuse cold fill, NOT a hard winter sun.
+// Approximate the three overhead luminaires with ONE near-vertical shadow key;
+// their individual warm point lights remain inexpensive and unshadowed.
+// A steep incidence keeps desks and cabinets grounded without projecting
+// multi-metre diagonal shadows from a window that cannot cast them.
+const key=new T.DirectionalLight(0xf1efe8,.78);
+key.position.set(-2.2,18,1.1);
 key.castShadow=true;key.shadow.bias=-.0002;key.shadow.normalBias=.015;
 key.shadow.mapSize.set(mobile?1024:2048,mobile?1024:2048);
 // Fit the fixed map ONCE to all reachable floor, walls, ceiling, door and
@@ -550,7 +558,9 @@ const frost=canvasTex(768,768,(g,w,h)=>{
 const passingGlow=new T.PointLight(0xdbdbbd,0,4.5,2);passingGlow.position.set(-5.35,1.8,-2.6);scene.add(passingGlow);
 let winterTime=0,lastWinter=-1;
 function updateWinter(now){if(document.hidden||reducedMotion.matches)return;const seconds=now/1000,phase=seconds%83,passing=phase>43&&phase<48,interval=passing?.12:1;if(seconds-lastWinter<interval)return;lastWinter=seconds;winterTime=seconds;daylight.intensity=3.15+.24*Math.sin(seconds/29);windowPane.emissiveIntensity=.23+.014*Math.sin(seconds/29);passingGlow.intensity=passing?Math.sin((phase-43)/5*Math.PI)*.85:0;passingGlow.position.z=-3.9+(phase-43)*.51;needsFrame=true;}
-const doorGroup=new T.Group();doorGroup.position.set(5.84,0,-.8);doorGroup.rotation.y=-Math.PI/2;scene.add(doorGroup);
+// The door leaf seats inside the wall aperture (wall spans x=5.90..6.10).
+// Faces, seals and perimeter frame project inward from the recess.
+const doorGroup=new T.Group();doorGroup.position.set(5.96,0,-.8);doorGroup.rotation.y=-Math.PI/2;scene.add(doorGroup);
 softBox(1.17,2.52,.14,dark,0,1.26,0,doorGroup,.015);softBox(1.02,2.37,.09,wood,0,1.205,.10,doorGroup,.018);softBox(.78,1.34,.035,M(0x4a4232,.04,.92),0,1.57,.16,doorGroup,.01);softBox(.78,.51,.035,wood,0,.53,.16,doorGroup,.01);decal(.43,.18,['ОПЕРАТОРСКАЯ','№ 3'],0,1.81,.189,doorGroup,'#b9a777');cyl(.038,.055,brass,.37,1.07,.205,Math.PI/2,0,0,doorGroup);box(.16,.027,.027,brass,.32,1.07,.247,doorGroup);
 /* ROOM COMPLETENESS: intentionally physical institutional fittings; no cabinet redesign. */
 const finishPaint=M(0x697165,.02,.93),finishIron=M(0x464d46,.31,.72);
@@ -588,13 +598,30 @@ for(const z of [-6.677,6.877]){
  finishBox(11.82,.13,.095,finishIron,0,5.86,z>0?6.816:-6.616);
 }
 for(const side of [-1,1]){
- finishBox(.026,.96,13.56,finishPaint,side*5.875,.49,0);
- finishBox(.065,.13,13.58,finishIron,side*5.846,.085,0);
- finishBox(.044,.043,13.56,steel2,side*5.845,1,0);
+ // Paint, skirting and chair rail TERMINATE at the door jambs on +X.
+ // The opposite wall retains a continuous finish.
+ const spans=side<0?[[-6.78,6.78]]:
+  [[-6.78,corridorOpening.z0],[corridorOpening.z1,6.78]];
+ for(const [z0,z1] of spans){
+  const center=(z0+z1)/2,length=z1-z0;
+  finishBox(.026,.96,length,finishPaint,side*5.875,.49,center);
+  finishBox(.065,.13,length,finishIron,side*5.846,.085,center);
+  finishBox(.044,.043,length,steel2,side*5.845,1,center);
+ }
  finishBox(.095,.13,13.62,finishIron,side*5.815,5.86,0);
- for(const z of [-5.15,-2.57,0,2.57,5.15])finishBox(.026,4.66,.025,seam,side*5.844,3.36,z);
+ for(const z of [-5.15,-2.57,0,2.57,5.15]){
+  if(side>0&&z===0)finishBox(.026,5.69-corridorOpening.top,.025,
+   seam,side*5.844,(5.69+corridorOpening.top)/2,z);
+  else finishBox(.026,4.66,.025,seam,side*5.844,3.36,z);
+ }
  for(const y of [3.02,4.69])finishBox(.027,.027,13.49,seam,side*5.843,y,0);
 }
+// Dark metal returns finish the real thickness of the cut concrete.
+// Static noncasting trim makes no detached floating panel shadows.
+for(const z of [corridorOpening.z0+.015,corridorOpening.z1-.015])
+ finishBox(.20,corridorOpening.top,.030,finishIron,6,corridorOpening.top/2,z);
+finishBox(.20,.042,corridorOpening.z1-corridorOpening.z0,finishIron,
+ 6,corridorOpening.top-.021,-.8);
 for(const x of [-5.3,-2.65,0,2.65,5.3])finishBox(.033,4.65,.026,seam,x,3.34,6.858);
 for(const y of [3.02,4.69])finishBox(11.55,.030,.028,seam,0,y,6.858);
 const tiePoints=[];

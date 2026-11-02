@@ -38,6 +38,28 @@ const T={
 const scene={add(o){if(o instanceof InstancedMesh){assert.equal(o.instances.length,o.count);assert(o.instances.every(x=>x&&Number.isFinite(x.x)),'All instancing transforms initialized');instances.push(o);for(const item of o.instances)records.push({kind:'instanced',...item,mat:o.material})}}};
 const env={T,scene,doorGroup:{},seam:material(),steel2:material(),wallConcrete:material(),tieMat:material(),brass:material(),black:material(),phoneRed:material(),wood:material(),meterIvory:material(),rad:material(),
  M:material,box:(...args)=>shape('box',...args),softBox:(...args)=>shape('softBox',...args),cyl:(r,h,mat,x,y,z,rx,ry,rz,parent)=>shape('cyl',r,h,r,mat,x,y,z,parent),decal:(...args)=>shape('decal',...args)};
+// Evaluate the actual initial shell, including the three-piece +X doorway.
+const apertureStart=app.indexOf('const corridorOpening=');
+const apertureEnd=app.indexOf('/* recessed concrete panel seams',apertureStart);
+assert(apertureStart>0&&apertureEnd>apertureStart,'Door aperture is part of the real room shell');
+const shellBoxes=[];
+const shellEnv={institutionalFloor:{},wallConcrete:{},M:material,
+ box:(w,h,d,mat,x,y,z)=>{
+  const o={w,h,d,mat,x,y,z,castShadow:true};
+  shellBoxes.push(o);return o;
+ }};
+vm.createContext(shellEnv);
+vm.runInContext(app.slice(apertureStart,apertureEnd),shellEnv);
+const opening=vm.runInContext('corridorOpening',shellEnv);
+const rightWall=shellBoxes.filter(o=>o.x===6&&o.w===.2&&o.mat===shellEnv.wallConcrete);
+assert.equal(rightWall.length,3,'Right wall comprises two jamb-side spans and a lintel');
+const hasConcrete=(z,y)=>rightWall.some(o=>Math.abs(z-o.z)<o.d/2-.0001&&Math.abs(y-o.y)<o.h/2-.0001);
+assert(!hasConcrete(-.8,1.3),'There is an actual open aperture behind the closed door leaf');
+assert(hasConcrete(-1.8,1.3)&&hasConcrete(.5,1.3),'Concrete reaches either side of the jamb');
+assert(hasConcrete(-.8,3.1),'Continuous wall and lintel enclose the opening above the door');
+assert.equal(rightWall.every(o=>!o.castShadow),true,'Room walls do not block the interior key');
+assert.match(app,/doorGroup\.position\.set\(5\.96,0,-\.8\)/,'Door leaf seats in the shell recess');
+env.corridorOpening=opening;
 vm.createContext(env);vm.runInContext(app.slice(start,end),env);
 const front=vm.runInContext('frontWall',env);
 assert.equal(front.name,'room-front-wall');
