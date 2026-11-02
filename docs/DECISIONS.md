@@ -9,6 +9,7 @@
 | Identity | Fictional 1982 Soviet bureaucratic document-confirmation experience, titled **БЮРОКЯДТ-1**; current source, [README](../README.md) |
 | Machine appearance | Layered physical cabinet with recessed CRT, switch bank, ministry plate, analog meters, press, paper feed/chute, wear and hardware; [AESTHETICS.md](../AESTHETICS.md) |
 | Atmosphere | Cold inhabited winter office, original poster assets, heavy door, archival furniture, nearby environmental details; [AESTHETICS.md](../AESTHETICS.md), [AUDIT.md](../AUDIT.md) |
+| Winter light correction (2 Nov 2026) | Ceiling fixtures should govern short, soft shadows; opaque frosted glass supplies diffuse cold fill, not sharp winter sun. The right corridor leaf must be seated in an actual wall aperture with jambs and lintel. Owner's live 10.2.3 screenshots; [issue #22](https://github.com/joedoragon-glitch/byurokyadt-1/issues/22). Implementation is a review candidate until merged. |
 | Player trust | File contents do not leave the device; certificate uses selected filename; issued count persists locally but personal names/contents do not persist in the tray; source and [README](../README.md) |
 | Audio | Original generated music and effects; independent sound/music controls, user-gesture startup and positional room/corridor sounds; `js/audio.js`, [AESTHETICS.md](../AESTHETICS.md) |
 | Cinematic presentation | Eight physical-camera inspection views, obstruction-safe routing, scene-only photographs and reduced-motion support; `js/cinematic.js`, [AUDIT.md](../AUDIT.md) |
