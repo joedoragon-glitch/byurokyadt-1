@@ -1,6 +1,16 @@
 # Development state — БЮРОКЯДТ-1
 
-**Maintained status snapshot, prepared 1 November 2026.** Status is sourced from the repository at the stated checkpoints. Future changes must update this document when they affect current behavior or release claims.
+**Maintained status snapshot, prepared 1 November 2026 and refreshed 2 November 2026.** Status is sourced from the repository at the stated checkpoints. Future changes must update this document when they affect current behavior or release claims.
+
+## Latest repository and performance review checkpoint (2 November 2026 UTC)
+
+- **Current released-source checkpoint:** `main` at `9b95387f4e2ee1966cfce7f1bc3ec9a66e4b0e9d`, package `10.1.1`, Three.js r152/WebGL, PWA cache `byurokyadt-v10-1-1`. [PR #5](https://github.com/joedoragon-glitch/byurokyadt-1/pull/5) was merged on 2 November 2026; exact-main [Pages and acceptance run #41392927312](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41392927312) passed. The following 1 November PR #5 candidate description is retained as **dated history**, not the present release status.
+- **Current unmerged issue #8 work:** [PR #12](https://github.com/joedoragon-glitch/byurokyadt-1/pull/12) on branch `perf/issue-8-workload-profiling` introduces a non-deploying paired Chromium profiler and documented performance acceptance protocol. No player-facing runtime, artwork, audio, game data or service-worker asset was changed. Source review confirmed gated WebGL draws despite continuously scheduled rAF callbacks, bounded winter/clock/audio updates, instanced props and existing offline caches.
+- **Measured early profiler and comprehensive regression evidence:** [CI run #41399820069](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41399820069) passed the base/candidate profiler and full existing `npm test` on first instrumentation commit `9db86edf394050cb2874cdc94d85b22187cf4ba0`. Software-rendered Chromium used ANGLE/SwiftShader, 960×680 DPR 1: 30-second idle 1,155 vs 1,159 rAF callbacks but only 26 vs 27 scene renders; a full physical document procedure rendered 77 frames on each and took 39.18 vs 38.98 seconds. Minor differences reflect uncontrolled run variation on identical runtime code, **not** claimed performance improvement or physical-device speed. Offline/audio/cinema/paper and source geometry regressions passed.
+- **Instrument refinement:** The subsequent candidate includes WebGL buffer/texture resource-lifecycle counts, Chromium CDP JavaScript-heap sampling, lower-overhead browser polling and a CI checkout pinned to the exact PR head SHA. Read the PR's matching commit/run evidence for those refined measurements. These counters are diagnostics: headless SwiftShader render time is not hardware GPU time, and JavaScript heap does not measure VRAM. Without a material demonstrated runtime bottleneck, production rendering stays unchanged.
+- **Unverified:** physical mobile/desktop/Chromebook latency, GPU throughput, power/thermals, native installed-PWA update behavior, and human visual/acoustic acceptance. PR #12 must not be merged or deployed without the owner's explicit authorization.
+
+---
 
 ## Verified baseline before the documentation migration
 
