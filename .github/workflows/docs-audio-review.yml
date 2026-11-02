@@ -37,11 +37,11 @@ jobs:
           npm run test:docs
           npm run test:preview
           npm run test:preview:browser
-      - name: Upload diagnostic screenshots
-        if: failure()
+      - name: Upload visual review screenshots
+        if: always()
         uses: actions/upload-artifact@v5
         with:
-          name: audio-room-review-failure
-          path: test-results/
+          name: audio-room-visual-review
+          path: test-results/audio-room-*.png
           if-no-files-found: ignore
           retention-days: 7

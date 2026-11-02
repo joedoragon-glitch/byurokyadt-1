@@ -1,17 +1,25 @@
 // Real Chromium acceptance for the standalone original-audio room and game cache.
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
+import {mkdir} from 'node:fs/promises';
 const base=process.env.BASE_URL || 'http://127.0.0.1:8000/';
 const url=new URL('assets/audio-preview.html',base).href;
 const browser=await chromium.launch();
 const context=await browser.newContext({viewport:{width:1000,height:860}});
 const page=await context.newPage();
 page.setDefaultTimeout(30000);
+await mkdir('test-results',{recursive:true});
 const errors=[];
 page.on('pageerror',error=>errors.push(error.message));
 try{
  await page.goto(url,{waitUntil:'load'});
  assert.equal(await page.locator('audio').count(),7,'Seven native recording players');
+ await page.screenshot({path:'test-results/audio-room-desktop.png',fullPage:true});
+ await page.setViewportSize({width:390,height:844});
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'Audio room must not overflow a narrow phone viewport');
+ assert.equal(await page.locator('audio').first().isVisible(),true);
+ await page.screenshot({path:'test-results/audio-room-mobile.png',fullPage:true});
+ await page.setViewportSize({width:1000,height:860});
  assert.equal(await page.locator('audio[autoplay]').count(),0,'No automatic audio playback');
  assert.equal(await page.locator('audio').evaluateAll(nodes=>nodes.every(node=>node.paused)),true);
  const diagnostics=await page.evaluate(async()=>{
@@ -33,7 +41,12 @@ try{
  await players.nth(0).click({position:{x:32,y:25}});
  await page.waitForFunction(()=>!document.querySelectorAll('audio')[0].paused);
  await players.nth(1).click({position:{x:32,y:25}});
- await page.waitForFunction(()=>!document.querySelectorAll('audio')[1].paused);
+ // The browser changes media.paused before dispatching the asynchronous 'play'
+ // event; wait for the event handler's effect on the previously playing cue.
+ await page.waitForFunction(()=>{
+  const players=document.querySelectorAll('audio');
+  return !players[1].paused&&players[0].paused;
+ });
  assert.equal(await players.nth(0).evaluate(el=>el.paused),true,'Other player must pause');
  await page.getByRole('button',{name:'Stop all playback'}).click();
  assert.equal(await page.locator('audio').evaluateAll(nodes=>nodes.every(el=>el.paused)),true,'Stop all stops media');
@@ -60,7 +73,12 @@ try{
  await context.setOffline(true);
  await page.reload();
  assert.equal(await page.locator('audio').count(),7,'Previously visited listening room must reopen offline');
- await assert.rejects(()=>page.goto(new URL('assets/not-visited-qa.html',base).href), 'Uncached standalone page cannot fall back to game');
+ // Keep the main page stable: a failed navigation can asynchronously visit
+ // chrome-error://, which must not race the subsequent offline game check.
+ const probe=await context.newPage();
+ try{
+  await assert.rejects(()=>probe.goto(new URL('assets/not-visited-qa.html',base).href), 'Uncached standalone page cannot fall back to game');
+ }finally{await probe.close();}
  await page.goto(new URL('index.html',base).href,{waitUntil:'domcontentloaded'});
  assert.equal(await page.locator('#loading').count(),1,'Real game shell survives offline');
  assert.deepEqual(errors,[],'No page-script errors');
