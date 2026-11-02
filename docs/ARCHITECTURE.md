@@ -34,6 +34,7 @@ Follow `js/app.js` when changing processing, counter/tray, collisions or geometr
 - `tests/acceptance.mjs` — Playwright/Chromium game workflow, WebGL, offline, document, sound, export, persistence, collisions and viewports.
 - `tests/cinematic.mjs` — browser cinematic behavior, photos and related checks.
 - `tests/paper-motion.mjs` — rendered intermediate paper motion, stamping and corridor cues.
+- `tests/performance.mjs` — non-deploying paired Playwright profiler for rAF callbacks versus WebGL draws, workload stages, heap and cold/warm/offline loading (development only; not runtime instrumentation).
 
 `.github/workflows/pages.yml` tests local production files, assembles `_site/`, deploys GitHub Pages on pushes to **`main`**, and checks the deployed URL. Its assembly copies `assets/` wholesale, so the independent listening page can be served without changing the deployment workflow. `.github/workflows/review.yml` runs on pushes to three **historical, explicitly named** review branches; a new arbitrary feature branch does not currently acquire CI automatically. Report the absence of an automated run rather than claiming it passed.
 
