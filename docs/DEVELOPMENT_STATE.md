@@ -1,16 +1,25 @@
 # Development state — БЮРОКЯДТ-1
 
-**Maintained status snapshot, prepared 1 November 2026 and refreshed 2 November 2026.** Status is sourced from the repository at the stated checkpoints. Future changes must update this document when they affect current behavior or release claims.
+**Maintained status snapshot, prepared 1 November 2026.** Status is sourced from the repository at the stated checkpoints. Future changes must update this document when they affect current behavior or release claims.
 
-## Latest repository and performance review checkpoint (2 November 2026 UTC)
 
-- **Current released-source checkpoint:** `main` at `9b95387f4e2ee1966cfce7f1bc3ec9a66e4b0e9d`, package `10.1.1`, Three.js r152/WebGL, PWA cache `byurokyadt-v10-1-1`. [PR #5](https://github.com/joedoragon-glitch/byurokyadt-1/pull/5) was merged on 2 November 2026; exact-main [Pages and acceptance run #41392927312](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41392927312) passed. The following 1 November PR #5 candidate description is retained as **dated history**, not the present release status.
-- **Current unmerged issue #8 work:** [PR #12](https://github.com/joedoragon-glitch/byurokyadt-1/pull/12) on branch `perf/issue-8-workload-profiling` introduces a non-deploying paired Chromium profiler and documented performance acceptance protocol. No player-facing runtime, artwork, audio, game data or service-worker asset was changed. Source review confirmed gated WebGL draws despite continuously scheduled rAF callbacks, bounded winter/clock/audio updates, instanced props and existing offline caches.
-- **Measured early profiler and comprehensive regression evidence:** [CI run #41399820069](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41399820069) passed the base/candidate profiler and full existing `npm test` on first instrumentation commit `9db86edf394050cb2874cdc94d85b22187cf4ba0`. Software-rendered Chromium used ANGLE/SwiftShader, 960×680 DPR 1: 30-second idle 1,155 vs 1,159 rAF callbacks but only 26 vs 27 scene renders; a full physical document procedure rendered 77 frames on each and took 39.18 vs 38.98 seconds. Minor differences reflect uncontrolled run variation on identical runtime code, **not** claimed performance improvement or physical-device speed. Offline/audio/cinema/paper and source geometry regressions passed.
-- **Instrument refinement:** The subsequent candidate includes WebGL buffer/texture resource-lifecycle counts, Chromium CDP JavaScript-heap sampling, lower-overhead browser polling and a CI checkout pinned to the exact PR head SHA. Read the PR's matching commit/run evidence for those refined measurements. These counters are diagnostics: headless SwiftShader render time is not hardware GPU time, and JavaScript heap does not measure VRAM. Without a material demonstrated runtime bottleneck, production rendering stays unchanged.
-- **Unverified:** physical mobile/desktop/Chromebook latency, GPU throughput, power/thermals, native installed-PWA update behavior, and human visual/acoustic acceptance. PR #12 must not be merged or deployed without the owner's explicit authorization.
+## Issue #8 — evidence-led performance profiling (2 November 2026)
 
----
+- [PR #12](https://github.com/joedoragon-glitch/byurokyadt-1/pull/12) provides reproducible paired CPU/WebGL workload instrumentation, cold/warm/offline cache traces, renderer/resource snapshots, comparison checks and a non-deploying profiling workflow. It preserves the original Three.js runtime, artwork, audio, documents and PWA behavior.
+- Initial separate-head software-Chromium profiling showed similar rendering/callback counts before and after instrumentation; no physical-device speedup is claimed. The combination with lighting, completed room and accessible UI needs its own exact-head repeat; see PR #12's latest Actions run and [profiling protocol](PERFORMANCE_PROFILING.md).
+- The old 10.1.1 main snapshots below remain historical; don't interpret branch-specific performance numbers as hardware-native results or final release validation.
+
+## Cross-issue integration candidate (2 November 2026)
+
+- [PR #13](https://github.com/joedoragon-glitch/byurokyadt-1/pull/13) (lighting) was merged into `main` and [PR #14](https://github.com/joedoragon-glitch/byurokyadt-1/pull/14) (room) was combined on its branch with the lighting code. The independent PR snapshots below are historical and may predate the combined build.
+- [PR #15](https://github.com/joedoragon-glitch/byurokyadt-1/pull/15) adds contextual accessible operator controls, independent Sound/Music settings, a secondary Menu, first-time Help and reduced HUD noise. The unified 10.2.1 release assets are coordinated with the room and lighting versions; validate the exact combined branch and the future Pages deployment separately.
+- Separate work on [PR #12](https://github.com/joedoragon-glitch/byurokyadt-1/pull/12) (profiling) and [PR #11](https://github.com/joedoragon-glitch/byurokyadt-1/pull/11) (maintenance) must be integrated with docs/test rosters rather than replacing earlier work.
+
+## Historical checkpoint: source and issue #6 candidate (2 November 2026 UTC)
+
+- `main` is at `9b95387f4e2ee1966cfce7f1bc3ec9a66e4b0e9d`, following the authorized PR #5 merge. Exact-main [CI/Pages run #41392927312](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41392927312) passed the existing acceptance and deployment checks. The sections below are dated historical snapshots and should not be read as the current PR #5 state.
+- [Issue #6](https://github.com/joedoragon-glitch/byurokyadt-1/issues/6) / [draft PR #13](https://github.com/joedoragon-glitch/byurokyadt-1/pull/13): an **unmerged and unpublished** 10.1.2 lighting candidate, confined to office shadow coverage, caster selection, source-aligned regression and offline cache revision. Owner visual approval, actual physical handset/GPU verification, any PR merge, and deployment remain outstanding.
+- The dedicated lighting review workflow compares the exact main baseline with the branch in Chromium at desktop and narrow/mobile viewports; the complete existing browser game suite runs without publishing. Use the final CI run, attached before/after frames and measured results on PR #13 to determine its actual verified status; the presence of a workflow or candidate commit does **not** imply a pass.
 
 ## Verified baseline before the documentation migration
 
@@ -33,6 +42,12 @@ The listening room contains no new music, engine, online service or game-state i
 - The previous failing runs were used to diagnose a real background-footstep/approach race and overly eager browser/test assertions. The three-line `js/audio.js` fix preserves original sound assets and the real paper-cycle logic. Earlier failures are historical evidence, not current passes.
 - The final documentation cleanup and restoration of the historical `review.yml` branch filter do not alter the tested app, game tests, assets or package version. Verify the focused PR check on that documentation-only commit before merge.
 - **No publication or real-device/acoustic certification is implied.** `main` and the public Pages build remain at the prior verified baseline until the owner explicitly authorizes merge. Device audio quality, physical iPhone/Chromebook performance and installed PWA update behavior remain unverified.
+
+## Issue #7 environment candidate — 2 November 2026
+
+The `issue-7-room-completeness` feature branch proposes the **10.2.0 room visual update** from main `9b95387f4e2e`: a physical +Z wall, continuous four-wall joins, period service fittings, door details, and refined cabinets/chair/telephone/radiator. It does **not** change the accepted central machine, original poster files, paper timing, lighting, audio, save data or eight cinematic shot definitions. A new cache namespace `byurokyadt-v10-2-0` and query string `?v=10.2.0` isolate the candidate from installed 10.1.1 shells.
+
+The issue-specific [environment evidence guide](ROOM_COMPLETENESS_REVIEW.md) inventories changes and specifies repeatable before/after Chromium captures from the pinned main base. Test results and evidence should be linked from the issue and PR **only after an actual run**. This branch is **implemented, not merged, published, accepted artistically, or device verified**; physical-device and native-GPU performance remain unmeasured.
 
 ## Ongoing accuracy rules
 

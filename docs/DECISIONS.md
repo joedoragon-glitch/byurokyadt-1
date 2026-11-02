@@ -38,6 +38,10 @@ This migration is **a selective adaptation, not a claim of exact rule-for-rule e
 
 The mapping is meant to keep future collaborators from copying the other project's current implementation as a false authority. Consult this repository's live source and the owner's new directions before proposing a change.
 
+## Issue #7 visual candidate — not yet accepted
+
+The owner authorized implementation and visual review of a more complete 1982 room on issue #7. The current branch candidate adds a physically modeled +Z wall, continuous muted institutional junctions, improved period desk/cabinet/door detailing and service fittings. **These proposed appearances are not owner-accepted replacements**; the accepted V9 machine and poster artwork are unchanged. See [room comparison and selective aesthetic choices](ROOM_COMPLETENESS_REVIEW.md).
+
 ## Future design decisions
 
 A feature suggested in chat remains **proposed** until the owner authorizes it. If new narrative, interaction, art or music direction is accepted, record the exact choice, its scope, affected asset/behavior and source in this maintained page or the relevant owning feature document. Do not manufacture retrospective approval from dated pull requests, an AI description or an illustrative brief. Keep gameplay-specific proposals separate from existing accepted visual and interaction identity.

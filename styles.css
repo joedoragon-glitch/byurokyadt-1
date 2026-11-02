@@ -18,32 +18,88 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0d0e0b;fon
 .loadTitle{text-align:center;font-weight:900;letter-spacing:2px;font-size:clamp(22px,4vw,38px);color:#f1dfab}.loadSub{text-align:center;font-size:11px;letter-spacing:1.5px;color:#bfb69d;margin:5px 0 20px}
 .loadTask{min-height:38px;text-align:center;font-size:12px;color:#e6d8b5;margin-bottom:10px}.loadBarShell{height:28px;padding:3px;background:#10110e;border:2px inset #77756a;box-shadow:inset 0 0 12px #000}.loadBar{height:100%;width:0;transition:width .16s ease;background:repeating-linear-gradient(135deg,#a42b21 0 16px,#c44734 16px 31px,#d0ad55 31px 36px);box-shadow:0 0 10px rgba(181,49,36,.45)}
 .loadMeta{display:flex;justify-content:space-between;gap:10px;margin-top:7px;font-size:10px;color:#bdb39a}.loadTip{margin-top:20px;min-height:48px;padding:10px 12px;border-top:1px solid #645c48;text-align:center;font-size:12px;line-height:1.45;color:#eadbb5}.loadTip:before{content:"PAЯTY ADVЇCЄ: ";font-weight:900;color:#d5ad55}.loadFooter{text-align:center;margin-top:9px;font-size:9px;color:#817c6c;letter-spacing:.8px}
-@media(max-width:700px){#hud{max-width:78vw;font-size:11px}#hud .small{font-size:9px}#hint{font-size:9px}#fs{display:none}.loadCard{padding:20px 17px 18px}.loadEmblem{width:60px;height:60px;font-size:40px}.loadTip,.loadTask{font-size:10px}}/* V8 operator station: compact tools leave the party wall unobstructed. */
-button{font:700 11px 'Courier New',monospace;cursor:pointer;color:#e5dec7;background:#343d36;border:1px solid #8a927e;padding:10px 13px;letter-spacing:.25px;touch-action:manipulation}
-button:hover{background:#4c594b;border-color:#ded4aa}button:focus-visible{outline:2px solid #f5d58a;outline-offset:3px}button:disabled{opacity:.4;cursor:default}.redButton{background:#80362d;border-color:#bc7560}.redButton:hover{background:#a04637}
-#hud{left:22px;top:22px;max-width:440px;background:rgba(19,26,22,.80);border-color:#727963;padding:12px 15px}
-#hud b{font-size:11px;letter-spacing:.7px;color:#e1d7ad}#hud .small{font-size:10px;color:#b9c1ad}
-#viewControls{position:fixed;right:22px;top:92px;z-index:23;display:flex;flex-direction:column;gap:7px}
-#viewControls button{text-align:left;font-size:10px;background:#253028dd;min-width:145px}
-#operator{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);width:min(570px,calc(100vw - 32px));box-sizing:border-box;background:#1c2722ed;border:1px solid #78816a;box-shadow:0 10px 32px #0006;padding:10px 12px;z-index:25}
-.operatorHead{display:flex;justify-content:space-between;font-size:9px;letter-spacing:1.3px;color:#aebba7;margin-bottom:9px}.operatorActions{display:flex;gap:7px}.operatorActions button{flex:1;white-space:nowrap;font-size:10px;padding:10px 8px}.privacy{font-size:9px;color:#9ba58f;margin-top:9px;text-align:center}
-#hint{bottom:134px;max-width:80vw;white-space:normal;text-align:center;line-height:1.5;background:#18231de8;border-color:#68715f;font-size:11px}
-#cross{display:none}#installBtn{z-index:25}#badge{font-size:9px}#appMode{font-size:8px}
-#certificate{width:min(540px,88vw);max-height:86vh;overflow:auto;background:#202b23;color:#e8ddbf;border:1px solid #8d937b;padding:16px;box-shadow:0 30px 100px #000a}
-#certificate::backdrop{background:#080d0ae8;backdrop-filter:blur(5px)}#certificate canvas{width:100%;height:auto;margin:14px 0;display:block}.receiptHeader{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px}#downloadReceipt{width:100%}
-@media(max-width:700px){#hud{left:12px;top:12px;max-width:calc(100vw - 195px);padding:8px}#hud b{font-size:9px}#hud .small{font-size:8px}#viewControls{top:12px;right:12px}#viewControls button{min-width:140px;padding:8px}#operator{bottom:21px;padding:9px}.operatorActions{gap:4px}.operatorActions button{font-size:9px;padding:9px 5px}#hint{bottom:133px;font-size:10px;max-width:88vw;width:max-content}.privacy{font-size:8px}#badge,#appMode{display:none}#installBtn{top:117px;right:12px;font-size:9px}.receiptHeader{font-size:9px}}
-@media(max-height:540px){#hud .small{display:none}#operator{bottom:8px}.privacy{display:none}#hint{bottom:90px;padding:5px}#badge,#appMode{display:none}}
-@media(prefers-reduced-motion:reduce){.loadEmblem{animation:none}.loadBar,#loading{transition:none}}
-
-/* V9 readable operator chrome. The cabinet itself retains its Cyrillic plates. */
-#app>canvas{transition:opacity .18s ease}#viewControls{top:88px}#viewControls button{min-width:164px}.volumeLabel{font:10px 'Courier New',monospace;padding:8px 10px;background:#253028dd;border:1px solid #6b735f;display:flex;flex-direction:column;gap:8px}#volume{width:140px;accent-color:#bcb290}#hud .small{line-height:1.7}#operator{width:min(600px,calc(100vw - 32px))}#hint{max-width:72vw}
-@media(max-width:700px){#viewControls{top:12px}#viewControls button{min-width:149px;font-size:9px}.volumeLabel{font-size:9px;padding:6px 8px}#volume{width:130px}#hud{max-width:calc(100vw - 205px)}#hud .small{font-size:8px}.operatorActions button{font-size:8px;padding:11px 4px}}
-@media(max-height:650px){#viewControls{gap:4px}#viewControls button{padding:7px 10px}.volumeLabel{padding:5px 8px;gap:3px}#hud .small{font-size:9px}}
+@media(max-width:700px){#hud{max-width:78vw;font-size:11px}#hud .small{font-size:9px}#hint{font-size:9px}#fs{display:none}.loadCard{padding:20px 17px 18px}.loadEmblem{width:60px;height:60px;font-size:40px}.loadTip,.loadTask{font-size:10px}}/* Contextual operator UI · the 3D office is the primary canvas. */
+button{font:700 12px "Courier New",monospace;cursor:pointer;color:#f0e9d5;background:#303a32;border:1px solid #8a937f;padding:10px 13px;letter-spacing:.12px;touch-action:manipulation;min-height:44px}
+button:hover{background:#485848;border-color:#ded4aa}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #ffe09a;outline-offset:2px}
+button:disabled{opacity:.57;cursor:default}
+.redButton{background:#873b31;border-color:#ca8772}.redButton:hover{background:#a44738}
+#file{display:none}#cross{display:none}
+#hud{left:max(12px,env(safe-area-inset-left));top:max(12px,env(safe-area-inset-top));max-width:min(270px,calc(100vw - 150px));padding:8px 11px;background:#121a16e0;border-color:#79816c;display:flex;flex-direction:column;gap:2px;box-sizing:border-box}
+#hud strong{color:#f0ddb0;font-size:13px;letter-spacing:.7px}
+#hud span{color:#c3cfbd;font-size:10px}
+#menuToggle{position:fixed;right:max(12px,env(safe-area-inset-right));top:max(12px,env(safe-area-inset-top));z-index:30;background:#253128ed;border-color:#a0a78c;padding:8px 14px}
+#utilityPanel{position:fixed;right:max(12px,env(safe-area-inset-right));top:calc(max(12px,env(safe-area-inset-top)) + 52px);z-index:31;width:min(296px,calc(100vw - 24px));max-height:calc(100dvh - 74px - env(safe-area-inset-bottom));overflow:auto;box-sizing:border-box;padding:13px;background:#19251eeF;border:1px solid #818b74;box-shadow:0 15px 45px #000b;overscroll-behavior:contain}
+.utilityTitle{font-size:11px;font-weight:700;color:#ebd4a2;letter-spacing:.7px}
+.utilityGroupTitle{font-size:10px;font-weight:700;color:#bccbb8;letter-spacing:1px;margin:13px 0 7px;border-top:1px solid #526353;padding-top:9px}
+#viewControls{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+#viewControls button{text-align:left;font-size:11px;padding:8px;min-width:0;background:#303b32}
+#cinemaEnter,.volumeLabel,#viewControls>.utilityGroupTitle{grid-column:1/-1}
+#viewControls>.utilityGroupTitle{margin-bottom:0}
+.volumeLabel{font:11px "Courier New",monospace;color:#e8e4d2;display:flex;flex-direction:column;gap:8px;padding:10px;border:1px solid #697664;background:#273329}
+#volume{width:100%;accent-color:#e5c789;min-height:22px;margin:0}
+#utilityPanel>#helpToggle,#utilityPanel>#fs,#utilityPanel>#installBtn{width:100%;text-align:left;margin-top:7px;font-size:11px}
+#fs{position:static;right:auto;top:auto;z-index:auto;box-shadow:none}
+#installBtn{display:none;position:static;box-shadow:none}#installBtn.show{display:block}
+.utilityMeta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-top:15px;font-size:9px;color:#b7c2ad}
+#badge,#appMode{position:static;background:none;border:none;padding:0;color:inherit;font-size:inherit}
+#operator{position:fixed;bottom:max(14px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:25;box-sizing:border-box;width:min(650px,calc(100vw - 24px));background:#1b2822f2;border:1px solid #929984;box-shadow:0 10px 35px #0009;padding:12px 15px}
+.operatorHead{display:flex;justify-content:space-between;gap:14px;font-size:10px;letter-spacing:.5px;color:#c9d3b9}
+#cycleCount{white-space:nowrap;color:#f2d9a6}
+.workflowLine{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:11px 0 9px}
+#stepLabel{color:#ffe0a0;font-size:12px;line-height:1.35}
+#selectedFile{color:#c8d4c4;font-size:11px;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45%}
+.operatorActions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.operatorActions button{min-width:0;padding:9px 5px;font-size:11px;white-space:normal;overflow-wrap:anywhere}
+#operator:not([data-stage="ready"]) #receipt{display:none}
+#operator[data-stage="empty"] #resetDoc{display:none}
+#operator[data-stage="empty"] #runDoc{opacity:.78}
+#operator[data-stage="ready"] #receipt{background:#82502e;border-color:#d1a47c}
+#operator[data-stage="empty"] .operatorActions{grid-template-columns:repeat(2,minmax(0,1fr))}
+#operator[data-stage="selected"] .operatorActions,#operator[data-stage="busy"] .operatorActions{grid-template-columns:repeat(3,minmax(0,1fr))}
+#operator[data-stage="ready"] .operatorActions{grid-template-columns:repeat(4,minmax(0,1fr))}
+#hint{position:static;left:auto;bottom:auto;transform:none;max-width:none;width:auto;box-sizing:border-box;text-align:left;white-space:normal;overflow-wrap:anywhere;line-height:1.45;background:none;border:none;border-top:1px solid #526353;padding:9px 0 0;margin-top:9px;color:#e1e7d7;font-size:12px}
+.privacy{font-size:10px;color:#becfbb;margin-top:7px}
+#certificate,#helpDialog{box-sizing:border-box;width:min(570px,calc(100vw - 26px));max-height:calc(100dvh - 34px);overflow:auto;background:#202b23;color:#eee4c9;border:1px solid #9fa78d;padding:17px;box-shadow:0 25px 90px #000b}
+#certificate::backdrop,#helpDialog::backdrop{background:#080d0ae8;backdrop-filter:blur(4px)}
+#certificate canvas{width:100%;height:auto;margin:14px 0;display:block}
+.receiptHeader,.helpHeading{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px}
+#downloadReceipt{width:100%}
+#helpDialog h2{font-size:16px;margin:0;color:#ffe0a0;line-height:1.3}
+#helpDialog h3{font-size:13px;color:#e8d7a9;margin:18px 0 5px}
+#helpDialog p,#helpDialog li{font-size:13px;line-height:1.6;color:#e5e8d9}
+#helpDialog ol{padding-left:21px}
+#helpDialog li{margin-bottom:9px}
+#helpTitle:focus{outline:none}
+#app>canvas{transition:opacity .18s ease}
+@media(max-width:640px){
+ #hud{max-width:calc(100vw - 153px);padding:8px}#hud strong{font-size:11px}#hud span{font-size:9px}
+ #operator{bottom:max(8px,env(safe-area-inset-bottom));padding:10px 11px}
+ .operatorHead{font-size:9px}
+ .workflowLine{flex-direction:column;align-items:stretch;gap:3px;margin:8px 0}
+ #stepLabel{font-size:12px}
+ #selectedFile{max-width:100%;text-align:left;font-size:10px}
+ .operatorActions button{min-height:44px;font-size:10px}
+ #operator[data-stage="ready"] .operatorActions{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #hint{font-size:11px;padding-top:7px;margin-top:7px}
+ .privacy{font-size:10px}
+}
+@media(max-height:490px){
+ #hud{padding:5px 9px}#hud span{display:none}
+ #menuToggle{min-height:44px;padding:5px 10px}
+ #utilityPanel{top:58px;max-height:calc(100dvh - 66px)}
+ #operator{padding:7px 10px}
+ .operatorHead{font-size:9px}
+ .workflowLine{margin:4px 0}
+ #hint{font-size:10px;margin-top:4px;padding-top:4px}
+ .privacy{font-size:9px;margin-top:3px}
+}
+@media(prefers-reduced-motion:reduce){.loadEmblem{animation:none}.loadBar,#loading,#app>canvas{transition:none}}
 
 /* V10: a quiet viewfinder; photos are rendered from the scene, never this UI. */
 [hidden]{display:none!important}
 body.cinematic{background:#070a08}
-body.cinematic :is(#hud,#operator,#viewControls,#hint,#cross,#fs,#installBtn,#badge,#appMode){display:none!important}
+body.cinematic :is(#hud,#operator,#menuToggle,#utilityPanel,#viewControls,#hint,#cross,#fs,#installBtn,#badge,#appMode){display:none!important}
 #cinema{position:fixed;inset:0;pointer-events:none;z-index:40}
 #cinemaBar{position:absolute;left:20px;right:20px;bottom:20px;max-width:1120px;margin:auto;background:#14201dec;border:1px solid #758572;box-shadow:0 10px 40px #0008;padding:14px 16px;pointer-events:auto}
 .cinemaHeading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;font-size:11px;letter-spacing:1.2px;color:#d8c796}
@@ -55,7 +111,7 @@ body.cinematic :is(#hud,#operator,#viewControls,#hint,#cross,#fs,#installBtn,#ba
 #cinemaLens{width:90px;accent-color:#bdaf83}#cinemaLensValue{min-width:26px}
 .cinemaHelp{font-size:9px;line-height:1.9;color:#adc1b3;margin-top:9px}
 #cinemaStatus{color:#d9c895}
-#cinemaReveal{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font-size:9px;opacity:.16;pointer-events:auto;transition:opacity .2s}
+#cinemaReveal{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font-size:9px;opacity:.4;pointer-events:auto;transition:opacity .2s}
 #cinemaReveal:hover,#cinemaReveal:focus-visible{opacity:1}
 #cinemaToast{position:absolute;top:24px;left:50%;transform:translateX(-50%);background:#162d23de;border:1px solid #8f9c7e;padding:12px;font-size:11px}
 @media(max-width:700px){#cinemaBar{left:9px;right:9px;bottom:9px;padding:11px}.cinemaHeading{font-size:9px;letter-spacing:0}.cinemaHeading button{font-size:8px}.cinemaTools{gap:5px}.cinemaTools button,.cinemaTools select{font-size:9px;padding:9px 6px}.cinemaHelp{font-size:8px}#cinemaLens{width:70px}#cinemaReveal{width:max-content}}

@@ -1,14 +1,16 @@
 {
   "name": "byurokyadt-1",
   "private": true,
-  "version": "10.1.1",
+  "version": "10.2.1",
   "type": "module",
   "scripts": {
-    "test": "node tests/documentation-links.mjs && node tests/audio-preview.mjs && node tests/audio-corridor.mjs && node tests/camera-math.mjs && node tests/paper-path.mjs && node tests/acceptance.mjs && node tests/cinematic.mjs && node tests/paper-motion.mjs && node tests/audio-preview-browser.mjs",
+    "test": "node tests/documentation-links.mjs && node tests/audio-preview.mjs && node tests/audio-corridor.mjs && node tests/camera-math.mjs && node tests/paper-path.mjs && node tests/room-shell.mjs && node tests/acceptance.mjs && node tests/cinematic.mjs && node tests/paper-motion.mjs && node tests/audio-preview-browser.mjs && node tests/ui-accessibility.mjs",
     "test:preview": "node tests/audio-preview.mjs",
     "test:preview:browser": "node tests/audio-preview-browser.mjs",
     "test:docs": "node tests/documentation-links.mjs",
-    "test:audio-corridor": "node tests/audio-corridor.mjs"
+    "test:audio-corridor": "node tests/audio-corridor.mjs",
+    "test:ui": "node tests/ui-accessibility.mjs",
+    "test:room": "node tests/room-shell.mjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"
