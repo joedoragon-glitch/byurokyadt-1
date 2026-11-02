@@ -30,6 +30,12 @@ The listening room contains no new music, engine, online service or game-state i
 - The final documentation cleanup and restoration of the historical `review.yml` branch filter do not alter the tested app, game tests, assets or package version. Verify the focused PR check on that documentation-only commit before merge.
 - **No publication or real-device/acoustic certification is implied.** `main` and the public Pages build remain at the prior verified baseline until the owner explicitly authorizes merge. Device audio quality, physical iPhone/Chromebook performance and installed PWA update behavior remain unverified.
 
+## Issue #7 environment candidate — 2 November 2026
+
+The `issue-7-room-completeness` feature branch proposes the **10.2.0 room visual update** from main `9b95387f4e2e`: a physical +Z wall, continuous four-wall joins, period service fittings, door details, and refined cabinets/chair/telephone/radiator. It does **not** change the accepted central machine, original poster files, paper timing, lighting, audio, save data or eight cinematic shot definitions. A new cache namespace `byurokyadt-v10-2-0` and query string `?v=10.2.0` isolate the candidate from installed 10.1.1 shells.
+
+The issue-specific [environment evidence guide](ROOM_COMPLETENESS_REVIEW.md) inventories changes and specifies repeatable before/after Chromium captures from the pinned main base. Test results and evidence should be linked from the issue and PR **only after an actual run**. This branch is **implemented, not merged, published, accepted artistically, or device verified**; physical-device and native-GPU performance remain unmeasured.
+
 ## Ongoing accuracy rules
 
 Use exact commit and CI run URLs for **tested**, GitHub PR state for **merged**, Pages job results for **published**, and physical-device observation for **device verified**. An installed browser app may retain older cached content. Document unperformed listening and handset/Chromebook checks explicitly. If a candidate or next phase changes, update its current guide instead of appending another contradictory "latest" block. Historical source and review logs remain in [AUDIT.md](../AUDIT.md).
