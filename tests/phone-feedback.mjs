@@ -25,6 +25,10 @@ window.__SHADOW_REVIEW=()=>{
  const panels=names.map(n=>scene.getObjectByName(n));
  if(panels.some(p=>!p))throw Error('Missing named front-wall panels');
  const before=panels.map(p=>p.castShadow);
+ // With ceiling-driven shadows, a 3 m object cannot project several
+ // metres across the office, regardless of any accidental wall caster.
+ const incidence=key.position.clone().sub(key.target.position);
+ const projectedFrom3m=3*Math.hypot(incidence.x,incidence.z)/incidence.y;
  camera.position.set(0,1.7,2.7);camera.rotation.set(-.25,Math.PI,0);
  const gl=renderer.getContext(),w=renderer.domElement.width,h=renderer.domElement.height;
  const read=(cast)=>{
@@ -43,7 +47,7 @@ window.__SHADOW_REVIEW=()=>{
  }
  panels.forEach((p,i)=>p.castShadow=before[i]);
  renderer.shadowMap.needsUpdate=true;renderer.render(scene,camera);
- return {names,initialCasters:before,changed,formerDarker,formerBrighter,
+ return {names,initialCasters:before,projectedFrom3m,changed,formerDarker,formerBrighter,
   expected:{castersOff:before.every(v=>!v)},resolution:[w,h]};
 };
 window.__SHADOW_REVIEW_RESTORE=()=>{
@@ -65,9 +69,11 @@ window.__SHADOW_REVIEW_RESTORE=()=>{
  const probe=await page.evaluate(()=>window.__SHADOW_REVIEW());
  results.shadow=probe;
  assert(probe.expected.castersOff,'Decorative front-wall backplates must not cast by default');
- assert(probe.changed>100,'Re-enabling panels must measurably recreate the floor shadow defect');
- assert(probe.formerDarker>probe.formerBrighter*2,
-  'The defect must be shadow darkening, not unrelated lighting changes');
+ assert(probe.projectedFrom3m<.60,
+  'Overhead shadow geometry must not stretch a 3 m cabinet into a long window-like floor silhouette');
+ // The previous oblique-light test expected deliberately re-enabled wall
+ // decorations to recreate large detached patches. That is no longer the
+ // desired behavior: both caster selection AND shadow direction prevent it.
  await page.locator('#app canvas').screenshot({path:'test-results/phone-feedback/front-wall-fixed.png'});
  await page.evaluate(()=>window.__SHADOW_REVIEW_RESTORE());
  // Native touch events, including a movement gesture and cleanup.
