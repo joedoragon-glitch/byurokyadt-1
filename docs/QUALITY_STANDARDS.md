@@ -11,6 +11,12 @@
 - Visual changes should not alter document-processing rules, timing, counters or collisions merely to make a screenshot look better.
 - Respect reduced-motion preferences, narrow/mobile layout and readable external controls. Stylized lettering does not replace accessible names or contrast.
 
+## Lighting and shadow verification
+
+A shadowed interior key must reach representative walkable positions, both ends of the room, the door/window, archive furniture, and the moving press without a camera-dependent cutoff. Keep warm practicals and cold daylight visually distinct. Check for acne, detached contact, unrealistically darkened walls, and lost poster/document legibility in matched scene-only captures. The same shadow-camera fit must be correct at desktop and mobile map sizes. Do not turn on shadows for every ceiling/desk point light.
+
+For source-based verification use the paired `tests/lighting-shadows.mjs` gate (and the non-deploying lighting review workflow), the existing cinematic and paper-motion browser suites, and matched renderer draw-call/triangle/map-size evidence. Shadow-camera coverage is a deterministic requirement, **not** a substitute for image review. Keep subjective atmosphere and real-device GPU behavior pending owner/device confirmation.
+
 ## Audio and experience
 
 Use [Audio direction](AUDIO_DIRECTION.md) for the creative sound contract. Keep effects tied to real causes and locations. Music and effects must remain independently controlled. Silence or audio failure must not prevent the machine's visual procedure. No automatic unmuted playback before a user gesture. Assess actual listening when possible; digital peaks, decode success and a green test do **not** certify enjoyable sound, speaker balance or long-session fatigue.
