@@ -115,7 +115,7 @@ try{
   assert(data.grip.max[0]>data.mouthpiece.max[0]-.05);
   assert(Math.abs(data.earpiece.min[1]-data.cradleLeft.max[1])<.012,
     'Handset must rest on left cradle, not float above it');
-  assert(Math.abs(data.mouthpiece.min[1]-data.cradleRight.max[1])<.05,
+  assert(Math.abs(data.mouthpiece.min[1]-data.cradleRight.max[1])<.012,
     'Handset must rest on right cradle');
   assert(data.cord.min[1]>.90&&data.cord.max[1]<1.24,
     'Coiled cord must hang beside set, not slice through the desk');
