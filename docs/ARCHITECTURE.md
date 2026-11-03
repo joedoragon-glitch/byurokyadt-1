@@ -44,20 +44,22 @@ Follow `js/app.js` when changing processing, counter/tray, collisions or geometr
 - `tests/paper-motion.mjs` — rendered intermediate paper motion, stamping and corridor cues.
 - `tests/performance.mjs` — non-deploying paired Playwright profiler for rAF callbacks versus WebGL draws, workload stages, heap and cold/warm/offline loading (development only; not runtime instrumentation).
 - `tests/performance-compare.mjs` — deterministic negative-case regression for the trace comparison contract (rejects mismatched DPR, GPU, stage names and profiling settings).
+- `tests/ui-accessibility.mjs` — operator controls, dialog focus, mobile and reduced-motion paths.
+- `tests/phone-feedback.mjs` — mobile audio/joystick, decorative shadows and winter-lighting corrections.
+- `tests/desk-props.mjs` — phone dial, binder/folio separation and Chromium scene captures.
 
-`.github/workflows/pages.yml` tests local production files, assembles `_site/`, deploys GitHub Pages on pushes to **`main`**, and checks the deployed URL. Its assembly copies `assets/` wholesale, so the independent listening page can be served without changing the deployment workflow. `.github/workflows/review.yml` runs on pushes to three **historical, explicitly named** review branches; a new arbitrary feature branch does not currently acquire CI automatically. Report the absence of an automated run rather than claiming it passed.
+`.github/workflows/pages.yml` tests local production files, assembles `_site/`, deploys GitHub Pages on pushes to **`main`**, and checks the deployed URL. Its assembly copies `assets/` wholesale, so the independent listening page can be served without changing the deployment workflow. `.github/workflows/review.yml` runs the non-deploying game suite for **pull requests targeting `main`** and listed historical push branches. `.github/workflows/docs-audio-review.yml` independently exercises documentation/audio checks for matching PR paths. Neither workflow publishes; `pages.yml` deploys on `main` pushes after its checks. Inspect exact runs before claiming a pass.
 
 See [Engineering workflow](ENGINEERING_WORKFLOW.md) for focused checks and release controls, and [Development state](DEVELOPMENT_STATE.md) for time-qualified evidence.
 
-## Contextual UI verification (issue #9)
+## Additional test ownership
 
-- `tests/ui-accessibility.mjs` exercises contextual state, keyboard/touch, Help/Certificate/Cinema focus, reduced motion and responsive menu positions.
-- `.github/workflows/review.yml` runs non-deploying Chromium tests for PRs targeting `main`; historical review branch triggers and room visual probes remain. Verify the actual current workflow and job conclusion, not its mere presence.
+The paired `tests/room-visual.mjs`, `tests/lighting-shadows.mjs` and `tests/performance.mjs` diagnostics are not ordinary `npm test` entries. Use their separate baseline/server protocols only when a relevant visual or workload change warrants them.
 
-## 10.2.1 integration maintenance
+## Release metadata and integration maintenance
 
 - `tests/maintenance.mjs` guards package/lock version, HTML module URLs, service-worker cache/precache membership and the complete declared test roster.
-- The combined source includes issue #6 lighting, issue #7 room shell, issue #9 contextual UI, issue #8 profiling and issue #10 state/maintenance checks. Review whole-scene behavior and CI on the final commit, not just independent PR artifacts.
+- The integrated source includes issues #6–#10, followed by merged #16 audio/touch, #20 desk props and #22 winter-light/doorway fixes. Current `package.json` is **10.2.4** with **14 ordered checks**; `tests/maintenance.mjs` guards version/cache cohesion. Review whole-scene behavior and CI on the final commit, not just independent PR artifacts.
 
 ## Historical legacy behavior and contradiction register (issue #10, pre-integration, 2 November 2026)
 
@@ -84,6 +86,6 @@ This register distinguishes historical *appearance* from real defects; the audit
 
 The secondary telephone table's original location (x≈3.9, z≈−5.2, tabletop y≈.9) stays unchanged. The source for its prop geometry is exclusively `js/app.js`: `deskPhone` groups a beveled, sloped extruded red housing, an ivory rotary face with 1–9 and 0 drawn deterministically into a 512×512 `CanvasTexture`, handset/cradle geometry, and a coiled receiver lead. `deskFiles` contains four independently constructed rigid closed binders with paper cores and genuine Cyrillic spine labels; `looseDossier` is a single shallow folio in front of, **not through**, those standing binders. The mug was shifted within the existing desktop to avoid overlapping the widened handset housing. No 3D asset import, new renderer dependency, collider, light, audio change or alteration to game document stacks was introduced. `tests/desk-props.mjs` intercepts a test-only scene probe in Chromium, verifies scene bounds and dial numbering and writes close-up desktop/mobile screenshot evidence. Preserve actual game paths and the central machine as separate concerns.
 
-## Integrated corridor doorway — 10.2.4 candidate
+## Integrated corridor doorway — 10.2.4 merged source
 
 The +X wall is built as two full-height concrete spans and a genuine lintel over a 1.34 m × 2.64 m closed-door opening at z = −0.8. The existing heavy leaf is recessed into this opening at x = 5.96, and opening-aware dado, skirting, wall seams and metal jamb returns no longer run through the doorway. Collision keeps the door closed; no corridor gameplay or camera routes change. `tests/room-shell.mjs` checks real production source geometry, absence of concrete across the opening, the lintel and preserved collision.

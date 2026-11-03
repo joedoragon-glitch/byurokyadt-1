@@ -6,7 +6,7 @@
 
 The listening room is included with the site's assets. Its Pages link works after a successful deployment of the commit containing it; an unmerged PR is not a live site. It can also be opened from a local server at `/assets/audio-preview.html`.
 
-**Jump to:** [Experience](#the-experience) · [Controls](#controls) · [Sound and photography](#sound-and-photography) · [Privacy and offline use](#privacy-and-offline-use) · [Development](#development) · [Project documentation](#project-documentation)
+**Jump to:** [Experience](#the-experience) · [Recent updates](#recent-updates) · [Controls](#controls) · [Sound and photography](#sound-and-photography) · [Privacy and offline use](#privacy-and-offline-use) · [Development](#development) · [Project documentation](#project-documentation)
 
 ## The experience
 
@@ -14,14 +14,19 @@ The office contains a 3D cabinet with switches, a CRT, analog meters, a printer 
 
 The intended tone is restrained, tactile and gently absurd: institutional bureaucracy treated with the seriousness of a monumental industrial process. The room contains original mechanical sound, a sparse instrumental score, winter ambience and spatially placed corridor footsteps.
 
-**The 10.1.2 lighting improvement** in [issue #6](https://github.com/joedoragon-glitch/byurokyadt-1/issues/6) fits a single shadow camera across the office without changing the original lamp palette or mechanical animation. The overall lighting appearance remains subject to the owner's evaluation of the integrated game.
+## Recent updates
 
-**Version 10.1** corrected the continuous paper path and stamp-contact timing, and made the corridor footsteps respond to an operator approaching the door. The **10.1.1 maintenance patch** protects that approach cue against early background footsteps and adds a separate sound listening room. The **10.2.0 room-completeness pass** completes the fourth wall, door joinery, office surfaces and period props without replacing the approved machine or posters; see [the matched environment review](docs/ROOM_COMPLETENESS_REVIEW.md). See [Development state](docs/DEVELOPMENT_STATE.md) for the distinction between source availability and a verified public deployment. See the [historical production audit](AUDIT.md) for the recorded work and its verification; the [maintained development state](docs/DEVELOPMENT_STATE.md) distinguishes historical evidence from current verification.
+The current **`main` source is version 10.2.4** (2 November 2026). The exact-head [Pages deployment and local/live acceptance run](https://github.com/joedoragon-glitch/byurokyadt-1/actions/runs/41466794235) **completed successfully** for `21e36a178a56`. This verifies publication by the workflow, not that a previously installed browser has refreshed its cache or that native-device visuals have been approved. See [Development state](docs/DEVELOPMENT_STATE.md) for verification boundaries.
+
+- **10.2.4:** [PR #24](https://github.com/joedoragon-glitch/byurokyadt-1/pull/24) seats the closed corridor door in a real concrete opening and changes winter shadows to be predominantly ceiling-driven, with diffuse light at the frosted window.
+- **10.2.3:** [PR #21](https://github.com/joedoragon-glitch/byurokyadt-1/pull/21) replaces intersecting desk files with separate archive binders and a loose dossier, and models a more credible red Soviet-era rotary telephone.
+- **10.2.2:** [PR #17](https://github.com/joedoragon-glitch/byurokyadt-1/pull/17) adds first-gesture, default-on mobile audio, a discreet touch joystick, a shadow-caster correction and typography fixes.
+- **10.2.1:** PRs #11–#15 (including [UI integration PR #15](https://github.com/joedoragon-glitch/byurokyadt-1/pull/15)) integrate the completed room shell, fitted shadows, contextual accessible operator UI, profiling and maintenance guards.
+- **10.1/10.1.1:** Corrected continuous paper/stamp motion and corridor approach sound, then added startup/audio-cache fixes and the separate listening room.
+
+The proposed broader Russian-first-glance lettering pass is tracked separately in [PR #19](https://github.com/joedoragon-glitch/byurokyadt-1/pull/19); it is **not** part of the 10.2.4 source. These notes describe source changes, not physical-phone visual or acoustic certification.
 
 ## Controls
-
-The **10.2.1 polishing release** brings the lighting, complete room architecture and contextual accessible UI together with performance profiling and maintenance guards. Consult the current [Development state](docs/DEVELOPMENT_STATE.md) and [Pages workflow](https://github.com/joedoragon-glitch/byurokyadt-1/actions/workflows/pages.yml) for the exact deployed source; final appearance is yours to assess in the game.
-
 
 **First procedure:** Select a local document → Confirm → watch the machine inspect and stamp its certificate → Collect certificate → Save PNG. The operator strip shows the current step, file name and progress in ordinary English; the file is not uploaded. The **Menu** button at the top right opens Room/Machine/Side views, Sound, Music, volume, fullscreen, installation (when supported) and How to operate. Escape closes the menu. The menu is optional for the main procedure and keeps the office unobstructed when closed.
 
@@ -85,15 +90,3 @@ The full `npm test` command runs the documented Node and Chromium regression sui
 | All maintained guides and historical reference paths | [Documentation index](docs/DOCUMENTATION_INDEX.md) |
 
 **Historical records remain intact:** [AESTHETICS.md](AESTHETICS.md) contains approved visual references and texture provenance; [AUDIT.md](AUDIT.md) contains V9–V10.1 testing and release history. These are evidence, not fresh work orders. The authorial and engineering principles above were adapted from the separately maintained *So I Became the Dark Lord's Problem* repository; its fantasy setting, game mechanics, code paths and platform-specific policies do **not** apply here.
-
-## Version 10.2.2 — mobile audio, floor shadows and touch controls
-
-[Issue #16](https://github.com/joedoragon-glitch/byurokyadt-1/issues/16) adds default-on gesture-unlocked audio, removes detached shadows projected by the front-wall service fittings, introduces a floating reddish touch-first movement joystick, and corrects the accidental double-dotted I stand-ins in decorated English text. The source change was validated by Chromium regression; physical iPhone Safari audio and touch response remain separate device checks. Consult [PR #17](https://github.com/joedoragon-glitch/byurokyadt-1/pull/17), [development state](docs/DEVELOPMENT_STATE.md) and [Pages Actions](https://github.com/joedoragon-glitch/byurokyadt-1/actions/workflows/pages.yml) to distinguish code integration from confirmed public deployment.
-
-## Version 10.2.3 — period-correct office desk props
-
-The right-hand wooden office desk features restrained, separately bound archive folders with readable case spines and a thin loose dossier, rather than intersecting broad plastic-looking files and a paper block. Its red rotary desk telephone is modeled after the era-appropriate Soviet VEF TA-72 silhouette (low wedge, numbered ivory rotary face, continuous handset and coiled lead), not a photograph or exact manufactured replica. The tabletop, mug, machine, room placement, sound and game controls remain intact. See [issue #20](https://github.com/joedoragon-glitch/byurokyadt-1/issues/20) and its reviewable PR for source and 3D screenshot evidence. Automated Chromium captures are not evidence of physical iPhone or owner visual approval; consult [Pages runs](https://github.com/joedoragon-glitch/byurokyadt-1/actions/workflows/pages.yml) before calling the public version deployed.
-
-## Version 10.2.4 — winter lighting and seated corridor door (review candidate)
-
-[Issue #22](https://github.com/joedoragon-glitch/byurokyadt-1/issues/22) responds to the owner's room screenshots: the frosted window supplies diffuse cold daylight, while the near-overhead key and three ceiling lamps create modest, short furniture shadows instead of long diagonal sunlight-like strips. The right corridor door is seated in a real three-piece concrete opening with a lintel and jamb-finished trim rather than applied in front of a solid wall. The existing closed-door collision, original cabinet/posters, paper process, default-on audio and mobile controls are preserved. This 10.2.4 candidate remains **unmerged and unpublished** until the new PR is reviewed and explicitly authorized; source-based tests and automated browser images do not establish final physical iPhone appearance.
